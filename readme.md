@@ -1,7 +1,9 @@
 This is for Social Data Applciation.
 
+Before adding the .env file, create a database named socialdata
+
 ==============================================================================================================
-Create a .env file at root directory and put the information like bellow. And change the information according. That means your will not be to change any files under app/config folder.
+Create a .env file at root directory and put the information like bellow. And change the information accordingly. That means your will not be to change any files under app/config folder.
 
 APP_ENV=local
 
