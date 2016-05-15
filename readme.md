@@ -72,4 +72,29 @@ Default User : admin
 Default Pass : admin
 
 
+====================================================================
+
+Now if you want to run the cron in your local machine then follow the following instructions:
+
+For linux and mac
+
+crontab -e
+
+* * * * * php /path/to/artisan schedule:run >> /dev/null 2>&1
+
+and save it. this cron will pull data every hour.
+
+
+And if you want to check from your commandline then use:
+
+php artisan -list
+
+By using this you can see the list of command you can run. Use the social media related commands Or user the following commands:
+
+
+php artisan get:twitter
+
+php artisan get:facebook
+
+
 
