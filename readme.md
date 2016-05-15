@@ -98,3 +98,11 @@ php artisan get:facebook
 
 
 
+============================================
+
+If any folder permission issue then then give permission to bootstrap, public, storage folder like :
+
+chmod -R 777 <to_specific_folder>
+
+
+
