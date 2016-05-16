@@ -96,6 +96,8 @@ php artisan get:twitter
 
 php artisan get:facebook
 
+php artisan get:googleplus
+
 
 
 ============================================

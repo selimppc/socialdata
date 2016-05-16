@@ -22,7 +22,8 @@
     "autoload": {
         "classmap": [
             "database",
-            "app/modules"
+            "app/modules",
+            "vendor/google/apiclient/src/Google"
         ],
         "psr-4": {
             "App\\": "app/",
