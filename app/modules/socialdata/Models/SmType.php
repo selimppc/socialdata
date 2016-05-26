@@ -33,4 +33,8 @@ class SmType extends Model
             return false;
         }
     }
+    public function relUserSocialAccount()
+    {
+        return $this->hasMany('App\Modules\Www\Models\UserSocialAccount','sm_account_id','id');
+    }
 }

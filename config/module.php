@@ -12,5 +12,6 @@ return [
         "admin",
         "socialdata",
         "api_app",
+        "www",
     ),
 ];
