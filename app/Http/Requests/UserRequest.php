@@ -35,17 +35,17 @@ class UserRequest extends Request
         if($id==null)
         {
             return [
-                'first_name' => 'required|max:64',
+                'username' => 'required|max:64',
                 'email' => 'required',
                 'password' => 'required|max:64',
-                'confirm_password' => 'required|same:password',
+                're_password' => 'required|same:password',
                  'image'=>'mimes:png,gif,jpeg,txt,pdf,doc,jpg',
             ];
         }
         else
         {
             return [
-                'first_name' => 'required|max:64',
+                'username' => 'required|max:64',
             ];
         }
 
