@@ -103,10 +103,10 @@ class GooglePlus extends Command
                             $company_details = CompanySocialAccount::where('status', 'active')->where('sm_type_id', $sm_type_details['id'])->get();
                             foreach ($company_details as $company_detail) {
                                 $sm_type_id = $company_detail->sm_type_id;
-                                $user_fb_id = $company_detail->sm_account_id;
+                                $page_id = $company_detail->page_id;
                                 $company_id = $company_detail->company_id;
                                 if (Company::where('id', $company_id)->where('status', 'active')->exists()) {
-                                    $this->google_post($user_fb_id, $company_id, $sm_type_id);
+                                    $this->google_post($page_id, $company_id, $sm_type_id);
                                     //update company social account duration all to 1 day after first iteration
                                     if($company_detail->data_pull_duration == 'all'){
                                         $company_detail->data_pull_duration = 1;
@@ -131,9 +131,9 @@ class GooglePlus extends Command
                                 $company_social_account = CompanySocialAccount::where('company_id', $company_id)->where('sm_type_id', $sm_type_id['id'])->where('status', 'active')->get();
                                 foreach ($company_social_account as $com_s_acc) {
                                     $sm_type_id = $com_s_acc->sm_type_id;
-                                    $user_fb_id = $com_s_acc->sm_account_id;
+                                    $page_id = $com_s_acc->page_id;
                                     $company_id = $com_s_acc->company_id;
-                                    $this->google_post($user_fb_id, $company_id, $sm_type_id);
+                                    $this->google_post($page_id, $company_id, $sm_type_id);
                                     //update company social account duration all to 1 day after first iteration
                                     if($com_s_acc->data_pull_duration == 'all'){
                                         $com_s_acc->data_pull_duration = 1;

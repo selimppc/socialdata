@@ -10,6 +10,7 @@
         "illuminate/html": "5.*",
         "google/apiclient": "1.0.*@beta",
         "facebook/php-sdk": "@stable",
+        "facebook/php-sdk-v4" : "~5.0",
         "j7mbo/twitter-api-php": "dev-master",
         "abraham/twitteroauth": "^0.6.2"
     },

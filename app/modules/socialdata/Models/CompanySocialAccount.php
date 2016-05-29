@@ -9,7 +9,11 @@ class CompanySocialAccount extends Model
     protected $table = 'company_social_account';
     protected $fillable = [
         'sm_account_id',
+        'page_id',
         'company_id',
+        'access_token',
+        'p_status',
+        'ac_status',
         'sm_type_id',
         'data_pull_duration',
         'status'

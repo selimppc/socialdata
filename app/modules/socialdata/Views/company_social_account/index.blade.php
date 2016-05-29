@@ -43,8 +43,9 @@
                         <thead>
                         <tr>
                             <th> Id </th>
-                            <th> Social Media Account ID </th>
                             <th> Social Media name </th>
+                            <th> Account ID </th>
+                            <th> Page ID </th>
                             <th> Data Pull Duration (Days) </th>
                             {{--<th> Company name </th>--}}
                             <th> Status </th>
@@ -56,8 +57,9 @@
                             @foreach($data as $values)
                                 <tr class="gradeX">
                                     <td>{{$values->id}}</td>
-                                    <td>{{$values->sm_account_id}}</td>
                                     <td>{{$values->relSmType->type}}</td>
+                                    <td>{{$values->sm_account_id}}</td>
+                                    <td>{{$values->page_id}}</td>
                                     <td>{{$values->data_pull_duration}}</td>
                                     {{--<td>{{$values->relCompany->name}}</td>--}}
                                     <td>{{$values->status}}</td>

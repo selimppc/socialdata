@@ -39,7 +39,11 @@ class CreateAllTable extends Migration
         Schema::create('company_social_account', function (Blueprint $table) {
             $table->increments('id');
             $table->string('sm_account_id');
+            $table->string('page_id');
             $table->integer('company_id', false, 11);
+            $table->string('access_token');
+            $table->boolean('ac_status')->comment('Account Status');
+            $table->boolean('p_status')->comment('Page Status');
             $table->integer('sm_type_id', false, 11);
             $table->string('data_pull_duration',10);
             $table->enum('status',array('active','inactive','cancel'))->nullable();

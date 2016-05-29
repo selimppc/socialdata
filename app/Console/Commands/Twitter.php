@@ -79,13 +79,13 @@ class Twitter extends Command
                     $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
                     foreach ($company_details as $company_detail) {
                         $sm_type_id = $company_detail->sm_type_id;
-                        $user_tw_id = $company_detail->sm_account_id;
+                        $page_id = $company_detail->page_id;
                         $company_id = $company_detail->company_id;
                         if(Company::where('id',$company_id)->where('status','active')->exists()){
-                            $this->twitter_post($user_tw_id, $company_id, $sm_type_id, $twitter_conf);
+                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
 
                             //Call mention related function
-                            $this->twitter_post_mention($user_tw_id, $company_id, $sm_type_id, $twitter_conf);
+                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
                             //update company social account duration all to 1 day after first iteration
                             if($company_detail->data_pull_duration == 'all'){
                                 $company_detail->data_pull_duration = 1;
@@ -109,10 +109,10 @@ class Twitter extends Command
                         $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
                         foreach ($company_social_account as $com_s_acc) {
                             $sm_type_id = $com_s_acc->sm_type_id;
-                            $user_tw_id = $com_s_acc->sm_account_id;
+                            $page_id = $com_s_acc->page_id;
                             $company_id = $com_s_acc->company_id;
-                            $this->twitter_post($user_tw_id, $company_id, $sm_type_id, $twitter_conf);
-                            $this->twitter_post_mention($user_tw_id, $company_id, $sm_type_id, $twitter_conf);
+                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
+                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
                             //update company social account duration all to 1 day after first iteration
                             if($com_s_acc->data_pull_duration == 'all'){
                                 $com_s_acc->data_pull_duration = 1;
@@ -125,7 +125,7 @@ class Twitter extends Command
         }
     }
 
-    public function twitter_post_mention($user_tw_id, $company_id, $sm_type_id ,$twitter_conf){
+    public function twitter_post_mention($page_id, $company_id, $sm_type_id ,$twitter_conf){
         $count = 200;
         $max_id = 'init';
         while($max_id != null){
@@ -134,10 +134,10 @@ class Twitter extends Command
 
                 // Have to use max_id Ref:: http://techiella.x0.com/twitter-search-using-the-twitter-api-php/
                 if($max_id == 'init'){
-                    $posts = $twitter->get('search/tweets', ['q' => '#'.$user_tw_id, 'count' => $count]);
+                    $posts = $twitter->get('search/tweets', ['q' => '#'.$page_id, 'count' => $count]);
                 }
                 else {
-                    $posts = $twitter->get('search/tweets', ['q' => '#'.$user_tw_id, 'count' => $count, 'max_id' => $max_id]);
+                    $posts = $twitter->get('search/tweets', ['q' => '#'.$page_id, 'count' => $count, 'max_id' => $max_id]);
                 }
                 //Log::info(print_r($posts, true));
                 //print_r($posts);
@@ -160,14 +160,14 @@ class Twitter extends Command
         return true;
     }
 
-    public function twitter_post($user_tw_id, $company_id, $sm_type_id ,$twitter_conf){
+    public function twitter_post($page_id, $company_id, $sm_type_id ,$twitter_conf){
         $count = 200;
         $page = 1;
         $no_of_post = 1;
         while($page != null){
             try {
                 $twitter = $this->twitter_auth();
-                $posts = $twitter->get('statuses/user_timeline', ['screen_name'=>$user_tw_id, 'count'=>$count, 'page'=>$page]);
+                $posts = $twitter->get('statuses/user_timeline', ['screen_name'=>$page_id, 'count'=>$count, 'page'=>$page]);
 
                 foreach ($posts as $post) {
                     $post->sm_type_id = $sm_type_id;

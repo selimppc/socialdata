@@ -110,7 +110,6 @@ class CompanySocialAccountController extends Controller
     {
         $model = CompanySocialAccount::where('id',$id)->first();
         $input = $request->all();
-
         DB::beginTransaction();
         try {
             $model->update($input);

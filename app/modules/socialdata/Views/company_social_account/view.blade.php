@@ -7,6 +7,10 @@
     <div style="padding: 30px;">
         <table id="" class="table table-bordered table-hover table-striped">
             <tr>
+                <th class="col-lg-4">Company Social Media</th>
+                <td>{{ isset($data->relSmType->type)?$data->relSmType->type:''}}</td>
+            </tr>
+            <tr>
                 <th class="col-lg-4">ID</th>
                 <td>{{ isset($data->id)?$data->id:''}}</td>
             </tr>
@@ -15,8 +19,8 @@
                 <td>{{ isset($data->sm_account_id)?$data->sm_account_id:''}}</td>
             </tr>
             <tr>
-                <th class="col-lg-4">Company Social Media</th>
-                <td>{{ isset($data->relSmType->type)?$data->relSmType->type:''}}</td>
+                <th class="col-lg-4">Company Social Media Page ID</th>
+                <td>{{ isset($data->sm_account_id)?$data->page_id:''}}</td>
             </tr>
             <tr>
                 <th class="col-lg-4">Company Name</th>

@@ -24,7 +24,7 @@ class CompanySocialAccountRequest extends Request
     public function rules()
     {
         return [
-            'sm_account_id' => 'required|max:255',
+            'page_id' => 'required|max:255',
             'company_id' => 'required|max:64',
             'sm_type_id' => 'required|max:64'
         ];

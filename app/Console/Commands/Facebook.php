@@ -56,10 +56,10 @@ class Facebook extends Command
                     $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
                     foreach ($company_details as $company_detail) {
                         $sm_type_id = $company_detail->sm_type_id;
-                        $user_fb_id = $company_detail->sm_account_id;
+                        $page_id = $company_detail->page_id;
                         $company_id = $company_detail->company_id;
                         if(Company::where('id',$company_id)->where('status','active')->exists()){
-                            $this->facebook_post($user_fb_id, $sm_type_id, $company_id);
+                            $this->facebook_post($page_id, $sm_type_id, $company_id);
                             //update company social account duration all to 1 day after first iteration
                             /*DB::table('company_social_account')
                                 ->where('id',$sm_type_id)
@@ -87,9 +87,9 @@ class Facebook extends Command
                         $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
                         foreach ($company_social_account as $com_s_acc) {
                             $sm_type_id = $com_s_acc->sm_type_id;
-                            $user_fb_id = $com_s_acc->sm_account_id;
+                            $page_id = $com_s_acc->page_id;
                             $company_id = $com_s_acc->company_id;
-                            $this->facebook_post($user_fb_id, $sm_type_id, $company_id);
+                            $this->facebook_post($page_id, $sm_type_id, $company_id);
                             //update company social account duration all to 1 day after first iteration
                             if($com_s_acc->data_pull_duration == 'all'){
                                 $com_s_acc->data_pull_duration = 1;
@@ -103,7 +103,7 @@ class Facebook extends Command
         exit;
     }
 
-    public function facebook_post($user_fb_id, $sm_type_id, $company_id)
+    public function facebook_post($page_id, $sm_type_id, $company_id)
     {
         $config = [
             'appId' => '969861563097945',
@@ -114,7 +114,7 @@ class Facebook extends Command
         $limit = 20;
 
         // FB first call to get pagination next var
-        $feed = $facebook->api("/$user_fb_id/posts?limit=$limit");
+        $feed = $facebook->api("/$page_id/posts?limit=$limit");
         $content_id['paging']['next'] = isset($feed['paging']['next'])?$feed['paging']['next']:null;
         if(isset($feed['data'])){
             foreach ($feed['data'] as $item) {
@@ -131,7 +131,7 @@ class Facebook extends Command
         while(isset($content_id['paging']['next']) != null){
             try {
                 $page_token = $content_id['paging']['next'];
-                $content_id = $facebook->api("/$user_fb_id/posts?limit=$limit&__paging_token=$page_token");
+                $content_id = $facebook->api("/$page_id/posts?limit=$limit&__paging_token=$page_token");
                 if(isset($content_id['data'])){
                     foreach ($content_id['data'] as $c_id) {
                         $c_id['sm_type_id'] = $sm_type_id;

@@ -28,9 +28,9 @@
             @endif
         </div>--}}
         <div class="form-group">
-            {!! Form::label('sm_account_id', 'Company Social Media Account Id:', ['class' => 'control-label']) !!}
+            {!! Form::label('page_id', 'Company Social Media Page Id:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
-            {!! Form::text('sm_account_id', null, ['id'=>'sm_account_id', 'class' => 'form-control','required', 'placeholder' => 'Example: for google+: +EdutechSolution']) !!}
+            {!! Form::text('page_id', null, ['id'=>'page_id', 'class' => 'form-control','required', 'placeholder' => 'Example: for google+: +EdutechSolution']) !!}
         </div>
 
             <div class="form-group">
