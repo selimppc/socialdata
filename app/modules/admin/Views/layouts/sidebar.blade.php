@@ -29,6 +29,9 @@
         @if(file_exists(app_path().'/modules/socialdata/Views/layout/sidebar.blade.php'))
             @include('socialdata::layout.sidebar')
         @endif
+        @if(file_exists(app_path().'/modules/www/Views/layout/sidebar.blade.php'))
+            @include('www::layout.sidebar')
+        @endif
     </ul> <!-- / .navigation -->
     {{--<div class="menu-content animated fadeIn">
         <a href="#" class="btn btn-primary btn-block btn-outline dark">Create Invoice</a>

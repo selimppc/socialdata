@@ -54,6 +54,7 @@ class UserRole extends Migration
 
             $table->unsignedInteger('role_id')->nullable();
             $table->unsignedInteger('department_id')->nullable();
+            $table->unsignedInteger('company_id')->nullable();
 
             $table->dateTime('last_visit')->nullable();
 
@@ -71,6 +72,7 @@ class UserRole extends Migration
             {
                 $table->foreign('role_id')->references('id')->on('role');
                 $table->foreign('department_id')->references('id')->on('department');
+                $table->foreign('company_id')->references('id')->on('company');
             }
         });
 

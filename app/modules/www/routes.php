@@ -21,4 +21,14 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as' => 'get-posts',
         'uses' => 'SocialMediaController@get_posts'
     ]);
+    Route::get('select-company', [
+        #'middleware' => 'acl_access:user-list',
+        'as' => 'select-company',
+        'uses' => 'SettingController@select_company'
+    ]);
+    Route::post('select-company', [
+        #'middleware' => 'acl_access:user-list',
+        'as' => 'select-company',
+        'uses' => 'SettingController@store_company'
+    ]);
 });
