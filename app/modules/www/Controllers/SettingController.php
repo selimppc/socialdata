@@ -26,7 +26,7 @@ class SettingController extends Controller
         $user= User::findOrFail(\Auth::user()->id);
         $user->company_id= $request->input('company_id');
         $user->save();
-        Session::flash('message', 'Your Company has been updated successfully');
+        \Session::flash('message', 'Your Company has been updated successfully');
         return redirect()->back();
     }
 }

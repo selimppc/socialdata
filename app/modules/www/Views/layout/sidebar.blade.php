@@ -1,7 +1,8 @@
 <li class="mm-dropdown">
     <a href="#"><i class="menu-icon fa fa-umbrella"></i><span class="mm-text">Social Data Manager</span></a>
+    <?php //print_r($user_company_id); exit; ?>
     <ul>
-        @if(isset($user_company_id) && empty($user_company_id))
+        @if(isset($user_company_id) && $user_company_id->company_id == 0)
         <li>
             <a tabindex="-1" href="{{route('select-company')}}" data-toggle="modal" data-placement="top" data-toggle="modal" data-target="#selectCompany"><span class="mm-text"> Select Company </span></a>
         </li>
