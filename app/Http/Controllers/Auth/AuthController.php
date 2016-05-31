@@ -171,6 +171,7 @@ class AuthController extends Controller
                                 $user_act_model->create($user_activity);
 
                                 Session::put('email', $user_data->email);
+                                Session::put('companyId', $user_data->company_id);
                                 Session::flash('message', "Successfully  Logged In.");
                                 return redirect()->intended('dashboard');
                             }else{

@@ -9,7 +9,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Auth;
 class CustomPost extends Model
 {
     protected $table='custom_posts';
@@ -26,6 +26,10 @@ class CustomPost extends Model
     public function relArchiveSchedule()
     {
         return $this->belongsTo('App\ArchiveSchedule','custom_post_id','id');
+    }
+    public function relCompany()
+    {
+        return $this->belongsTo('App\Company','company_id','id');
     }
 
 

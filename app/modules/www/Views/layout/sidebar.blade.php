@@ -8,7 +8,10 @@
         </li>
         @endif
         <li>
-            <a tabindex="-1" href="{{route('add-social-media')}}"><span class="mm-text"> Social Medias </span></a>
+            <a tabindex="-1" href="{{route('add-social-media')}}"><span class="mm-text"> Social Media </span></a>
+        </li>
+        <li>
+            <a tabindex="-1" href="{{route('posts')}}"><span class="mm-text"> Posts </span></a>
         </li>
     </ul>
 </li>

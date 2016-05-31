@@ -14,6 +14,7 @@ use App\SmType;
 use Facebook\Facebook;
 use Facebook\FacebookRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class SocialMediaController extends Controller
 {
@@ -30,9 +31,10 @@ class SocialMediaController extends Controller
                     if($user_social_account->sm_type_id==2)
                     {
                         @session_start();
+                        $fb_config=Config::get('custom.facebook');
                         $config = [
-                            'app_id' => '251889945201960',
-                            'app_secret' => '38db4d9210cbffda07f78baf35eaf981',
+                            'app_id' => $fb_config['app_id'],
+                            'app_secret' => $fb_config['app_secret'],
                             'default_graph_version' => 'v2.6',
                             'persistent_data_handler'=>'session'
                         ];
@@ -114,9 +116,10 @@ class SocialMediaController extends Controller
         if($social_media_type=='facebook')
         {
             session_start();
+            $fb_config=Config::get('custom.facebook');
             $config = [
-                'app_id' => '251889945201960',
-                'app_secret' => '38db4d9210cbffda07f78baf35eaf981',
+                'app_id' => $fb_config['app_id'],
+                'app_secret' => $fb_config['app_secret'],
                 'default_graph_version' => 'v2.6',
                 'persistent_data_handler'=>'session'
             ];

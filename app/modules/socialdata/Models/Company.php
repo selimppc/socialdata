@@ -11,4 +11,12 @@ class Company extends Model
         'name',
         'status'
     ];
+
+    public function relCustomPost()
+    {
+        return $this->hasMany('App\CustomPost','company_id','id');
+    }
+    public function relUser(){
+        return $this->hasMany('App\User', 'company_id', 'id');
+    }
 }
