@@ -51,4 +51,9 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as'=> 'update-post',
         'uses' => 'CustomPostController@update'
     ]);
+    Route::get('publish-fb/{id}',[
+        #'middleware' => 'acl_access:publish-fb',
+        'as'=> 'publish-fb',
+        'uses' => 'CustomPostController@publish_fb'
+    ]);
 });

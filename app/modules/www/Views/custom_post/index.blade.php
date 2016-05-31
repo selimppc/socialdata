@@ -22,8 +22,8 @@
                             <tr>
                                 <th> ID </th>
                                 <th> Post </th>
-                                <th> Status </th>
-                                <th> Actions </th>
+                                <th width="10%"> Status </th>
+                                <th width="20%"> Actions </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -34,8 +34,12 @@
                                     <td>{{ $post->text }}</td>
                                     <td>{{ ucfirst($post->status) }}</td>
                                     <td>
-                                        <a href="" data-toggle="modal" data-placement="top" data-toggle="modal" data-target="#selectCompany"></a>
-                                        <a href="{{ url('www/edit-post/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" data-content="click add role button for new role entry">Edit</a>
+                                        @if($post->status!='sent')
+                                            <a href="{{ url('www/edit-post/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" data-content="click add role button for new role entry" class="btn btn-info">Edit</a>
+                                            <a href="{{ url('www/publish-fb/'.$post->id) }}" class="btn btn-warning">Publish Now</a>
+                                        @else
+                                            {{ $post->postId }}
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

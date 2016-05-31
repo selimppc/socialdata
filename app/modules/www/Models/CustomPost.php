@@ -16,6 +16,8 @@ class CustomPost extends Model
     protected $fillable=[
         'text',
         'status',
+        'company_id',
+        'postId',
         'created_by',
         'updated_by',
     ];

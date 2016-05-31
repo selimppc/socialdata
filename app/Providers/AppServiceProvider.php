@@ -13,9 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('www::layout.sidebar',function($view){
-            $view->with('user_company_id', \App\User::select('company_id')->where('id',\Auth::user()->id)->first());
-        });
+        //
     }
 
     /**

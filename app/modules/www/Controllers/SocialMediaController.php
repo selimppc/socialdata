@@ -10,6 +10,7 @@ namespace App\Modules\Www\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\CompanySocialAccount;
+use App\SMConfigController;
 use App\SmType;
 use Facebook\Facebook;
 use Facebook\FacebookRequest;
@@ -20,7 +21,9 @@ class SocialMediaController extends Controller
 {
     public function index(){
         $data['pageTitle']='Social Media Status';
-        $data['social_medias']=SmType::with(['relCompanySocialAccount'])->get();
+        $data['social_medias']=SmType::with(['relCompanySocialAccount'=>function($query){
+            $query->where('company_id',\Session::get('companyId'));
+        }])->get();
 
         #dd($data);
         foreach ($data['social_medias'] as $id=>$social_media) {
@@ -30,14 +33,7 @@ class SocialMediaController extends Controller
                 {
                     if($user_social_account->sm_type_id==2)
                     {
-                        @session_start();
-                        $fb_config=Config::get('custom.facebook');
-                        $config = [
-                            'app_id' => $fb_config['app_id'],
-                            'app_secret' => $fb_config['app_secret'],
-                            'default_graph_version' => 'v2.6',
-                            'persistent_data_handler'=>'session'
-                        ];
+                        $config = SMConfigController::getFbConfig();
                         $fb = new Facebook($config);
 
                         $helper = $fb->getRedirectLoginHelper();
@@ -99,7 +95,7 @@ class SocialMediaController extends Controller
                         if($user_social_account->sm_type_id==2)
                         {
                             $data['social_medias'][$id]->user_sm_id = $user_social_account->id;
-                            $data['social_medias'][$id]->button_text = 'Get Data';
+                            $data['social_medias'][$id]->button_text_data = 'Get Data';
 
                         }
                     }
@@ -108,25 +104,15 @@ class SocialMediaController extends Controller
             }
 
         }
-        //$data['active_medias']=CompanySocialAccount::where('user_id',Auth::user()->id)->get();
-        //dd($data);
         return view('www::social_media.index',$data);
     }
     public function social_media_return($social_media_type,$company_social_media_id){
         if($social_media_type=='facebook')
         {
-            session_start();
-            $fb_config=Config::get('custom.facebook');
-            $config = [
-                'app_id' => $fb_config['app_id'],
-                'app_secret' => $fb_config['app_secret'],
-                'default_graph_version' => 'v2.6',
-                'persistent_data_handler'=>'session'
-            ];
+            $config=SMConfigController::getFbConfig();
             $fb = new Facebook($config);
 
             $helper = $fb->getRedirectLoginHelper();
-//            dd($accessToken = $helper->getAccessToken());
 
             try {
                 $accessToken = $helper->getAccessToken();
@@ -172,13 +158,7 @@ class SocialMediaController extends Controller
     }
     public function get_posts($user_social_media_id)
     {
-        session_start();
-        $config = [
-            'app_id' => '251889945201960',
-            'app_secret' => '38db4d9210cbffda07f78baf35eaf981',
-            'default_graph_version' => 'v2.6',
-            'persistent_data_handler'=>'session'
-        ];
+        $config=SMConfigController::getFbConfig();
         $fb = new Facebook($config);
         $app_data= CompanySocialAccount::findOrFail($user_social_media_id);
 
