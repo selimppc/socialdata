@@ -54,8 +54,9 @@ class SocialMediaHelper
                 $post=$post->getGraphNode()->asArray();
                 if(isset($post['id']))
                 {
+                    $p=explode('_',$post['id']);
                     $custom_post=CustomPost::findOrFail($id);
-                    $custom_post->postId=$post['id'];
+                    $custom_post->postId=$p[1];
                     $custom_post->status='sent';
                     $custom_post->save();
                     return true;
