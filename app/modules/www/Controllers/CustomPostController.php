@@ -10,6 +10,7 @@ namespace App\Modules\Www\Controllers;
 
 use App\CompanySocialAccount;
 use App\CustomPost;
+use App\Helpers\SocialMediaHelper;
 use App\Http\Controllers\Controller;
 use App\Schedule;
 use App\SMConfigController;
@@ -70,40 +71,15 @@ class CustomPostController extends Controller
     }
     public function publish_fb($id)
     {
-        $config= SMConfigController::getFbConfig();
-        $fb_account= CompanySocialAccount::where('company_id',Session::get('companyId'))->where('sm_type_id',2)->first();
-        $fb= new Facebook($config);
-        $fb->setDefaultAccessToken($fb_account->access_token);
-        $pages=$fb->get('/me/accounts');
-        $pages=$pages->getGraphEdge()->asArray();
-        $page_access_token= null;
-        $page_id= null;
-        foreach ($pages as $page) {
-            if($page['name']==$fb_account->page_id){
-                $page_access_token=$page['access_token'];
-                $page_id=$page['id'];
-            }
-        }
-        if($page_access_token!=null && $page_access_token!=null)
+        $status=SocialMediaHelper::publish_fb($id,Session::get('companyId'));
+        if($status==true)
         {
-            try{
-                $custom_post=CustomPost::findOrFail($id);
-                $post=$fb->post('/'.$page_id.'/feed',['message'=>$custom_post->text],$page_access_token);
-                $post=$post->getGraphNode()->asArray();
-                if(isset($post['id']))
-                {
-                    $custom_post=CustomPost::findOrFail($id);
-                    $custom_post->postId=$post['id'];
-                    $custom_post->status='sent';
-                    $custom_post->save();
-                    Session::flash('message','Post has been successfully sent to social media.');
-                }
-            }catch (Exception $e)
-            {
-                Session::flash('error',$e->getMessage());
-            }
+            Session::flash('message','Post has been successfully sent to social media.');
+        }elseif($status==false)
+        {
+            Session::flash('error','Sorry,something is wrong !');
         }else{
-            Session::flash('error','Sorry,Something is wrong !!');
+            Session::flash('error',$status);
         }
         return redirect()->back();
     }

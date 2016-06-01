@@ -27,7 +27,7 @@ class CustomPost extends Model
     }
     public function relArchiveSchedule()
     {
-        return $this->belongsTo('App\ArchiveSchedule','custom_post_id','id');
+        return $this->hasOne('App\ArchiveSchedule','custom_post_id','id');
     }
     public function relCompany()
     {

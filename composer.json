@@ -30,7 +30,10 @@
             "App\\": "app/",
             "Modules\\": "modules/",
             "Bootstrap\\": "bootstrap/"
-        }
+        },
+        "files": [
+            "app/modules/www/helpers/SocialMediaHelper.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

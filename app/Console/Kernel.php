@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\GooglePlus::class,
         \App\Console\Commands\Facebook::class,
         \App\Console\Commands\Twitter::class,
+        \App\Console\Commands\PostSchedule::class,
     ];
 
     /**
@@ -52,5 +53,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:googleplus')->cron('15 5,12,19 * * * *');
         $schedule->command('get:googleplus')->cron('30 3,10,17 * * * *');
         $schedule->command('get:googleplus')->cron('45 1,8,15,22 * * * *');
+        $schedule->command('post:schedule')->everyMinute();
     }
 }
