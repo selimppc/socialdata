@@ -56,4 +56,29 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as'=> 'publish-fb',
         'uses' => 'CustomPostController@publish_fb'
     ]);
+    Route::get('create-schedule/{post_id}',[
+        #'middleware' => 'acl_access:create-schedule',
+        'as'=> 'create-schedule',
+        'uses' => 'CustomPostController@create_schedule'
+    ]);
+    Route::post('create-schedule/{post_id}',[
+        #'middleware' => 'acl_access:create-schedule',
+        'as'=> 'create-schedule',
+        'uses' => 'CustomPostController@store_schedule'
+    ]);
+    Route::get('edit-schedule/{schedule_id}',[
+        #'middleware' => 'acl_access:edit-schedule',
+        'as'=> 'edit-schedule',
+        'uses' => 'CustomPostController@edit_schedule'
+    ]);
+    Route::get('show-schedule/{schedule_id}',[
+        #'middleware' => 'acl_access:show-schedule',
+        'as'=> 'show-schedule',
+        'uses' => 'CustomPostController@show_schedule'
+    ]);
+    Route::post('update-schedule/{schedule_id}',[
+        #'middleware' => 'acl_access:update-schedule',
+        'as'=> 'update-schedule',
+        'uses' => 'CustomPostController@update_schedule'
+    ]);
 });

@@ -23,20 +23,33 @@
                                 <th> ID </th>
                                 <th> Post </th>
                                 <th width="10%"> Status </th>
-                                <th width="20%"> Actions </th>
+                                <th> Actions </th>
                             </tr>
                             </thead>
+                            <style>
+                                tbody .btn{
+                                    margin-bottom: 5px;
+                                }
+                            </style>
                             <tbody>
                             <?php $i=1; ?>
                             @foreach($posts as $post)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $post->text }}</td>
+                                    <td>{{ nl2br($post->text) }}</td>
                                     <td>{{ ucfirst($post->status) }}</td>
                                     <td>
                                         @if($post->status!='sent')
-                                            <a href="{{ url('www/edit-post/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" data-content="click add role button for new role entry" class="btn btn-info">Edit</a>
-                                            <a href="{{ url('www/publish-fb/'.$post->id) }}" class="btn btn-warning">Publish Now</a>
+                                            @if($post->status=='processing')
+                                                @if($post->relSchedule != null)
+                                                    <a href="{{ url('www/edit-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default" >Edit Schedule</a>
+                                                    <a href="{{ url('www/show-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-info" >View Schedule</a>
+                                                @endif
+                                            @else
+                                                <a href="{{ url('www/edit-post/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" data-content="click add role button for new role entry" class="btn btn-info">Edit</a><br>
+                                                <a href="{{ url('www/publish-fb/'.$post->id) }}" class="btn btn-warning">Publish Now</a><br>
+                                                <a href="{{ url('www/create-schedule/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default" >Create Schedule</a>
+                                            @endif
                                         @else
                                             {{ $post->postId }}
                                         @endif

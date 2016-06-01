@@ -11,10 +11,12 @@ namespace App\Modules\Www\Controllers;
 use App\CompanySocialAccount;
 use App\CustomPost;
 use App\Http\Controllers\Controller;
+use App\Schedule;
 use App\SMConfigController;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Facebook\Facebook;
 use Facebook\FacebookRequest;
@@ -27,7 +29,7 @@ class CustomPostController extends Controller
     {
         $company_id=Session::get('companyId');
         $data['pageTitle']='Custom Posts';
-        $data['posts']=CustomPost::where('company_id',$company_id)->get();
+        $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
         return view('www::custom_post.index',$data);
     }
     public function create()
@@ -102,6 +104,73 @@ class CustomPostController extends Controller
             }
         }else{
             Session::flash('error','Sorry,Something is wrong !!');
+        }
+        return redirect()->back();
+    }
+    public function create_schedule($id)
+    {
+        $data['pageTitle']='Create Schedule';
+        $data['post_id']=$id;
+        return view('www::custom_post.create_schedule',$data);
+    }
+    public function store_schedule(Request $request,$id)
+    {
+        $input=$request->all();
+        $time=$input['date'].' '.$input['time'];
+        DB::beginTransaction();
+        try {
+            $schedule = new Schedule();
+            $schedule->time = $time;
+            $schedule->custom_post_id = $id;
+            $schedule->save();
+
+            $custom_post= CustomPost::findOrFail($id);
+            $custom_post->status='processing';
+            $custom_post->save();
+            DB::commit();
+            Session::flash('message','Schedule has been create successfully');
+        }catch (Exception $e){
+            DB::rollBack();
+            Sessioin::flash('error',$e->getMessage());
+        }
+        return redirect()->back();
+    }
+    public function show_schedule($schedule_id)
+    {
+        $data['pageTitle']='Show Schedule';
+        $schedule=Schedule::findOrFail($schedule_id);
+        $scd=explode(' ',$schedule->time);
+        $schedule->time=$scd[1];
+        $schedule->date=$scd[0];
+        $data['schedule']=$schedule;
+        return view('www::custom_post.show_schedule',$data);
+
+    }
+    public function edit_schedule($schedule_id)
+    {
+        $data['pageTitle']='Edit Schedule';
+        $schedule=Schedule::findOrFail($schedule_id);
+        $scd=explode(' ',$schedule->time);
+        $schedule->time=$scd[1];
+        $schedule->date=$scd[0];
+        $data['schedule']=$schedule;
+        return view('www::custom_post.edit_schedule',$data);
+
+    }
+    public function update_schedule(Request $request,$schedule_id)
+    {
+        $input=$request->all();
+        $time=$input['date'].' '.$input['time'];
+        DB::beginTransaction();
+        try {
+            $schedule = Schedule::findOrFail($schedule_id);
+            $schedule->time = $time;
+            $schedule->save();
+            DB::commit();
+            Session::flash('message','Schedule has been updated successfully');
+        }catch (Exception $e){
+            DB::rollBack();
+            Sessioin::flash('error',$e->getMessage());
         }
         return redirect()->back();
     }

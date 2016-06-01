@@ -9,6 +9,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class Schedule extends Model
 {

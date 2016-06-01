@@ -14,7 +14,7 @@ class CreateScheduleTable extends Migration
     {
         Schema::create('schedule', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('custom_post_id',false);
+            $table->unsignedInteger('custom_post_id',false)->unique();
             $table->foreign('custom_post_id')->references('id')->on('custom_posts');
             $table->timestamp('time');
             $table->integer('created_by',false);

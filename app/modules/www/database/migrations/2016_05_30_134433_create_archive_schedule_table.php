@@ -14,7 +14,7 @@ class CreateArchiveScheduleTable extends Migration
     {
         Schema::create('archive_schedule', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('custom_post_id',false);
+            $table->unsignedInteger('custom_post_id',false)->unique();
             $table->foreign('custom_post_id')->references('id')->on('custom_posts');
             $table->timestamp('time');
             $table->integer('schedule_created_by',false);
