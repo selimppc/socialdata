@@ -41,7 +41,7 @@ class SocialMediaHelper
         $page_access_token= null;
         $page_id= null;
         foreach ($pages as $page) {
-            if($page['name']==$fb_account->page_id){
+            if($page['id']==$fb_account->page_id){
                 $page_access_token=$page['access_token'];
                 $page_id=$page['id'];
             }
