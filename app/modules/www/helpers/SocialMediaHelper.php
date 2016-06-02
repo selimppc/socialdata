@@ -46,7 +46,7 @@ class SocialMediaHelper
                 $page_id=$page['id'];
             }
         }
-        if($page_access_token!=null && $page_access_token!=null)
+        if($page_access_token!=null && $page_id!=null)
         {
             try{
                 $custom_post=CustomPost::findOrFail($id);

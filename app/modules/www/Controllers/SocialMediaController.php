@@ -10,12 +10,12 @@ namespace App\Modules\Www\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\CompanySocialAccount;
-use App\SMConfigController;
 use App\SmType;
 use Facebook\Facebook;
 use Facebook\FacebookRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Helpers\SocialMediaHelper;
 
 class SocialMediaController extends Controller
 {
@@ -33,7 +33,7 @@ class SocialMediaController extends Controller
                 {
                     if($user_social_account->sm_type_id==2)
                     {
-                        $config = SMConfigController::getFbConfig();
+                        $config = SocialMediaHelper::getFbConfig();
                         $fb = new Facebook($config);
 
                         $helper = $fb->getRedirectLoginHelper();
@@ -109,7 +109,7 @@ class SocialMediaController extends Controller
     public function social_media_return($social_media_type,$company_social_media_id){
         if($social_media_type=='facebook')
         {
-            $config=SMConfigController::getFbConfig();
+            $config=SocialMediaHelper::getFbConfig();
             $fb = new Facebook($config);
 
             $helper = $fb->getRedirectLoginHelper();
@@ -158,7 +158,7 @@ class SocialMediaController extends Controller
     }
     public function get_posts($user_social_media_id)
     {
-        $config=SMConfigController::getFbConfig();
+        $config=SocialMediaHelper::getFbConfig();
         $fb = new Facebook($config);
         $app_data= CompanySocialAccount::findOrFail($user_social_media_id);
 

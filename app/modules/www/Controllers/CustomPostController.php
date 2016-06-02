@@ -13,7 +13,6 @@ use App\CustomPost;
 use App\Helpers\SocialMediaHelper;
 use App\Http\Controllers\Controller;
 use App\Schedule;
-use App\SMConfigController;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +76,7 @@ class CustomPostController extends Controller
             Session::flash('message','Post has been successfully sent to social media.');
         }elseif($status==false)
         {
-            Session::flash('error','Sorry,something is wrong !');
+            Session::flash('error','Sorry,Page dosen\'t match !!');
         }else{
             Session::flash('error',$status);
         }
