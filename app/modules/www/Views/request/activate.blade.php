@@ -11,7 +11,7 @@
         You can use the following link to activate:
     </div>
     <div>
-        {{ URL::to('user-activation/'.$link) }}.
+        {{ URL::to('www/user-activation/'.$link) }}.
         {{--<p><strong>If you don't use this link within 30 minutes, it will expire.</strong></p>--}}
     </div>
 </div>

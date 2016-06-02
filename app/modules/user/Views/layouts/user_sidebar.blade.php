@@ -12,6 +12,9 @@
         <a href="#"><i class="menu-icon fa fa-user-md"></i><span class="mm-text">User</span></a>
         <ul>
             <li>
+                <a tabindex="-1" href="{{route('request')}}"><span class="mm-text"> Send User Request</span></a>
+            </li>
+            <li>
                 <a tabindex="-1" href="{{route('user-profile')}}"><span class="mm-text"> Profile</span></a>
             </li>
             <li>

@@ -81,4 +81,41 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as'=> 'update-schedule',
         'uses' => 'CustomPostController@update_schedule'
     ]);
+
+
+    /*
+     * User Request for join start
+     * */
+
+    Route::get('request', [
+        #'middleware' => 'acl_access:request',
+        'as' => 'request',
+        'uses' => 'UserRegistrationController@create'
+    ]);
+
+    Route::post('request', [
+        #'middleware' => 'acl_access:request',
+        'as' => 'request',
+        'uses' => 'UserRegistrationController@store'
+    ]);
+
+
+    Route::get('user-confirmation/{remember_token}',[
+        'as'=>'user-confirmation',
+        'uses'=>'UserRegistrationController@user_confirm']);
+
+    Route::post('user-confirmation', [
+        'as' => 'user-confirmation',
+        'uses' => 'UserRegistrationController@update'
+    ]);
+
+    Route::get('user-activation/{remember_token}',[
+        'as'=>'user-activation',
+        'uses'=>'UserRegistrationController@user_activation'
+    ]);
+
+    /*
+     * User Request for join end
+     * */
+
 });

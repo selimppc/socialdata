@@ -1,7 +1,6 @@
-@extends('layout.master')
+@extends('admin::layouts.master')
 @section('sidebar')
-    @parent
-    @include('layout.sidebar')
+    @include('admin::layouts.sidebar')
 @stop
 
 @section('content')
@@ -23,17 +22,21 @@
             </header>
             <div class="panel-body">
                 {{--<form role="form">--}}
-                {!! Form::open(['route' => 'user.send-request']) !!}
+                {!! Form::open() !!}
                 {!! Form::hidden('status','invited') !!}
                     <div class="form-group">
                         {{--<label for="exampleInputEmail1">Email address</label>--}}
                         {{--<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">--}}
-                        {!! Form::label('email', 'Email Address:', ['class' => 'control-label']) !!}
+                        {!! Form::label('email', 'Email Address:', ['class' => 'control-label']) !!}<span style="color:red;">*</span>
                         {!! Form::email('email', null, ['id'=>'email', 'class' => 'form-control', 'required'=>'required']) !!}
                     </div>
                 <div class="form-group">
                     {!! Form::label('type', 'Type:', ['class' => 'control-label']) !!}<span style="color:red;">*</span>
-                    {!! Form::Select('type',array(''=>'Select Type','admin'=>'Admin','user'=>'User'),Input::old('type'),['class'=>'form-control ','required']) !!}
+                    {!! Form::Select('type',$role,Input::old('type'),['class'=>'form-control ','required']) !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::label('expire_date','Expire Date:',['class'=>'control-label']) !!}<span style="color:red;">*</span>
+                    {!! Form::input('date','expire_date',null,['class'=>'form-control','required']) !!}
                 </div>
                     <button type="submit" class="pull-right btn btn-info">Send</button>
                 {!! Form::close() !!}
