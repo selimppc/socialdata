@@ -31,10 +31,7 @@
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $social_media->type }}</td>
                                     <td>
-                                        <a href="{{ $social_media->loginUrl }}" class="btn btn-primary">{{ $social_media->button_text }}</a>
-                                        {{--@if(isset($social_media->user_sm_id))                                        <a href="{{ URL::to('www/get-posts/'.$social_media->user_sm_id) }}" class="btn btn-info">{{ $social_media->button_text_data }}</a>
-
-                                        @endif--}}
+                                        <a href="{{ $social_media->loginUrl }}" class="btn btn-{{ $social_media->btnClass }}">{{ $social_media->button_text }}</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -16,6 +16,7 @@ use Facebook\FacebookRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Helpers\FacebookHelper;
+use Illuminate\Support\Facades\Session;
 
 class SocialMediaController extends Controller
 {
@@ -33,61 +34,17 @@ class SocialMediaController extends Controller
                 {
                     if($user_social_account->sm_type_id==2)
                     {
-                        $config = FacebookHelper::getFbConfig();
-                        $fb = new Facebook($config);
-
-                        $helper = $fb->getRedirectLoginHelper();
-                        $permissions = [
-                            'public_profile',
-                            'user_friends',
-                            'email',
-                            'user_about_me',
-                            'user_actions.books',
-                            'user_actions.fitness',
-                            'user_actions.music',
-                            'user_actions.news',
-                            'user_actions.video',
-                            //user_actions:{app_namespace}
-                            'user_birthday',
-                            'user_education_history',
-                            'user_events',
-                            'user_games_activity',
-                            'user_hometown',
-                            'user_likes',
-                            'user_location',
-                            'user_managed_groups',
-                            'user_photos',
-                            'user_posts',
-                            'user_relationships',
-                            'user_relationship_details',
-                            'user_religion_politics',
-                            'user_tagged_places',
-                            'user_videos',
-                            'user_website',
-                            'user_work_history',
-                            'read_custom_friendlists',
-                            'read_insights',
-                            'read_audience_network_insights',
-                            'read_page_mailboxes',
-                            'manage_pages',
-                            'publish_pages',
-                            'publish_actions',
-                            'rsvp_event',
-                            'pages_show_list',
-                            'pages_manage_cta',
-                            'pages_manage_instant_articles',
-                            'ads_read',
-                            'ads_management',
-                            'pages_messaging',
-                            'pages_messaging_phone_number'
-                        ]; // Optional permissions
-                        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account->id);
-                        $data['social_medias'][$id]->loginUrl = $helper->getLoginUrl($url, $permissions);
+                        $loginUrl= FacebookHelper::getLoginUrl($user_social_account->id);
+                        $data['social_medias'][$id]->loginUrl = $loginUrl;
                         $data['social_medias'][$id]->button_text = 'Subscribe with Facebook';
-                    }else{
+                    }elseif($user_social_account->sm_type_id==3){
                         $data['social_medias'][$id]->loginUrl = '#';
-                        $data['social_medias'][$id]->button_text = 'Please Subscribe';
+                        $data['social_medias'][$id]->button_text = 'Subscribe with Twitter';
+                    }elseif($user_social_account->sm_type_id==1){
+                        $data['social_medias'][$id]->loginUrl = '#';
+                        $data['social_medias'][$id]->button_text = 'Subscribe with Google+';
                     }
+                    $data['social_medias'][$id]->btnClass='info';
                 }else{
                     $data['social_medias'][$id]->loginUrl = '#';
                     $data['social_medias'][$id]->button_text = 'Already Subscribe';
@@ -99,6 +56,7 @@ class SocialMediaController extends Controller
 
                         }
                     }
+                    $data['social_medias'][$id]->btnClass='primary';
 
                 }
             }
@@ -109,51 +67,22 @@ class SocialMediaController extends Controller
     public function social_media_return($social_media_type,$company_social_media_id){
         if($social_media_type=='facebook')
         {
-            $config=FacebookHelper::getFbConfig();
-            $fb = new Facebook($config);
+            $status=FacebookHelper::facebook_return();
+            if(isset($status) && isset($status['userNode']) && isset($status['longLiveAccessToken'])) {
+                /*
+                 * store data on user social account
+                 * */
 
-            $helper = $fb->getRedirectLoginHelper();
+                $userSocial = CompanySocialAccount::findOrFail($company_social_media_id);
+                $userSocial->sm_account_id = $status['userNode']->getId();
+                $userSocial->access_token = $status['longLiveAccessToken'];
+                $userSocial->save();
+                \Session::flash('message', 'Successfully Subscribe.');
 
-            try {
-                $accessToken = $helper->getAccessToken();
-            } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                // When Graph returns an error
-                echo 'Graph returned an error: ' . $e->getMessage();
-                exit;
-            } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                // When validation fails or other local issues
-                echo 'Facebook SDK returned an error: ' . $e->getMessage();
-                exit;
+            }else{
+                Session::flash('error',$status);
             }
-
-            $oAuth2Client= $fb->getOAuth2Client();
-            $longLiveAccessToken=$oAuth2Client->getLongLivedAccessToken($accessToken);
-            $fb->setDefaultAccessToken($longLiveAccessToken);
-
-            try {
-                $response = $fb->get('/me');
-                $userNode = $response->getGraphUser();
-            } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                // When Graph returns an error
-                echo 'Graph returned an error: ' . $e->getMessage();
-                exit;
-            } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                // When validation fails or other local issues
-                echo 'Facebook SDK returned an error: ' . $e->getMessage();
-                exit;
-            }
-//dd($userNode->getId());
-            /*
-             * store data on user social account
-             * */
-
-            $userSocial= CompanySocialAccount::findOrFail($company_social_media_id);
-            $userSocial->sm_account_id=$userNode->getId();
-//            $userSocial->user_id=Auth::user()->id;
-            $userSocial->access_token=$longLiveAccessToken;
-            $userSocial->save();
             return redirect('www/add-social-media');
-
         }
     }
     public function get_posts($user_social_media_id)

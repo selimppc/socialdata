@@ -27,6 +27,47 @@ class FacebookHelper
         ];
         return $config;
     }
+    public static function getLoginUrl($user_social_account_id)
+    {
+        $config = FacebookHelper::getFbConfig();
+        $fb = new Facebook($config);
+
+        $helper = $fb->getRedirectLoginHelper();
+        // Optional permissions
+        $permissions=Config::get('custom.permissions');
+        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account_id);
+        return $helper->getLoginUrl($url, $permissions);
+
+    }
+    public static function facebook_return()
+    {
+        $config=FacebookHelper::getFbConfig();
+        $fb = new Facebook($config);
+
+        $helper = $fb->getRedirectLoginHelper();
+
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            return $e->getMessage();
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            return $e->getMessage();
+        }
+
+        $oAuth2Client= $fb->getOAuth2Client();
+        $longLiveAccessToken=$oAuth2Client->getLongLivedAccessToken($accessToken);
+        $fb->setDefaultAccessToken($longLiveAccessToken);
+
+        try {
+            $response = $fb->get('/me');
+            $userNode = $response->getGraphUser();
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            return $e->getMessage();
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            return $e->getMessage();
+        }
+        return ['userNode'=>$userNode,'longLiveAccessToken'=>$longLiveAccessToken];
+    }
     public static function publish_fb($id,$company_id)
     {
         $config= FacebookHelper::getFbConfig();
