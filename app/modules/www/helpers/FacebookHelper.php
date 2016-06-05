@@ -2,20 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: etsb
- * Date: 6/1/16
- * Time: 1:06 PM
+ * Date: 6/5/16
+ * Time: 11:52 AM
  */
 
 namespace App\Helpers;
-
 
 use App\CompanySocialAccount;
 use App\CustomPost;
 use Illuminate\Support\Facades\Config;
 use Facebook\Facebook;
 
-
-class SocialMediaHelper
+class FacebookHelper
 {
     public static function getFbConfig()
     {
@@ -31,7 +29,7 @@ class SocialMediaHelper
     }
     public static function publish_fb($id,$company_id)
     {
-        $config= SocialMediaHelper::getFbConfig();
+        $config= FacebookHelper::getFbConfig();
         $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
 
         $fb= new Facebook($config);
@@ -68,4 +66,5 @@ class SocialMediaHelper
         }
         return false;
     }
+
 }

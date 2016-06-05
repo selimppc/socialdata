@@ -10,6 +10,7 @@ use App\SmType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\TwitterHelper;
 
 class Twitter extends Command
 {
@@ -43,24 +44,15 @@ class Twitter extends Command
      * @return mixed
      */
     public function twitter_auth(){
-        $consumerKey = 'dg38tfZt8l6VwlILLivRoAoEK';
-        $consumerSecret = 'chlkofsQctIVJeOUB1fm5ROOFUnQ7HtqfA9iGN0jZl0lQ4XHvz';
-        $outhToken = '707118658229698560-GxOU9hq56QFEzVpHR4HHL7h3MnHyKgJ';
-        $othTokenSecret = 'UxRtbw8qCzkaqsfInbzlttJw80j8IMIJWSM0saP9y629e';
-
-        $twitter = new TwitterOAuth($consumerKey, $consumerSecret, $outhToken, $othTokenSecret);
+        $config= TwitterHelper::getTwitterConfig();
+        $twitter = new TwitterOAuth($config['consumerKey'], $config['consumerSecret'], $config['outhToken'], $config['othTokenSecret']);
         return $twitter;
     }
     private static $i=0;
     public function handle()
     {
-        $settings = array(
-            'oauth_access_token' => "707118658229698560-GxOU9hq56QFEzVpHR4HHL7h3MnHyKgJ",
-            'oauth_access_token_secret' => "UxRtbw8qCzkaqsfInbzlttJw80j8IMIJWSM0saP9y629e",
-            'consumer_key' => "dg38tfZt8l6VwlILLivRoAoEK",
-            'consumer_secret' => "chlkofsQctIVJeOUB1fm5ROOFUnQ7HtqfA9iGN0jZl0lQ4XHvz"
-        );
-        $twitter = new \TwitterAPIExchange($settings);
+        $config= TwitterHelper::getTwitterSetting();
+        $twitter = new \TwitterAPIExchange($config);
         $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
         $requestMethod = 'GET';
         $twitter_conf = [

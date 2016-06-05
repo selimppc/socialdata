@@ -10,7 +10,7 @@ namespace App\Modules\Www\Controllers;
 
 use App\CompanySocialAccount;
 use App\CustomPost;
-use App\Helpers\SocialMediaHelper;
+use App\Helpers\FacebookHelper;
 use App\Http\Controllers\Controller;
 use App\Schedule;
 use App\User;
@@ -70,7 +70,7 @@ class CustomPostController extends Controller
     }
     public function publish_fb($id)
     {
-        $status=SocialMediaHelper::publish_fb($id,Session::get('companyId'));
+        $status=FacebookHelper::publish_fb($id,Session::get('companyId'));
         if($status==true)
         {
             Session::flash('message','Post has been successfully sent to social media.');
