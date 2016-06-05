@@ -7,6 +7,7 @@
  */
 
 return [
+        'callback'=>'www/social-media-return',
         'facebook'=>[
                 'app_id'=>'251889945201960',
                 'app_secret'=>'38db4d9210cbffda07f78baf35eaf981'

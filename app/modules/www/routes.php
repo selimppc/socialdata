@@ -11,7 +11,7 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as' => 'add-social-media',
         'uses' => 'SocialMediaController@index'
     ]);
-    Route::get('social-media-return/{social_media_type}/{company_social_media_id}', [
+    Route::any('social-media-return/{social_media_type}/{company_social_media_id?}', [
         #'middleware' => 'acl_access:social-media-return/{social_media_type}/{company_social_media_id}',
         'as' => 'social-media-return',
         'uses' => 'SocialMediaController@social_media_return'

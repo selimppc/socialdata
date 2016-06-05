@@ -8,6 +8,8 @@
 
 namespace App\Modules\Www\Controllers;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
+use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\CompanySocialAccount;
 use App\SmType;
@@ -38,7 +40,8 @@ class SocialMediaController extends Controller
                         $data['social_medias'][$id]->loginUrl = $loginUrl;
                         $data['social_medias'][$id]->button_text = 'Subscribe with Facebook';
                     }elseif($user_social_account->sm_type_id==3){
-                        $data['social_medias'][$id]->loginUrl = '#';
+                        $loginUrl= TwitterHelper::getLoginUrl($user_social_account->id);
+                        $data['social_medias'][$id]->loginUrl = $loginUrl;
                         $data['social_medias'][$id]->button_text = 'Subscribe with Twitter';
                     }elseif($user_social_account->sm_type_id==1){
                         $data['social_medias'][$id]->loginUrl = '#';
@@ -64,7 +67,7 @@ class SocialMediaController extends Controller
         }
         return view('www::social_media.index',$data);
     }
-    public function social_media_return($social_media_type,$company_social_media_id){
+    public function social_media_return($social_media_type,$company_social_media_id=false){
         if($social_media_type=='facebook')
         {
             $status=FacebookHelper::facebook_return();
@@ -82,8 +85,29 @@ class SocialMediaController extends Controller
             }else{
                 Session::flash('error',$status);
             }
-            return redirect('www/add-social-media');
+        }elseif($social_media_type=='twitter')
+        {
+            if(Session::has('oauth_token') && Session::has('oauth_token_secret') && Session::has('user_social_account_id') && isset($_REQUEST) && $_REQUEST['oauth_token']==session('oauth_token')){
+                $status=TwitterHelper::twitterReturn();
+                if(isset($status) && isset($status['oauth_token']) && isset($status['oauth_token_secret']) && isset($status['user_id'])) {
+                    /*
+                     * store data on user social account
+                     * */
+
+                    $company_social_account_id=Session::pull('user_social_account_id');
+                    $userSocial = CompanySocialAccount::findOrFail($company_social_account_id);
+                    $userSocial->sm_account_id = $status['user_id'];
+                    $userSocial->access_token = $status['oauth_token'];
+                    $userSocial->associate_token = $status['oauth_token_secret'];
+                    $userSocial->save();
+                    \Session::flash('message', 'Successfully Subscribe.');
+
+                }else{
+                    Session::flash('error',$status);
+                }
+            }
         }
+        return redirect('www/add-social-media');
     }
     public function get_posts($user_social_media_id)
     {

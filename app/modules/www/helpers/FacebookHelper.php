@@ -35,8 +35,10 @@ class FacebookHelper
         $helper = $fb->getRedirectLoginHelper();
         // Optional permissions
         $permissions=Config::get('custom.permissions');
-        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account_id);
-        return $helper->getLoginUrl($url, $permissions);
+        $callback=Config::get('custom.callback').'/facebook/'.$user_social_account_id;
+        $callback= url($callback);
+//        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account_id);
+        return $helper->getLoginUrl($callback, $permissions);
 
     }
     public static function facebook_return()
@@ -68,10 +70,10 @@ class FacebookHelper
         }
         return ['userNode'=>$userNode,'longLiveAccessToken'=>$longLiveAccessToken];
     }
-    public static function publish_fb($id,$company_id)
+    public static function publish($id)
     {
         $config= FacebookHelper::getFbConfig();
-        $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
+        $fb_account= CompanySocialAccount::where('company_id',session('companyId'))->where('sm_type_id',2)->first();
 
         $fb= new Facebook($config);
         $fb->setDefaultAccessToken($fb_account->access_token);

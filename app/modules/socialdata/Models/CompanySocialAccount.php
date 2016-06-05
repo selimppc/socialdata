@@ -12,6 +12,7 @@ class CompanySocialAccount extends Model
         'page_id',
         'company_id',
         'access_token',
+        'associate_token',
         'p_status',
         'ac_status',
         'sm_type_id',

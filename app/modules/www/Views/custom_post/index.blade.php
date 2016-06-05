@@ -47,7 +47,7 @@
                                                 @endif
                                             @else
                                                 <a href="{{ url('www/edit-post/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" data-content="click add role button for new role entry" class="btn btn-info">Edit</a><br>
-                                                <a href="{{ url('www/publish-fb/'.$post->id) }}" class="btn btn-warning">Publish Now</a><br>
+                                                <a href="{{ url('www/publish/'.$post->id) }}" class="btn btn-warning">Publish Now</a><br>
                                                 <a href="{{ url('www/create-schedule/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default" >Create Schedule</a>
                                             @endif
                                         @else

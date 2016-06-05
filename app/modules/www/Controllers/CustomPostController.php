@@ -11,6 +11,7 @@ namespace App\Modules\Www\Controllers;
 use App\CompanySocialAccount;
 use App\CustomPost;
 use App\Helpers\FacebookHelper;
+use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\Schedule;
 use App\User;
@@ -68,9 +69,10 @@ class CustomPostController extends Controller
         Session::flash('message','Post has been updated successfully');
         return redirect()->back();
     }
-    public function publish_fb($id)
+    public function publish($id)
     {
-        $status=FacebookHelper::publish_fb($id,Session::get('companyId'));
+//        $status=FacebookHelper::publish($id);
+        $status=TwitterHelper::publish($id);
         if($status==true)
         {
             Session::flash('message','Post has been successfully sent to social media.');

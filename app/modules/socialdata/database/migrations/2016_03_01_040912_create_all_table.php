@@ -42,6 +42,7 @@ class CreateAllTable extends Migration
             $table->string('page_id');
             $table->integer('company_id', false, 11);
             $table->string('access_token');
+            $table->string('associate_token');
             $table->boolean('ac_status')->comment('Account Status');
             $table->boolean('p_status')->comment('Page Status');
             $table->integer('sm_type_id', false, 11);
