@@ -14,6 +14,7 @@ use App\Helpers\FacebookHelper;
 use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\Schedule;
+use App\SmType;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,7 @@ class CustomPostController extends Controller
     {
         $company_id=Session::get('companyId');
         $data['pageTitle']='Custom Posts';
+        $data['social_media']=SmType::select('id','type')->get();
         $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
         return view('www::custom_post.index',$data);
     }
@@ -57,6 +59,7 @@ class CustomPostController extends Controller
     public function edit($id)
     {
         $data['pageTitle']='Edit post';
+        $data['social_media']=SmType::select('id','type')->get();
         $data['post']=CustomPost::findOrFail($id);
         return view('www::custom_post.edit',$data);
     }

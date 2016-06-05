@@ -33,6 +33,10 @@ class CustomPost extends Model
     {
         return $this->belongsTo('App\Company','company_id','id');
     }
+    public function relPostSocialMedia()
+    {
+        return $this->hasMany('App\PostSocialMedia','custom_post_id','id');
+    }
 
 
 

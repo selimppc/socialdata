@@ -37,4 +37,8 @@ class SmType extends Model
     {
         return $this->hasMany('App\CompanySocialAccount','sm_type_id','id');
     }
+    public function relPostSocialMedia()
+    {
+        return $this->hasMany('App\PostSocialMedia','social_media_id','id');
+    }
 }
