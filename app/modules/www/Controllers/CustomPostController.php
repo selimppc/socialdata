@@ -13,6 +13,7 @@ use App\CustomPost;
 use App\Helpers\FacebookHelper;
 use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
+use App\PostSocialMedia;
 use App\Schedule;
 use App\SmType;
 use App\User;
@@ -31,7 +32,7 @@ class CustomPostController extends Controller
     {
         $company_id=Session::get('companyId');
         $data['pageTitle']='Custom Posts';
-        $data['social_media']=SmType::select('id','type')->get();
+        $data['all_social_media']=SmType::select('id','type')->get();
         $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
         return view('www::custom_post.index',$data);
     }
@@ -42,48 +43,117 @@ class CustomPostController extends Controller
     }
     public function store(Request $request)
     {
-        $company_id=Session::get('companyId');
-        if(isset($company_id) && $company_id!=0) {
-            $input = $request->except('_token');
-            $custom_post = new CustomPost();
-            $custom_post->company_id = $company_id;
-            $custom_post->text = $input['text'];
-            $custom_post->status = 'new';
-            $custom_post->save();
-            Session::flash('message', 'Post has been stored successfully');
-        }else{
-            Session::flash('error', 'Sorry,You are not set your company yet !!');
+        DB::beginTransaction();
+        try{
+            $company_id=Session::get('companyId');
+            if(isset($company_id) && $company_id!=0) {
+                $input = $request->except('_token');
+                $custom_post = new CustomPost();
+                $custom_post->company_id = $company_id;
+                $custom_post->text = $input['text'];
+                $custom_post->status = 'new';
+                $custom_post->save();
+                if(isset($input['social_media']) && !empty($input['social_media']))
+                {
+                    foreach ($input['social_media'] as $sm) {
+                        $post_social_media= new PostSocialMedia();
+                        $post_social_media->custom_post_id=$custom_post->id;
+                        $post_social_media->social_media_id=$sm;
+                        $post_social_media->status='new';
+                        $post_social_media->save();
+                    }
+                }
+                Session::flash('message', 'Post has been stored successfully');
+                DB::commit();
+            }else{
+                Session::flash('error', 'Sorry,You are not set your company yet !!');
+            }
+        }catch (Exception $e)
+        {
+            DB::rollback();
+            Session::flash('error',$e->getMessage());
         }
         return redirect()->back();
     }
     public function edit($id)
     {
         $data['pageTitle']='Edit post';
-        $data['social_media']=SmType::select('id','type')->get();
+        $data['all_social_media']=SmType::select('id','type')->get();
         $data['post']=CustomPost::findOrFail($id);
+        $active_social_media=PostSocialMedia::select('social_media_id')->where('custom_post_id',$id)->get();
+        $social_media=[];
+        foreach ($active_social_media as $asm) {
+            $social_media[]=$asm->social_media_id;
+        }
+        $data['post']->social_media=$social_media;
         return view('www::custom_post.edit',$data);
     }
     public function update(Request $request,$id)
     {
-        $input=$request->all();
-        $custom_post= CustomPost::findOrFail($id);
-        $custom_post->text=$input['text'];
-        $custom_post->save();
-        Session::flash('message','Post has been updated successfully');
+        DB::beginTransaction();
+        try {
+            $input = $request->all();
+            $custom_post = CustomPost::findOrFail($id);
+            $custom_post->text = $input['text'];
+            $custom_post->save();
+            if (isset($input['social_media']) && !empty($input['social_media'])) {
+                PostSocialMedia::where('custom_post_id',$id)->delete();
+                foreach ($input['social_media'] as $sm) {
+                    $post_social_media = new PostSocialMedia();
+                    $post_social_media->custom_post_id = $custom_post->id;
+                    $post_social_media->social_media_id = $sm;
+                    $post_social_media->status = 'new';
+                    $post_social_media->save();
+                }
+            }
+            Session::flash('message','Post has been updated successfully');
+            DB::commit();
+        }catch (Exception $e){
+            DB::rollback();
+            Session::flash('error',$e->getMessage());
+        }
         return redirect()->back();
     }
     public function publish($id)
     {
-//        $status=FacebookHelper::publish($id);
-        $status=TwitterHelper::publish($id);
-        if($status==true)
-        {
-            Session::flash('message','Post has been successfully sent to social media.');
-        }elseif($status==false)
-        {
-            Session::flash('error','Sorry,Page dosen\'t match !!');
+        $socialMediaToPost= PostSocialMedia::select('social_media_id')->where('custom_post_id',$id)->where('status','new')->get();
+        if(isset($socialMediaToPost)) {
+            $i=0;
+            $error='';
+            foreach ($socialMediaToPost as $smtp) {
+                if ($smtp->social_media_id == 1) {
+                    $i++;
+                } elseif ($smtp->social_media_id == 2) {
+                    $status = FacebookHelper::publish($id);
+//                    $status='Not ........';
+                    if(isset($status) && $status=='success')
+                    {
+                        $i++;
+                    }else{
+                        $error .='Facebook => '.$status;
+                    }
+                } elseif ($smtp->social_media_id == 3) {
+                    $status = TwitterHelper::publish($id);
+//                    $status='success';
+                    if(isset($status) && $status=='success')
+                    {
+                        $i++;
+                    }else{
+                        $error.='<br><b>Twitter =></b>'.$status;
+                    }
+                }
+            }
+            if(count($socialMediaToPost) == $i)
+            {
+                $custom_post=CustomPost::findOrFail($id);
+                $custom_post->status= 'sent';
+                $custom_post->save();
+                Session::flash('message', 'Post has been successfully sent to social media.');
+            }else{
+                Session::flash('danger', $error);
+            }
         }else{
-            Session::flash('error',$status);
+            Session::flash('error', 'Sorry,No social media selected to post data !!');
         }
         return redirect()->back();
     }

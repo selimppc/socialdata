@@ -11,6 +11,7 @@ namespace App\Helpers;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\CompanySocialAccount;
 use App\CustomPost;
+use App\PostSocialMedia;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Mockery\CountValidator\Exception;
@@ -65,19 +66,25 @@ class TwitterHelper
 
 
     }
-    public static function publish($post_id){
+    public static function publish($post_id,$company_id=false){
         try {
+            if($company_id==false)
+            {
+                $company_id=session('companyId');
+            }
             $twitter_config = Config::get('custom.twitter');
-            $ttr_account = CompanySocialAccount::where('company_id', session('companyId'))->where('sm_type_id', 3)->first();
+            $ttr_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id', 3)->first();
             $ttr = new TwitterOAuth($twitter_config['consumerKey'], $twitter_config['consumerSecret'], $ttr_account->access_token, $ttr_account->associate_token);
             $custom_post=CustomPost::findOrFail($post_id);
 
             $post = $ttr->post('statuses/update', ['status' => $custom_post->text]);
             if(isset($post->id)) {
-                $custom_post->postId = $post->id;
-                $custom_post->status = 'sent';
-                $custom_post->save();
-                return true;
+                $post_social_media=PostSocialMedia::where('custom_post_id',$post_id)->where('social_media_id',3)->first();
+                $post_social_media->postId=$post->id;
+                $post_social_media->status='sent';
+                $post_social_media->save();
+//                dd($post_social_media);
+                return 'success';
             }else{
                 return $post;
             }

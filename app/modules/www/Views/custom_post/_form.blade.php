@@ -9,8 +9,8 @@
             {!! Form::label('social_media', 'Post on Social Media:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
             <br>
-            @foreach($social_media as $sm)
-                {!! Form::checkbox('social_media', $sm->id,'', ['id'=>'social_media', 'required']) !!} {{ $sm->type }}
+            @foreach($all_social_media as $sm)
+                {!! Form::checkbox('social_media[]', $sm->id,Input::old('social_media'), ['id'=>'social_media', 'required']) !!} {{ $sm->type }}
             @endforeach
         </div>
     </div>

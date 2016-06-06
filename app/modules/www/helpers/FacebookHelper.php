@@ -10,6 +10,7 @@ namespace App\Helpers;
 
 use App\CompanySocialAccount;
 use App\CustomPost;
+use App\PostSocialMedia;
 use Illuminate\Support\Facades\Config;
 use Facebook\Facebook;
 
@@ -70,10 +71,14 @@ class FacebookHelper
         }
         return ['userNode'=>$userNode,'longLiveAccessToken'=>$longLiveAccessToken];
     }
-    public static function publish($id)
+    public static function publish($post_id,$company_id=false)
     {
         $config= FacebookHelper::getFbConfig();
-        $fb_account= CompanySocialAccount::where('company_id',session('companyId'))->where('sm_type_id',2)->first();
+        if($company_id==false)
+        {
+            $company_id=session('companyId');
+        }
+        $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
 
         $fb= new Facebook($config);
         $fb->setDefaultAccessToken($fb_account->access_token);
@@ -90,17 +95,17 @@ class FacebookHelper
         if($page_access_token!=null && $page_id!=null)
         {
             try{
-                $custom_post=CustomPost::findOrFail($id);
+                $custom_post=CustomPost::findOrFail($post_id);
                 $post=$fb->post('/'.$page_id.'/feed',['message'=>$custom_post->text],$page_access_token);
                 $post=$post->getGraphNode()->asArray();
                 if(isset($post['id']))
                 {
                     $p=explode('_',$post['id']);
-                    $custom_post=CustomPost::findOrFail($id);
-                    $custom_post->postId=$p[1];
-                    $custom_post->status='sent';
-                    $custom_post->save();
-                    return true;
+                    $post_social_media=PostSocialMedia::where('custom_post_id',$post_id)->where('social_media_id',2)->first();
+                    $post_social_media->postId=$p[1];
+                    $post_social_media->status='sent';
+                    $post_social_media->save();
+                    return 'success';
                 }
             }catch (Exception $e)
             {

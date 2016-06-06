@@ -51,10 +51,10 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
         'as'=> 'update-post',
         'uses' => 'CustomPostController@update'
     ]);
-    Route::get('publish-fb/{id}',[
+    Route::get('publish/{id}',[
         #'middleware' => 'acl_access:publish-fb/{id}',
         'as'=> 'publish-fb',
-        'uses' => 'CustomPostController@publish_fb'
+        'uses' => 'CustomPostController@publish'
     ]);
     Route::get('create-schedule/{post_id}',[
         #'middleware' => 'acl_access:create-schedule/{post_id}',

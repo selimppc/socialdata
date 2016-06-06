@@ -51,7 +51,7 @@
                                                 <a href="{{ url('www/create-schedule/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default" >Create Schedule</a>
                                             @endif
                                         @else
-                                            {{ $post->postId }}
+
                                         @endif
                                     </td>
                                 </tr>
