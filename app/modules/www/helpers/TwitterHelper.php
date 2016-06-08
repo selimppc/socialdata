@@ -40,7 +40,7 @@ class TwitterHelper
         ];
         return $config;
     }
-    public static function getLoginUrl($user_social_account_id){
+    public static function getLoginUrl(){
         $twitter_config=Config::get('custom.twitter');
         $callback=Config::get('custom.callback').'/twitter';
         $callback= url($callback);
@@ -48,12 +48,11 @@ class TwitterHelper
         $request_token= $ttr->oauth('oauth/request_token',['oauth_callback'=>$callback]);
         Session::put('oauth_token',$request_token['oauth_token']);
         Session::put('oauth_token_secret',$request_token['oauth_token_secret']);
-        Session::put('user_social_account_id',$user_social_account_id);
         $loginUrl= $ttr->url('oauth/authorize',['oauth_token'=>$request_token['oauth_token']]);
         return $loginUrl;
 
     }
-    public static function twitterReturn()
+    public static function _return()
     {
         try {
             $twitter_config = Config::get('custom.twitter');

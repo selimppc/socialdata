@@ -28,7 +28,7 @@ class FacebookHelper
         ];
         return $config;
     }
-    public static function getLoginUrl($user_social_account_id)
+    public static function getLoginUrl()
     {
         $config = FacebookHelper::getFbConfig();
         $fb = new Facebook($config);
@@ -36,13 +36,13 @@ class FacebookHelper
         $helper = $fb->getRedirectLoginHelper();
         // Optional permissions
         $permissions=Config::get('custom.permissions');
-        $callback=Config::get('custom.callback').'/facebook/'.$user_social_account_id;
+        $callback=Config::get('custom.callback').'/facebook';
         $callback= url($callback);
 //        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account_id);
         return $helper->getLoginUrl($callback, $permissions);
 
     }
-    public static function facebook_return()
+    public static function _return()
     {
         $config=FacebookHelper::getFbConfig();
         $fb = new Facebook($config);
