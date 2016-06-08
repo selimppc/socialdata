@@ -101,18 +101,18 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'App\Modules\Www\Con
 
 
     Route::get('user-confirmation/{remember_token}',[
-        'middleware'=> 'acl_access:user-confirmation/{remember_token}',
+        #'middleware'=> 'acl_access:user-confirmation/{remember_token}',
         'as'=>'user-confirmation',
         'uses'=>'UserRegistrationController@user_confirm']);
 
     Route::post('user-confirmation', [
-        'middleware'=> 'acl_access:user-confirmation',
+        #'middleware'=> 'acl_access:user-confirmation',
         'as' => 'user-confirmation',
         'uses' => 'UserRegistrationController@update'
     ]);
 
     Route::get('user-activation/{remember_token}',[
-        'middleware'=> 'acl_access:user-activation/{remember_token}',
+        #'middleware'=> 'acl_access:user-activation/{remember_token}',
         'as'=>'user-activation',
         'uses'=>'UserRegistrationController@user_activation'
     ]);
