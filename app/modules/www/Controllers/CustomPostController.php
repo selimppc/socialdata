@@ -135,11 +135,12 @@ class CustomPostController extends Controller
                 } elseif ($smtp->social_media_id == 3) {
                     $status = TwitterHelper::publish($id);
 //                    $status='success';
+//                    dd($status);
                     if(isset($status) && $status=='success')
                     {
                         $i++;
                     }else{
-                        $error.='<br><b>Twitter =></b>'.$status;
+                        $error.='Twitter =>'.$status->errors[0]->message;
                     }
                 }
             }
