@@ -3,7 +3,7 @@
         <div class="form-group">
             {!! Form::label('date', 'Date:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
-            {!! Form::input('date','date', Input::old('date'), ['id'=>'date', 'class' => 'form-control','required','autofocus']) !!}
+            {!! Form::input('date','date', Input::old('date'), ['id'=>'date', 'class' => 'form-control bs-datepicker-component','required','autofocus']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('time', 'Time:', ['class' => 'control-label']) !!}

@@ -11,6 +11,7 @@
     <link href="{{ URL::asset('assets/admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
 
     <!---generate.min.css  refers to landerapp.min.css ----->
+    <link href="{{ URL::asset('assets/admin/css/landerapp.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ URL::asset('assets/admin/css/generate.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ URL::asset('assets/admin/css/rtl.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ URL::asset('assets/admin/css/pages.min.css') }}" rel="stylesheet" type="text/css" >
@@ -20,6 +21,9 @@
     <link href="{{ URL::asset('assets/admin/css/bootstrap-duallistbox.css') }}" rel="stylesheet" type="text/css" >
     {{--<link href="{{ URL::asset('assets/admin/css/styles.min.css') }}" rel="stylesheet" type="text/css" >--}}
 
+
+    <script type="text/javascript" src="{{ URL::asset('assets/admin/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ URL::asset('assets/admin/js/bootstrap.min.js') }}"></script>
 </head>
 
 <body class="theme-dust main-menu-animated">
@@ -94,13 +98,15 @@
 </html>
 
 <!-- javascripts -->
-
-<script type="text/javascript" src="{{ URL::asset('assets/admin/js/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('assets/admin/js/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('assets/admin/js/custom.min.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('assets/admin/js/demo.js') }}"></script>
 <script type="text/javascript" src="{{ URL::asset('assets/admin/js/validation.js') }}"></script>
-
+<script type="text/javascript">
+    init.push(function () {
+        // Javascript code here
+    })
+    window.LanderApp.start(init);
+</script>
 
 <script type="text/javascript">
     /*--------data table-----------*/
