@@ -30,7 +30,7 @@ class CheckPermission
                         'description' => 'You are not authorized to access this resource.'
                     ]
                 ], 401);*/
-                return response(view('user::layouts.user_access')->render());
+                return response(view('admin::layouts.user_access')->render());
             }
         }
         //return redirect()->route('dashboard');

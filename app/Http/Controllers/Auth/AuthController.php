@@ -1,12 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use App\Helpers\MenuItems;
+use App\MenuPanel;
+use App\Permission;
+use App\Role;
+use App\RoleUser;
 use App\User;
 use App\UserActivity;
+use App\UserLoginHistory;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use URL;
 use HTML;
 use Mockery\CountValidator\Exception;
@@ -78,7 +85,7 @@ class AuthController extends Controller
     /*password reset before login by inactive user*/
     public function reset_password($user_id){
 
-        return view('user::reset_password._form',['user_id'=>$user_id]);
+        return view('admin::reset_password._form',['user_id'=>$user_id]);
     }
 
     public function update_new_password(Request $request){
@@ -121,11 +128,12 @@ class AuthController extends Controller
             return view('admin::layouts.dashboard');
         }
         else{
-            return view('user::signin._form');
+            $data['pageTitle']= 'Login';
+            return view('admin::signin._form',$data);
         }
     }
 
-    public function postLogin(Request $request)
+    /*public function postLogin(Request $request)
     {
         $data = Input::all();
         date_default_timezone_set("Asia/Dacca");
@@ -191,6 +199,144 @@ class AuthController extends Controller
                 Session::flash('danger', "UserName/Email does not exists.Please Try Again");
             }
             return redirect()->back();
+        }
+    }*/
+
+    public function postLogin(Request $request)
+    {
+        $data = Input::all();
+        date_default_timezone_set("Asia/Dacca");
+
+        if(Auth::check()){
+            Session::put('email', isset(Auth::user()->get()->id));
+            Session::flash('message', "You Have Already Logged In.");
+            return redirect()->route('dashboard');
+        }else{
+            $field = filter_var($data['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+            $user_data_exists = User::where($field, $data['email'])->exists();
+
+            if($user_data_exists){
+
+                $user_data = User::where($field, $data['email'])->first();
+                $check_password = Hash::check($data['password'], $user_data->password);
+                if($check_password){
+                    #exit('ok');
+                    if($user_data->last_visit!=NULL){
+                        if($user_data->expire_date < date('Y-m-d h:i:s', time())){
+                            DB::table('user')->where('id', '=', $user_data->id)->update(array('status' =>'inactive'));
+                            Session::flash('message', "Login Activation Time Is Expired.You Can Contact With Admin To Reactivate Account.");
+                        }elseif($user_data->status=='inactive'){
+                            Session::flash('error', "Sorry!!Your Account Is Inactive.You Can Contact With System-Admin To Reactivate Account.");
+                        }
+                        else{
+                            $attempt = Auth::attempt([
+                                $field => $request->get('email'),
+                                'password' => $request->get('password'),
+                            ]);
+                            if($attempt){
+                                DB::table('user')->where('id', '=', $user_data->id)->update(array('last_visit' =>date('Y-m-d h:i:s', time())));
+
+                                $user_act_model = new UserActivity();
+                                $user_activity = [
+                                    'action_name' => 'user-login',
+                                    'action_url' => 'get-user-login',
+                                    'action_details' => Auth::user()->username.' '. 'logged in',
+                                    'action_table' => 'user',
+                                    'date' => date('Y-m-d h:i:s', time()),
+                                    'user_id' => Auth::user()->id,
+                                ];
+                                $user_act_model->create($user_activity);
+
+
+                                $user_model = new UserLoginHistory();
+                                $user_history = [
+                                    /*'action_name' => 'user-login',
+                                    'action_url' => 'get-user-login',
+                                    'action_details' => Auth::user()->username.' '. 'logged in',
+                                    'action_table' => 'user',
+                                    'date' => date('Y-m-d h:i:s', time()),
+                                    'user_id' => Auth::user()->id,*/
+                                    'user_id' => Auth::user()->id,
+                                    'login_time' => date('Y-m-d h:i:s', time()),
+                                    'ip_address' => getHostByName(getHostName()),
+                                    'date' => date('Y-m-d h:i:s', time()),
+                                ];
+                                $user_model->create($user_history);
+
+                                $role=Role::findOrFail($user_data->role_id);
+
+                                Session::put('email', $user_data->email);
+                                Session::put('user_id', $user_data->id);
+                                Session::put('company_id', $user_data->company_id);
+                                Session::put('role_id', $role->type);
+                                Session::flash('message', "Successfully  Logged In.");
+
+                                $this->menu_permission();
+
+                                return redirect()->intended('dashboard');
+                            }else{
+                                Session::flash('danger', "Password Incorrect.Please Try Again");
+                            }
+                        }
+                    }else{
+                        Session::flash('info', "You are a new user.Please reset your password for first time login.");
+                        #return redirect()->to('welcome');
+                        return redirect()->route('reset-password',['user_id'=>$user_data['id']]);
+                    }
+                }else{
+                    #exit('no');
+                    Session::flash('danger', "Password Incorrect.Please Try Again!!!");
+                }
+            }else{
+                Session::flash('danger', "UserName/Email does not exists.Please Try Again");
+            }
+            return redirect()->back();
+        }
+    }
+
+    protected function menu_permission()
+    {
+        if(Schema::hasTable('role_user') && Schema::hasTable('menu_panel')){
+            if(!Session::has('sidebar_menu_user')) {
+                // Get User ID
+                $user_id = \Auth::user()->id;
+                //print_r($user_id);exit;
+
+                //get Role(s)
+                $role_list = RoleUser::where('user_id','=',$user_id)
+                    ->select('role_user.role_id')
+                    ->get()->toArray();
+
+                //print_r($role_list); exit;
+
+
+                //routes per role(s)
+                $permis_route = Permission::join('permission_role', 'permission_role.permission_id', '=', 'permissions.id')
+                    ->whereIn('permission_role.role_id', $role_list)
+                    ->select('permissions.route_url')
+                    ->get()->toArray();
+                //module route
+                $arr []=[
+                    'route_url'=>'#'
+                ];
+                // Merge all routes per ROLE(S) and USER ID
+                $per_routes = array_merge($permis_route, $arr);
+
+                //print_r($per_routes); exit;
+
+                //Get Menu Lists by PERMISSION (ROLE+USER+Permission)
+                $tree = MenuPanel::select('id','menu_id','menu_type','menu_name','route','parent_menu_id','icon_code','menu_order','status')->whereIn('menu_panel.route',$per_routes)->orderBy('menu_order', 'ASC')->get()->toArray();
+                //print_r($tree); exit;
+
+                $parent = 0;
+
+                $result = MenuItems::menu_tree($tree, $parent);
+                //print_r($result); exit;
+
+                // put the menu items in session
+                Session::put('sidebar_menu_user', $result);
+            }
         }
     }
 }

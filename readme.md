@@ -61,9 +61,9 @@ composer dump-autoload -o
 
 To get database run the migration command:
 
-php artisan migrate --path="app/modules/user/database/migrations"
+php artisan migrate --path="modules/admin/database/migrations"
 
-php artisan migrate --path="app/modules/socialdata/database/migrations"
+php artisan migrate --path="modules/socialdata/database/migrations"
 
 Now browse to the public directory like http://localhost/socialdata/public
 

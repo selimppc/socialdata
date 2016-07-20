@@ -8,7 +8,7 @@
 
 return [
     'modules'=>array(
-        "user",
+//        "user",
         "admin",
         "socialdata",
         "api_app",
