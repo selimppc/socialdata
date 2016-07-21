@@ -162,6 +162,11 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
         "as"   => "index-company-social-account",
         "uses" => "CompanySocialAccountController@index"
     ]);
+    Route::any("add-company-social-account/{company_id}", [
+        //"middleware" => "acl_access:add-company-social-account",
+        "as"   => "add-company-social-account",
+        "uses" => "CompanySocialAccountController@create"
+    ]);
 
     Route::any("store-company-social-account", [
         //"middleware" => "acl_access:store-company-social-account",

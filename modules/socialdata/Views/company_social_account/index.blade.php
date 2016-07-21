@@ -12,7 +12,7 @@
             <div class="panel-heading">
                 {{--<span class="panel-title">{{ $pageTitle }}</span>--}}
                 <span class="panel-title">Company Name: <b> {{ \App\Company::where('id',$company_id)->first()->name }} </b></span>&nbsp;&nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-content="<em>Social Media account for company</em>">(?)</span>
-                <a class="btn btn-primary btn-xs pull-right pop" data-toggle="modal" href="#addData" data-placement="top" data-content="click add role button for new Social Media account for Company">
+                <a class="btn btn-primary btn-xs pull-right pop" href="{{ route('add-company-social-account',$company_id) }}" data-placement="top" data-content="click add role button for new Social Media account for Company">
                     <strong>Add Company Social Media Account</strong>
                 </a>
                 <a class="btn btn-default btn-xs pull-right pop" data-toggle="modal" href="{{ route('index-company') }}" data-placement="left" data-content="Click to redirect in company information page" style="margin-right: 10px;">
@@ -65,7 +65,7 @@
                                     <td>{{$values->status}}</td>
                                     <td>
                                         <a href="{{ route('view-company-social-account', $values->id) }}" class="btn btn-info btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="view"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('edit-company-social-account', $values->id) }}" class="btn btn-primary btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="update"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ route('edit-company-social-account', $values->id) }}" class="btn btn-primary btn-xs" data-placement="top" data-content="update"><i class="fa fa-edit"></i></a>
                                         <a href="{{ route('delete-company-social-account', $values->id) }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('Are you sure to Delete?')" data-content="delete"><i class="fa fa-trash-o"></i></a>
                                     </td>
                                 </tr>
@@ -81,23 +81,6 @@
     </div>
 </div>
 <!-- page end-->
-
-<div id="addData" class="modal fade" tabindex="" role="dialog" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="click x button for close this entry form">×</button>
-                <h4 class="modal-title" id="myModalLabel">Add Social Media for a Company <span style="color: #A54A7B" class="user-guideline" data-content="<em>Must Fill <b>Required</b> Field.    <b>*</b> Put cursor on input field for more informations</em>"><font size="2">(?)</font> </span></h4>
-            </div>
-            <div class="modal-body">
-                {!! Form::open(['route' => 'store-company-social-account','id' => 'jq-validation-form']) !!}
-                @include('socialdata::company_social_account._form')
-                {!! Form::close() !!}
-            </div> <!-- / .modal-body -->
-        </div> <!-- / .modal-content -->
-    </div> <!-- / .modal-dialog -->
-</div>
-<!-- modal -->
 <!-- Modal  -->
 <div class="modal fade" id="etsbModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

@@ -27,7 +27,7 @@
             <div class="col-lg-offset-1 col-md-8 col-sm-8">
                 <div class="card">
                     <div class="card-body">
-                        {!! Form::model($data, ['method' => 'PATCH', 'route'=> ['update-company-social-account', $data->id]]) !!}
+                        {!! Form::open(['route' => 'store-company-social-account','id' => 'jq-validation-form']) !!}
                         @include('socialdata::company_social_account._form')
                         {!! Form::close() !!}
                     </div><!--end .card-body -->

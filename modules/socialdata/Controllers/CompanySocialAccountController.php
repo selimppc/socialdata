@@ -40,6 +40,16 @@ class CompanySocialAccountController extends Controller
         $company_info = Company::where('status','!=','cancel')->lists('title','id')->all();
         return view('socialdata::company_social_account.index', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type' => $sm_type, 'company_info' => $company_info, 'company_id' => $company_id]);
     }
+    public function create($company_id)
+    {
+        $pageTitle = "Add Company Social Media Account";
+
+        $data = CompanySocialAccount::where('company_id',$company_id)->where('status','!=','cancel')->orderBy('id', 'DESC')->paginate(50);
+        $sm_type = SmType::where('status','!=','cancel')->lists('type','id')->all();
+        $company_info = Company::where('status','!=','cancel')->lists('title','id')->all();
+        return view('socialdata::company_social_account.create', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type' => $sm_type, 'company_info' => $company_info, 'company_id' => $company_id]);
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -61,10 +71,10 @@ class CompanySocialAccountController extends Controller
             //If there are any exceptions, rollback the transaction`
             DB::rollback();
             Session::flash('danger', $e->getMessage());
+            return redirect()->back();
         }
 
-        //return redirect()->route('index-company-social-account');
-        return redirect()->back();
+        return redirect()->to('index-company-social-account/'.$input['company_id']);
     }
 
     /**
@@ -120,9 +130,10 @@ class CompanySocialAccountController extends Controller
             //If there are any exceptions, rollback the transaction
             DB::rollback();
             Session::flash('danger', $e->getMessage());
+            return redirect()->back();
         }
-        //return redirect()->route('index-company-social-account');
-        return redirect()->back();
+
+        return redirect()->to('index-company-social-account/'.$input['company_id']);
     }
 
     /**
