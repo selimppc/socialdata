@@ -24,7 +24,7 @@ class CompanyRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|max:64'
+            'title' => 'required|max:64'
         ];
     }
 }

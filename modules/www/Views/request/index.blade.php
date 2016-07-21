@@ -4,11 +4,10 @@
         <!-- Background overlay -->
         <div class="overlay"></div>
         <!-- Replace this with your bg image -->
-        <img src="{{ asset('assets/user/img/signin-bg-1.jpg') }}" alt="">
     </div>
 <div class="signin-container">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6 col-lg-offset-3">
             <section class="panel">
                 <div class="box-header" style="background-color: #0490a6">
                     <h3 class="text-center text-green"><b style="color: #f5f5f5">ETSB: Sign Up Here.......</b></h3>

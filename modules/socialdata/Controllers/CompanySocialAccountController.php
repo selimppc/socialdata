@@ -37,7 +37,7 @@ class CompanySocialAccountController extends Controller
 
         $data = CompanySocialAccount::where('company_id',$company_id)->where('status','!=','cancel')->orderBy('id', 'DESC')->paginate(50);
         $sm_type = SmType::where('status','!=','cancel')->lists('type','id')->all();
-        $company_info = Company::where('status','!=','cancel')->lists('name','id')->all();
+        $company_info = Company::where('status','!=','cancel')->lists('title','id')->all();
         return view('socialdata::company_social_account.index', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type' => $sm_type, 'company_info' => $company_info, 'company_id' => $company_id]);
     }
 

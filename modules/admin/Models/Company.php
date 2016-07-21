@@ -13,11 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-
     protected $table = 'company';
 
     protected $fillable = [
-        'title','description','created_by'
+        'title','status','description','created_by'
     ];
     public function relUser(){
         return $this->hasMany('App\User', 'company_id', 'id');

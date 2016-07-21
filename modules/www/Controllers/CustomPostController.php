@@ -30,7 +30,7 @@ class CustomPostController extends Controller
 {
     public function index()
     {
-        $company_id=Session::get('companyId');
+        $company_id=Session::get('company_id');
         $data['pageTitle']='Custom Posts';
         $data['all_social_media']=SmType::select('id','type')->get();
         $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
@@ -45,7 +45,7 @@ class CustomPostController extends Controller
     {
         DB::beginTransaction();
         try{
-            $company_id=Session::get('companyId');
+            $company_id=Session::get('company_id');
             if(isset($company_id) && $company_id!=0) {
                 $input = $request->except('_token');
                 $custom_post = new CustomPost();

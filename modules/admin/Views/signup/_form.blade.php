@@ -27,7 +27,7 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Repeat Password</label>
-                                {!! Form::password('repeat_password', ['id'=>'regis-password','class' => 'form-control','required','placeholder'=>'Password','title'=>'Enter Password','onkeyup'=>"validation()"]) !!}
+                                {!! Form::password('re_password', ['id'=>'regis-password','class' => 'form-control','required','placeholder'=>'Password','title'=>'Enter Password','onkeyup'=>"validation()"]) !!}
                                 <span id='rs-show-message'></span>
                             </div>
                             <div class="form-group col-lg-12">
@@ -41,8 +41,8 @@
 
                         </div>
                         <div class="pull-right">
-                            <a class="btn btn-success" href="{{ route('get-user-login') }}">Back to login page</a>
                             <button class="btn btn-info" id="resg-btn-disabled">Register</button>
+                            <a class="btn btn-success" href="{{ route('get-user-login') }}">Back to login page</a>
                         </div>
 
                     {!! Form::close() !!}

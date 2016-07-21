@@ -58,11 +58,11 @@ class UserController extends Controller
 
         $input_company = [
             'title'=>$input['title'],
+            'status'=>'active',
             'description'=>$input['description'],
             'created_by'=>1
         ];
         $company_name=str_replace(' ','-',$input['title']);
-
         DB::beginTransaction();
         try{
 
@@ -177,7 +177,8 @@ class UserController extends Controller
             //If there are any exceptions, rollback the transaction`
             DB::rollback();
             Session::flash('error', $e->getMessage());
-            LogFileHelper::log_error('store_signup_info', $e->getMessage(), $input_data);
+            LogFileHelper::log_error('store_signup_info', $e->getMessage());
+            return redirect()->back();
         }
         return redirect()->route('get-user-login');
     }

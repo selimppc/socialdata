@@ -28,7 +28,7 @@ class PostController extends Controller
         $pageTitle = "All Post";
         $data = Post::orderBy('id', 'DESC')->paginate(50);
         $sm_type = [''=>'Select Social Media Type'] + SmType::where('status','!=','cancel')->lists('type','id')->all();
-        $company = [''=>'Select Comapny'] + Company::where('status','!=','cancel')->lists('name','id')->all();
+        $company = [''=>'Select Comapny'] + Company::where('status','!=','cancel')->lists('title','id')->all();
         return view('socialdata::post.index', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type'=>$sm_type,'company'=>$company]);
     }
 

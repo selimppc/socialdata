@@ -66,7 +66,7 @@
                             @foreach($data as $values)
                                 <tr class="gradeX">
                                     <td>{{ $values->id }}</td>
-                                    <td>{{$values->relCompany->name}}</td>
+                                    <td>{{$values->relCompany->title}}</td>
                                     <td>{{$values->relSmType->type}}</td>
                                     <td title="{{ $values->post }}">{{\Illuminate\Support\Str::limit($values->post,50)}}</td>
                                     {{--<td>{{\Illuminate\Support\Str::limit($values->post_id,20)}}</td>--}}

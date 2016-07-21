@@ -1,9 +1,9 @@
 <div class="form-group form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
     <div class="row">
 
-        {!! Form::label('name', 'Comapny Name:', ['class' => 'control-label']) !!}
+        {!! Form::label('title', 'Company Name:', ['class' => 'control-label']) !!}
         <small class="required">(Required)</small>
-        {!! Form::text('name', null, ['id'=>'name', 'class' => 'form-control','required','autofocus']) !!}
+        {!! Form::text('title', null, ['id'=>'title', 'class' => 'form-control','required','autofocus']) !!}
 
         {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
         <small class="narration">(Active status Selected)</small>

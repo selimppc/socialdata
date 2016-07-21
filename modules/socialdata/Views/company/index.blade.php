@@ -49,7 +49,7 @@
                             @foreach($data as $values)
                                 <tr class="gradeX">
                                     <td>{{$values->id}}</td>
-                                    <td>{{$values->name}}</td>
+                                    <td>{{$values->title}}</td>
                                     <td>{{$values->status}}</td>
                                     <td>
                                         <a href="{{ route('view-company', $values->id) }}" class="btn btn-info btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="view"><i class="fa fa-eye"></i></a>

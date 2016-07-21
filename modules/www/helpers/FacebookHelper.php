@@ -76,7 +76,7 @@ class FacebookHelper
         $config= FacebookHelper::getFbConfig();
         if($company_id==false)
         {
-            $company_id=session('companyId');
+            $company_id=session('company_id');
         }
         $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
 

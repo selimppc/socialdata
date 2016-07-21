@@ -44,7 +44,7 @@ class UserRegistrationController extends Controller
                     'username'=>$e[0],
                     'remember_token'=> str_random(30),
                     'status'=> 'invited',
-                    'company_id'=> Session::get('companyId'),
+                    'company_id'=> Session::get('company_id'),
                     'expire_date'=> $request->expire_date,
                     'role_id'=> $type
                 ];
@@ -82,13 +82,14 @@ class UserRegistrationController extends Controller
     public function user_confirm($remember_token)
     {
 //        $user = User::first();
+        $pageTitle= 'Register here';
         $user = User::where('remember_token','=',$remember_token)->first();
 //        return view('www::request.index', ['user'=>$user]);
         if(!$user){
             Session::flash('flash_message_error', 'Invalid Confirmation Link.Please Try Again.');
         }
         else{
-            return view('www::request.index', ['user'=>$user]);
+            return view('www::request.index', ['user'=>$user,'pageTitle'=>$pageTitle]);
         }
         return redirect()->back();
     }

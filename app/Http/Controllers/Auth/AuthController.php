@@ -85,7 +85,7 @@ class AuthController extends Controller
     /*password reset before login by inactive user*/
     public function reset_password($user_id){
 
-        return view('admin::reset_password._form',['user_id'=>$user_id]);
+        return view('admin::reset_password._form',['user_id'=>$user_id,'pageTitle'=>'Reset Password']);
     }
 
     public function update_new_password(Request $request){
@@ -179,7 +179,7 @@ class AuthController extends Controller
                                 $user_act_model->create($user_activity);
 
                                 Session::put('email', $user_data->email);
-                                Session::put('companyId', $user_data->company_id);
+                                Session::put('company_id', $user_data->company_id);
                                 Session::flash('message', "Successfully  Logged In.");
                                 return redirect()->intended('dashboard');
                             }else{

@@ -25,9 +25,10 @@ class SocialMediaController extends Controller
 {
     public function index(){
         $data['pageTitle']='Social Media Status';
-        $data['social_medias']=SmType::with(['relCompanySocialAccount'=>function($query){
-            $query->where('company_id',\Session::get('companyId'));
-        }])->get();
+        $data['social_medias']=SmType::with(['relCompanySocialAccount'])->get();
+        /*$data['social_medias']=SmType::with(['relCompanySocialAccount'=>function($query){
+            $query->where('company_id',Session::get('company_id'));
+        }])->get();*/
 
         #dd($data);
         foreach ($data['social_medias'] as $id=>$social_media) {
@@ -54,14 +55,14 @@ class SocialMediaController extends Controller
                 }else{
                     $data['social_medias'][$id]->loginUrl = '#';
                     $data['social_medias'][$id]->button_text = 'Already Subscribe';
-                    foreach ($social_media->relCompanySocialAccount as $user_social_account) {
+                    /*foreach ($social_media->relCompanySocialAccount as $user_social_account) {
                         if($user_social_account->sm_type_id==2)
                         {
                             $data['social_medias'][$id]->user_sm_id = $user_social_account->id;
                             $data['social_medias'][$id]->button_text_data = 'Get Data';
 
                         }
-                    }
+                    }*/
                     $data['social_medias'][$id]->btnClass='primary';
 
                 }

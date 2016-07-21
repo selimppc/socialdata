@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <th class="col-lg-4">Company Name</th>
-                <td>{{ isset($data->relCompany->name)?$data->relCompany->name:''}}</td>
+                <td>{{ isset($data->relCompany->title)?$data->relCompany->title:''}}</td>
             </tr>
             <tr>
                 <th class="col-lg-4">Data Pull Duration</th>

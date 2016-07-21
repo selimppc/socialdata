@@ -69,7 +69,7 @@ class TwitterHelper
         try {
             if($company_id==false)
             {
-                $company_id=session('companyId');
+                $company_id=session('company_id');
             }
             $twitter_config = Config::get('custom.twitter');
             $ttr_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id', 3)->first();

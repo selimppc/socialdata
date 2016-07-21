@@ -8,7 +8,7 @@
         <table id="" class="table table-bordered table-hover table-striped">
             <tr>
                 <th class="col-lg-4">Company Name</th>
-                <td>{{ isset($data->relCompany->name)?$data->relCompany->name:''}}</td>
+                <td>{{ isset($data->relCompany->title)?$data->relCompany->title:''}}</td>
             </tr>
             <tr>
                 <th class="col-lg-4">Social Media Type</th>

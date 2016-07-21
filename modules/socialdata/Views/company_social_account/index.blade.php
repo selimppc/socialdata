@@ -61,7 +61,7 @@
                                     <td>{{$values->sm_account_id}}</td>
                                     <td>{{$values->page_id}}</td>
                                     <td>{{$values->data_pull_duration}}</td>
-                                    {{--<td>{{$values->relCompany->name}}</td>--}}
+                                    {{--<td>{{$values->relCompany->title}}</td>--}}
                                     <td>{{$values->status}}</td>
                                     <td>
                                         <a href="{{ route('view-company-social-account', $values->id) }}" class="btn btn-info btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="view"><i class="fa fa-eye"></i></a>
