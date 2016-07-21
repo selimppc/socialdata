@@ -68,17 +68,19 @@ class SocialMediaController extends Controller
 //        }
         foreach ($data['social_medias'] as $id=>$social_media) {
             if(empty($social_media->sm_account_id)){
-                Session::put('user_social_account_id',$social_media->id);
                 if($social_media->sm_type_id==2)
                 {
+                    Session::put('user_social_account_id_facebook',$social_media->id);
                     $loginUrl= FacebookHelper::getLoginUrl();
                     $data['social_medias'][$id]->loginUrl = $loginUrl;
                     $data['social_medias'][$id]->button_text = 'Subscribe with Facebook';
                 }elseif($social_media->sm_type_id==3){
+                    Session::put('user_social_account_id_twitter',$social_media->id);
                     $loginUrl= TwitterHelper::getLoginUrl();
                     $data['social_medias'][$id]->loginUrl = $loginUrl;
                     $data['social_medias'][$id]->button_text = 'Subscribe with Twitter';
                 }elseif($social_media->sm_type_id==1){
+                    Session::put('user_social_account_id_google',$social_media->id);
                     $loginUrl= GooglePlusHelper::getLoginUrl($social_media->id);
                     $data['social_medias'][$id]->loginUrl = $loginUrl;
                     $data['social_medias'][$id]->button_text = 'Subscribe with Google+';
@@ -94,8 +96,7 @@ class SocialMediaController extends Controller
     }
     public function social_media_return($social_media_type){
 //        dd(Session::get('user_social_account_id'));
-        if(Session::has('user_social_account_id')) {
-            $company_social_account_id = Session::get('user_social_account_id');
+        if(Session::has('user_social_account_id_facebook') || Session::has('user_social_account_id_twitter') ||Session::has('user_social_account_id_google')) {
 //            $company_social_account_id=1;
             if ($social_media_type == 'facebook') {
                 $status = FacebookHelper::_return();
@@ -103,7 +104,7 @@ class SocialMediaController extends Controller
                     /*
                      * store data on user social account
                      * */
-                    $userSocial = CompanySocialAccount::findOrFail($company_social_account_id);
+                    $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_facebook'));
                     $userSocial->sm_account_id = $status['userNode']->getId();
                     $userSocial->access_token = $status['longLiveAccessToken'];
                     $userSocial->save();
@@ -121,7 +122,7 @@ class SocialMediaController extends Controller
                          * store data on user social account
                          * */
 
-                        $userSocial = CompanySocialAccount::findOrFail($company_social_account_id);
+                        $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_twitter'));
                         $userSocial->sm_account_id = $status['user_id'];
                         $userSocial->access_token = $status['oauth_token'];
                         $userSocial->associate_token = $status['oauth_token_secret'];
@@ -140,7 +141,7 @@ class SocialMediaController extends Controller
                      * store data on user social account
                      * */
 
-                    $userSocial = CompanySocialAccount::findOrFail($company_social_account_id);
+                    $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_google'));
                     $userSocial->sm_account_id = $status['user_id'];
                     $userSocial->access_token = $status['refresh_token'];
                     $userSocial->save();
