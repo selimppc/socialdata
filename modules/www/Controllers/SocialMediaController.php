@@ -68,6 +68,7 @@ class SocialMediaController extends Controller
 //        }
         foreach ($data['social_medias'] as $id=>$social_media) {
             if(empty($social_media->sm_account_id)){
+                Session::put('user_social_account_id',$social_media->id);
                 if($social_media->sm_type_id==2)
                 {
                     $loginUrl= FacebookHelper::getLoginUrl();
@@ -88,47 +89,11 @@ class SocialMediaController extends Controller
                 $data['social_medias'][$id]->button_text = 'Already Subscribe';
                 $data['social_medias'][$id]->btnClass='primary';
             }
-
-
-//            foreach ($social_media->relCompanySocialAccount as $user_social_account) {
-//                if(empty($user_social_account->sm_account_id))
-//                {
-//                    Session::put('user_social_account_id',$user_social_account->id);
-//                    if($user_social_account->sm_type_id==2)
-//                    {
-//                        $loginUrl= FacebookHelper::getLoginUrl();
-//                        $data['social_medias'][$id]->loginUrl = $loginUrl;
-//                        $data['social_medias'][$id]->button_text = 'Subscribe with Facebook';
-//                    }elseif($user_social_account->sm_type_id==3){
-//                        $loginUrl= TwitterHelper::getLoginUrl();
-//                        $data['social_medias'][$id]->loginUrl = $loginUrl;
-//                        $data['social_medias'][$id]->button_text = 'Subscribe with Twitter';
-//                    }elseif($user_social_account->sm_type_id==1){
-//                        $loginUrl= GooglePlusHelper::getLoginUrl($user_social_account->id);
-//                        $data['social_medias'][$id]->loginUrl = $loginUrl;
-//                        $data['social_medias'][$id]->button_text = 'Subscribe with Google+';
-//                    }
-//                    $data['social_medias'][$id]->btnClass='info';
-//                }else{
-//                    $data['social_medias'][$id]->loginUrl = '#';
-//                    $data['social_medias'][$id]->button_text = 'Already Subscribe';
-//                    /*foreach ($social_media->relCompanySocialAccount as $user_social_account) {
-//                        if($user_social_account->sm_type_id==2)
-//                        {
-//                            $data['social_medias'][$id]->user_sm_id = $user_social_account->id;
-//                            $data['social_medias'][$id]->button_text_data = 'Get Data';
-//
-//                        }
-//                    }*/
-//                    $data['social_medias'][$id]->btnClass='primary';
-//
-//                }
-//            }
-
         }
         return view('www::social_media.index',$data);
     }
     public function social_media_return($social_media_type){
+//        dd(Session::get('user_social_account_id'));
         if(Session::has('user_social_account_id')) {
             $company_social_account_id = Session::get('user_social_account_id');
 //            $company_social_account_id=1;
