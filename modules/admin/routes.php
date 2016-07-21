@@ -67,6 +67,12 @@ Route::group(array('middleware' => 'auth', 'modules' => 'Admin', 'namespace' => 
             "uses" => "MenuPanelController@index",
     ]);
 
+    Route::get("add-menu-panel", [
+        //"middleware" => "acl_access:add-menu-panel",
+            "as"   => "add-menu-panel",
+            "uses" => "MenuPanelController@create",
+    ]);
+
     Route::any("store-menu-panel", [
         //"middleware" => "acl_access:store-branch",
             "as"   => "store-menu-panel",

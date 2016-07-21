@@ -27,8 +27,8 @@
             <div class="col-lg-offset-1 col-md-8 col-sm-8">
                 <div class="card">
                     <div class="card-body">
-                        {!! Form::open(['route' => 'store-post','class' => 'form']) !!}
-                        @include('www::custom_post._form')
+                        {!! Form::open(['route' => 'store-menu-panel','id' => 'jq-validation-form']) !!}
+                        @include('admin::menu_panel._form')
                         {!! Form::close() !!}
                     </div><!--end .card-body -->
                 </div><!--end .card -->
@@ -38,5 +38,4 @@
 
 
     </div>
-
 @stop

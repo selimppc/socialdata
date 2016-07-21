@@ -36,6 +36,11 @@ Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'Modules\Www\Control
         'as'=> 'posts',
         'uses' => 'CustomPostController@index'
     ]);
+    Route::get('add-post',[
+        #'middleware' => 'acl_access:add-post',
+        'as'=> 'add-post',
+        'uses' => 'CustomPostController@create'
+    ]);
     Route::post('store-post',[
         #'middleware' => 'acl_access:store-post',
         'as'=> 'store-post',

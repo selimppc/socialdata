@@ -15,3 +15,7 @@
         </div>
     </div>
 </div>
+<div class="footer-form-margin-btn">
+    {!! Form::submit('Save Changes', ['class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save company information']) !!}&nbsp;
+    <a href="{{route('posts')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+</div>

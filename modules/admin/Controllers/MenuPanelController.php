@@ -42,7 +42,10 @@ class MenuPanelController extends Controller
      */
     public function create()
     {
-        //
+        $pageTitle = "Add new menu";
+        $model = MenuPanel::orderBy('id', 'DESC')->where('status','!=','cancel')->paginate(30);
+
+        return view('admin::menu_panel.create', ['model' => $model, 'pageTitle'=> $pageTitle]);
     }
 
     /**
@@ -67,9 +70,10 @@ class MenuPanelController extends Controller
             DB::rollback();
             Session::flash('danger', $e->getMessage());
             //LogFileHelperAcc::log_error('store-branch', $e->getMessage(), ['Branch title : '.$input['title']]);
+            return redirect()->back();
         }
 
-        return redirect()->back();
+        return redirect()->route('menu-panel');
     }
 
     public function search_menu_panel(){
@@ -152,8 +156,9 @@ class MenuPanelController extends Controller
             DB::rollback();
             Session::flash('danger', $e->getMessage());
             //LogFileHelperAcc::log_error('update-branch', $e->getMessage(), ['Branch title : '.$input['title']]);
+            return redirect()->back();
         }
-        return redirect()->back();
+        return redirect()->route('menu-panel');
     }
 
     /**

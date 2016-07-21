@@ -11,7 +11,7 @@
         <div class="panel">
             <div class="panel-heading">
                 <span class="panel-title">{{ $pageTitle }}</span>&nbsp;&nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-content=""></span>
-                <a class="btn btn-primary btn-xs pull-right pop" data-toggle="modal" href="#addData" data-placement="left" data-content="click add new menu button for new menu entry">
+                <a class="btn btn-primary btn-xs pull-right pop" href="{{ route('add-menu-panel') }}" data-placement="left" data-content="click add new menu button for new menu entry">
                     <strong>Add New Menu</strong>
                 </a>
             </div>
@@ -66,7 +66,7 @@
                                     <td>{{ucfirst($values->status)}}</td>
                                     <td>
                                         <a href="{{ route('view-menu-panel', $values->id) }}" class="btn btn-info btn-xs" data-toggle="modal" data-target="#etsbModal" data-placement="top" data-content="view"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('edit-menu-panel', ['id'=>$values->id,'parent_menu_id'=>$values->parent_menu_id]) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#etsbModal" data-placement="top" data-content="update"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ route('edit-menu-panel', ['id'=>$values->id,'parent_menu_id'=>$values->parent_menu_id]) }}" class="btn btn-primary btn-xs" data-placement="top" data-content="update"><i class="fa fa-edit"></i></a>
                                         <a href="{{ route('delete-menu-panel', $values->id) }}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to Delete?')" data-placement="top" data-content="delete"><i class="fa fa-trash-o"></i></a>
                                     </td>
                                 </tr>
@@ -81,24 +81,6 @@
         </div>
     </div>
 </div>
-<!-- page end-->
-
-<div id="addData" class="modal fade" tabindex="" role="dialog" style="display: none;">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="click x button for close this entry form">×</button>
-                <h4 class="modal-title" id="myModalLabel">{{ $pageTitle }} <span style="color: #A54A7B" class="user-guideline"></span></h4>
-            </div>
-            <div class="modal-body">
-                {!! Form::open(['route' => 'store-menu-panel','id' => 'jq-validation-form']) !!}
-                @include('admin::menu_panel._form')
-                {!! Form::close() !!}
-            </div> <!-- / .modal-body -->
-        </div> <!-- / .modal-content -->
-    </div> <!-- / .modal-dialog -->
-</div>
-<!-- modal -->
 
 
 <!-- Modal  -->

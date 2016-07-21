@@ -38,6 +38,9 @@ class CustomPostController extends Controller
     }
     public function create()
     {
+        $company_id=Session::get('company_id');
+        $data['all_social_media']=SmType::select('id','type')->get();
+        $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
         $data['pageTitle']='Add new post';
         return view('www::custom_post.create',$data);
     }
@@ -67,13 +70,15 @@ class CustomPostController extends Controller
                 DB::commit();
             }else{
                 Session::flash('error', 'Sorry,You are not set your company yet !!');
+                return redirect()->back();
             }
         }catch (Exception $e)
         {
             DB::rollback();
             Session::flash('error',$e->getMessage());
+            return redirect()->back();
         }
-        return redirect()->back();
+        return redirect()->route('posts');
     }
     public function edit($id)
     {
