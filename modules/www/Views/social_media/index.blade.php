@@ -29,7 +29,7 @@
                             @foreach($social_medias as $social_media)
                                 <tr>
                                     <td>{{ $i++ }}</td>
-                                    <td>{{ $social_media->type }}</td>
+                                    <td>{{ $social_media->relSmType['type'] }}</td>
                                     <td>
                                         <a href="{{ $social_media->loginUrl }}" class="btn btn-{{ $social_media->btnClass }}">{{ $social_media->button_text }}</a>
                                     </td>
