@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use App\Company;
 use App\Helpers\MenuItems;
 use App\MenuPanel;
 use App\Permission;
@@ -13,6 +14,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
 use URL;
 use HTML;
@@ -221,6 +223,15 @@ class AuthController extends Controller
                 $user_data = User::where($field, $data['email'])->first();
                 $check_password = Hash::check($data['password'], $user_data->password);
                 if($check_password){
+                    if($user_data->company_id != null)
+                    {
+                        $company_status= Company::findOrFail($user_data->company_id);
+                        if($company_status->status== 'inactive')
+                        {
+                            Session::flash('error', "Sorry!!Your company is inactive. Please contact with your company.");
+                            return redirect()->back();
+                        }
+                    }
                     #exit('ok');
                     if($user_data->last_visit!=NULL){
                         if($user_data->expire_date < date('Y-m-d h:i:s', time())){
