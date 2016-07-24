@@ -5,7 +5,7 @@
  * Date: 5/26/16
  * Time: 12:45 PM
  */
-Route::group(['prefix'=>'www','modules'=>'www','namespace'=>'Modules\Www\Controllers'],function(){
+Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespace'=>'Modules\Www\Controllers'],function(){
     Route::get('add-social-media', [
         #'middleware' => 'acl_access:add-social-media',
         'as' => 'add-social-media',

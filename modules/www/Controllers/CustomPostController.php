@@ -116,8 +116,9 @@ class CustomPostController extends Controller
         }catch (Exception $e){
             DB::rollback();
             Session::flash('error',$e->getMessage());
+            return redirect()->back();
         }
-        return redirect()->back();
+        return redirect()->route('posts');
     }
     public function publish($id)
     {
