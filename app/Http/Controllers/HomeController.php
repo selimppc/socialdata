@@ -22,7 +22,7 @@ class HomeController extends Controller
     public function dashboard()
     {
 
-        $pageTitle = 'ENTSOL - Dashboard';
+        $pageTitle = 'Social Data - Dashboard';
 
         return view('admin::layouts.dashboard',['pageTitle'=>$pageTitle]);
     }

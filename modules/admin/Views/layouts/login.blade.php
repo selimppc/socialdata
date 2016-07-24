@@ -28,7 +28,7 @@
 
 <!-- BEGIN LOGIN SECTION -->
 <section class="section-account">
-    <div class="img-backdrop" style="background-image: url({{ asset('assets/main/img/img16.jpg') }})"></div>
+    {{--<div class="img-backdrop" style="background-image: url({{ asset('assets/main/img/img16.jpg') }})"></div>--}}
     <div class="spacer"></div>
 
     @if($errors->any())

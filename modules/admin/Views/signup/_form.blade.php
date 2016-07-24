@@ -32,7 +32,7 @@
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Company Name</label>
-                                {!! Form::text('title', Input::old('title'), ['name'=>'title', 'class' => 'form-control','required','placeholder'=>'Username','autofocus', 'title'=>'Enter User Name']) !!}
+                                {!! Form::text('title', Input::old('title'), ['name'=>'title', 'class' => 'form-control','required','placeholder'=>'Company Name','autofocus', 'title'=>'Enter User Name']) !!}
                             </div>
                             <div class="form-group col-sm-12">
                                 <label>Company Description</label>
