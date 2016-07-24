@@ -337,7 +337,7 @@ class AuthController extends Controller
                 //print_r($per_routes); exit;
 
                 //Get Menu Lists by PERMISSION (ROLE+USER+Permission)
-                $tree = MenuPanel::select('id','menu_id','menu_type','menu_name','route','parent_menu_id','icon_code','menu_order','status')->whereIn('menu_panel.route',$per_routes)->orderBy('menu_order', 'ASC')->get()->toArray();
+                $tree = MenuPanel::select('id','menu_id','menu_type','menu_name','route','parent_menu_id','icon_code','menu_order','status')->where('status','active')->whereIn('menu_panel.route',$per_routes)->orderBy('menu_order', 'ASC')->get()->toArray();
                 //print_r($tree); exit;
 
                 $parent = 0;

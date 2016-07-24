@@ -31,14 +31,30 @@ class CompanySocialAccountController extends Controller
      * @param $company_id
      * @return \Illuminate\Http\Response
      */
-    public function index($company_id)
+    public function index($company_id=false)
     {
+        // Filter if a user or cadmin try to access another company info
+        if((session('role_id') != 'admin' && session('role_id') != 'sadmin') && $company_id != false)
+        {
+            return redirect()->back();
+        }
+        // Get company ID
+        if(isset($company_id) && empty($company_id))
+        {
+            $company_id=Session::get('company_id');
+        }
+        // Define Company ID NULL or real value
+        if($company_id==null)
+        {
+            return redirect()->back();
+        }
         $pageTitle = "Company Social Media Account Informations";
 
         $data = CompanySocialAccount::where('company_id',$company_id)->where('status','!=','cancel')->orderBy('id', 'DESC')->paginate(50);
         $sm_type = SmType::where('status','!=','cancel')->lists('type','id')->all();
         $company_info = Company::where('status','!=','cancel')->lists('title','id')->all();
-        return view('socialdata::company_social_account.index', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type' => $sm_type, 'company_info' => $company_info, 'company_id' => $company_id]);
+        $company= Company::findOrFail($company_id);
+        return view('socialdata::company_social_account.index', ['data' => $data, 'pageTitle'=> $pageTitle, 'sm_type' => $sm_type, 'company_info' => $company_info, 'company_id' => $company_id,'company'=>$company]);
     }
     public function create($company_id)
     {

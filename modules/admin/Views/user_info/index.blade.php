@@ -7,7 +7,7 @@
         <!-- BEGIN PROFILE HEADER -->
 <section class="full-bleed">
     <div class="section-body style-default-dark force-padding text-shadow">
-        <div class="img-backdrop" style="background-image: url({{ asset('assets/main/img/img16.jpg') }})"></div>
+        <div class="img-backdrop" style="background-image: url({{ asset('assets/main/img/bg.jpg') }})"></div>
         <div class="overlay overlay-shade-top stick-top-left height-3"></div>
         <div class="row">
             <div class="col-md-3 col-xs-5">

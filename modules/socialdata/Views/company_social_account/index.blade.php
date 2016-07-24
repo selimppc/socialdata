@@ -11,13 +11,15 @@
         <div class="panel">
             <div class="panel-heading">
                 {{--<span class="panel-title">{{ $pageTitle }}</span>--}}
-                <span class="panel-title">Company Name: <b> {{ \App\Company::where('id',$company_id)->first()->name }} </b></span>&nbsp;&nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-content="<em>Social Media account for company</em>">(?)</span>
+                <span class="panel-title">Company Name: <b> {{ $company->title }} </b></span>&nbsp;&nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-content="<em>Social Media account for company</em>">(?)</span>
                 <a class="btn btn-primary btn-xs pull-right pop" href="{{ route('add-company-social-account',$company_id) }}" data-placement="top" data-content="click add role button for new Social Media account for Company">
                     <strong>Add Company Social Media Account</strong>
                 </a>
+                @if(session('role_id') == 'admin' || session('role_id') == 'sadmin')
                 <a class="btn btn-default btn-xs pull-right pop" data-toggle="modal" href="{{ route('index-company') }}" data-placement="left" data-content="Click to redirect in company information page" style="margin-right: 10px;">
                     <strong>Back to company information page</strong>
                 </a>
+                @endif
             </div>
 
             <div class="panel-body">

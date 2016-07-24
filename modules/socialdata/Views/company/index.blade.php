@@ -55,7 +55,7 @@
                                         <a href="{{ route('view-company', $values->id) }}" class="btn btn-info btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="view"><i class="fa fa-eye"></i></a>
                                         <a href="{{ route('edit-company', $values->id) }}" class="btn btn-primary btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="update"><i class="fa fa-edit"></i></a>
                                         <a href="{{ route('delete-company', $values->id) }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('Are you sure to Delete?')" data-content="delete"><i class="fa fa-trash-o"></i></a>
-                                        <a href="{{ route('index-company-social-account', $values->id) }}" class="btn btn-default btn-xs" data-placement="right" data-content="Click to go Company Social account page">Company Social Account</a>
+                                        <a href="{{ url('index-company-social-account/'.$values->id) }}" class="btn btn-default btn-xs" data-placement="right" data-content="Click to go Company Social account page">Company Social Account</a>
                                     </td>
                                 </tr>
                             @endforeach
