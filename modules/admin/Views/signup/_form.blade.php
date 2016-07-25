@@ -23,7 +23,7 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Password</label>
-                                {!! Form::password('password', ['id'=>'regis-user-password','class' => 'form-control','required','placeholder'=>'Password','title'=>'Enter Password']) !!}
+                                {!! Form::password('password', ['id'=>'regis-user-password','class' => 'form-control','required','placeholder'=>'Password','title'=>'Enter Password','pattern'=>"^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$",'title'=>"Please enter minimum 1 uppercase,lowercase and a numeric value"]) !!}
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Repeat Password</label>

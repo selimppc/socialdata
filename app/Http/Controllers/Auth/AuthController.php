@@ -14,6 +14,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
 use URL;
@@ -239,6 +240,19 @@ class AuthController extends Controller
                             Session::flash('message', "Login Activation Time Is Expired.You Can Contact With Admin To Reactivate Account.");
                         }elseif($user_data->status=='inactive'){
                             Session::flash('error', "Sorry!!Your Account Is Inactive.You Can Contact With System-Admin To Reactivate Account.");
+                        }elseif($user_data->status=='register'){
+                            $user_data->remember_token= str_random(30);
+                            $user_data->save();
+                            $email=$user_data->email;
+                            Mail::send('admin::signup.email', array('token' =>$user_data['remember_token'],'user_id'=>$user_data->id),function($message) use ($email)
+                            {
+                                $message->from('test@edutechsolutionsbd.com', 'Account activation link');
+                                $message->to($email);
+                                $message->subject('Account activation link');
+                            });
+
+
+                            Session::flash('error', "Sorry!!Your Account not activate yet ! Please check your email for account activation link");
                         }
                         else{
                             $attempt = Auth::attempt([

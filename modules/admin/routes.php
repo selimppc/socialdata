@@ -18,10 +18,13 @@ Route::group(array('modules' => 'Admin', 'namespace' => 'Modules\Admin\Controlle
             'as'   => 'sign-up',
             'uses' => 'UserController@create_sign_up',
     ]);
-
     Route::any('signup', [
             'as'   => 'signup',
             'uses' => 'UserController@store_signup_info',
+    ]);
+    Route::get('active_account/{user_id}/{token}', [
+            'as'   => 'active_account',
+            'uses' => 'UserController@active_account',
     ]);
 
 });

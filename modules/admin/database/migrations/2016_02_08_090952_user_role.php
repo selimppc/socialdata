@@ -85,7 +85,7 @@ class UserRole extends Migration
             $table->unsignedInteger('company_id')->nullable();
             $table->unsignedInteger('role_id')->nullable();
 //            $table->unsignedInteger('department_id')->nullable();
-            $table->enum('status',array('active','inactive','cancel'))->nullable();
+            $table->enum('status',array('register','active','inactive','cancel'))->nullable();
             $table->integer('created_by', false, 11);
             $table->integer('updated_by', false, 11);
             $table->timestamps();

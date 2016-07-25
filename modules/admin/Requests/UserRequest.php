@@ -44,7 +44,7 @@ class UserRequest extends Request
                 'email'   => 'required|unique:user,email,' . $id,
                 'username'   => 'required|unique:user,username,' . $id,
                 'title'   => 'required|unique:company,title',
-                'password' => 'required|'
+                'password'=> 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
             ];
 
         }else{

@@ -114,7 +114,8 @@ class UserController extends Controller
                 'role_id'=> $role_id,
                 'last_visit'=> date('Y-m-d h:i:s', time()),
                 'expire_date'=> $date,
-                'status'=> 'active',
+                'status'=> 'register',
+                'remember_token'=> str_random(30),
                 'created_by'=> 1
             ];
 
@@ -166,12 +167,17 @@ class UserController extends Controller
                     $role_permission->save();
                 }
             }
+            $email=$user_id->email;
 
-
-
+            Mail::send('admin::signup.email', array('token' =>$input_data['remember_token'],'user_id'=>$user_id->id),function($message) use ($email)
+            {
+                $message->from('test@edutechsolutionsbd.com', 'Account activation link');
+                $message->to($email);
+                $message->subject('Account activation link');
+            });
 
             DB::commit();
-            Session::flash('message', 'Successfully Completed Signup Process!You may login now ');
+            Session::flash('message', 'Successfully Completed Signup Process! Please check your email for account activation link ');
             #LogFileHelper::log_info('store_signip_info', 'Successfully add', $input_data);
         }catch (\Exception $e) {
             //If there are any exceptions, rollback the transaction`
@@ -181,6 +187,38 @@ class UserController extends Controller
             return redirect()->back();
         }
         return redirect()->route('get-user-login');
+    }
+    public function active_account($user_id,$token)
+    {
+        $user=User::findOrFail($user_id);
+        if(!empty($user))
+        {
+            if($token==$user->remember_token)
+            {
+                $user->status='active';
+                $user->remember_token='';
+                $user->save();
+                Session::flash('message','Your account is active. Please LogIn.');
+                return redirect()->to('get-user-login');
+            }elseif($user->status=='register'){
+                $user->remember_token=str_random(30);
+                $user->save();
+                $email=$user->email;
+                $remember_token=$user->remember_token;
+                Mail::send('admin::signup.email', array('token' =>$remember_token,'user_id'=>$user_id),function($message) use ($email)
+                {
+                    $message->from('test@edutechsolutionsbd.com', 'Account activation link');
+                    $message->to($email);
+                    $message->subject('Account activation link');
+                });
+                Session::flash('message','We are again sent a activation link on your email. Please check your email.');
+                return redirect()->to('get-user-login');
+            }
+
+        }else{
+            Session::flash('error','Sorry,This user is not exist. Please Sign Up.');
+            return redirect()->to('sign-up');
+        }
     }
     public function forget_password_view()
     {
