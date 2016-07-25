@@ -199,7 +199,7 @@ class CustomPostController extends Controller
                 if ($smtp->social_media_id == 1) {
                     $i++;
                 } elseif ($smtp->social_media_id == 2) {
-                    $status = FacebookHelper::publish($id);
+                    $status = $this->publish_facebook($id);
 //                    $status='Not ........';
                     if(isset($status) && $status=='success')
                     {
@@ -208,9 +208,7 @@ class CustomPostController extends Controller
                         $error .='Facebook => '.$status;
                     }
                 } elseif ($smtp->social_media_id == 3) {
-                    $status = TwitterHelper::publish($id);
-//                    $status='success';
-//                    dd($status);
+                    $status = $this->publish_twitter($id);
                     if(isset($status) && $status=='success')
                     {
                         $i++;
@@ -232,6 +230,16 @@ class CustomPostController extends Controller
             Session::flash('error', 'Sorry,No social media selected to post data !!');
         }
         return redirect()->back();
+    }
+    public function publish_facebook($id)
+    {
+        $status= FacebookHelper::publish($id);
+        return $status;
+    }
+    public function publish_twitter($id)
+    {
+        $status= TwitterHelper::publish($id);
+        return $status;
     }
     public function create_schedule()
     {

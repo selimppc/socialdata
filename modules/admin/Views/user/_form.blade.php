@@ -58,6 +58,30 @@
             {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
             {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
         </div>
+        <div class="col-sm-6">
+
+            <div class="form-group">
+                {!! Form::label('social_media', 'Permission on:', ['class' => 'control-label']) !!}
+                <small class="required">(Required)</small>
+                <br>
+                @foreach($social_role as $sr)
+                    <div class="checkbox-inline">
+                        <label class="">
+                            {!! Form::checkbox('social_media[]', $sr->id,Input::old('social_media'), ['id'=>'social_media']) !!}
+                            <img width="60px" height="25px"
+                                 @if($sr->slug=='facebook')
+                                 src="{{ asset('assets/social_media_images/facebook.jpg') }}"
+                                 @elseif($sr->slug=='twitter')
+                                 src="{{ asset('assets/social_media_images/twitter.jpg') }}"
+                                 @elseif($sr->slug=='google_plus')
+                                 src="{{ asset('assets/social_media_images/googleplus.png') }}"
+                                    @endif
+                                    >
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+        </div>
         {{--<div class="col-sm-6">
             {!! Form::label('department_id', 'Department:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>

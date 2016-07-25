@@ -469,13 +469,14 @@ class UserController extends Controller
 
             $company=  [];
         }
+        $social_role= Role::whereIn('slug', ['facebook','twitter','google_plus'])->select('slug','id')->get();
 
 //        $department_data =  [''=>'Select Department'] + Department::lists('title','id')->all();
         /*set 30days for expire-date to user*/
         $i=30;
         $add_days = +$i.' days';
         $days= date('Y/m/d', strtotime($add_days, strtotime(date('Y/m/d H:i:s'))));
-        return view('admin::user.create', ['pageTitle'=> $pageTitle,'role'=>$role,'days'=>$days,'company'=>$company]);
+        return view('admin::user.create', ['pageTitle'=> $pageTitle,'role'=>$role,'days'=>$days,'company'=>$company,'social_role'=>$social_role]);
     }
     public function add_user(Requests\UserRequest $request){
 

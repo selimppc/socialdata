@@ -91,6 +91,20 @@ class UserRole extends Migration
             $table->timestamps();
             $table->engine = 'InnoDB';
         });
+
+        /*user activation*/
+
+        schema::create('user_activation', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->dateTime('expire_date')->nullable();
+            $table->string('code',64)->nullable();
+            $table->enum('status',array('active','close'))->nullable();
+            $table->integer('created_by', false, 11);
+            $table->integer('updated_by', false, 11);
+            $table->timestamps();
+            $table->engine = 'InnoDB';
+        });
         Schema::table('user', function($table) {
             //if 'role' and department table  exists
             if(Schema::hasTable('role') && Schema::hasTable('department') && Schema::hasTable('company'))
