@@ -74,7 +74,7 @@
                                 </a>
                             </li>
                                 <li class="divider-inset"></li>
-                            <li class="tile">
+                            {{--<li class="tile">
                                 <a class="tile-content ink-reaction">
                                     <div class="tile-icon">
                                         Date of Birth
@@ -83,7 +83,7 @@
                                         {{ date('d M Y',strtotime($data->date_of_birth)) }}
                                     </div>
                                 </a>
-                            </li>
+                            </li>--}}
                                 <li class="divider-inset"></li>
                             <li class="tile">
                                 <a class="tile-content ink-reaction">

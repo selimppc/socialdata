@@ -61,7 +61,7 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as'=> 'publish-fb',
         'uses' => 'CustomPostController@publish'
     ]);
-    Route::get('create-schedule/{post_id}',[
+    Route::get('create-schedule',[
         #'middleware' => 'acl_access:create-schedule/{post_id}',
         'as'=> 'create-schedule',
         'uses' => 'CustomPostController@create_schedule'

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Facebook\Facebook;
 use Facebook\FacebookRequest;
+use Illuminate\Support\Facades\Validator;
 use Mockery\CountValidator\Exception;
 
 
@@ -46,6 +47,10 @@ class CustomPostController extends Controller
     }
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'social_media' => 'required',
+            'text' => 'required',
+        ]);
         DB::beginTransaction();
         try{
             $company_id=Session::get('company_id');
@@ -54,7 +59,11 @@ class CustomPostController extends Controller
                 $custom_post = new CustomPost();
                 $custom_post->company_id = $company_id;
                 $custom_post->text = $input['text'];
-                $custom_post->status = 'new';
+                if($input['submit']=='later'){
+                    $custom_post->status='processing';
+                }else{
+                    $custom_post->status = 'new';
+                }
                 $custom_post->save();
                 if(isset($input['social_media']) && !empty($input['social_media']))
                 {
@@ -66,7 +75,28 @@ class CustomPostController extends Controller
                         $post_social_media->save();
                     }
                 }
-                Session::flash('message', 'Post has been stored successfully');
+                if($input['submit']=='now')
+                {
+                    try {
+                        $this->publish($custom_post->id);
+                        Session::flash('message', 'Successfully Post on social media.');
+                    }catch (Exception $e){
+                        DB::rollBack();
+                        Sessioin::flash('error',$e->getMessage());
+                    }
+                }elseif($input['submit']=='later'){
+                    $time=$input['date'].' '.$input['time'];
+                    try {
+                        $schedule = new Schedule();
+                        $schedule->time = $time;
+                        $schedule->custom_post_id = $custom_post->id;
+                        $schedule->save();
+                        Session::flash('message','Schedule has been create successfully');
+                    }catch (Exception $e){
+                        DB::rollBack();
+                        Sessioin::flash('error',$e->getMessage());
+                    }
+                }
                 DB::commit();
             }else{
                 Session::flash('error', 'Sorry,You are not set your company yet !!');
@@ -86,19 +116,37 @@ class CustomPostController extends Controller
         $data['all_social_media']=SmType::select('id','type')->get();
         $data['post']=CustomPost::findOrFail($id);
         $active_social_media=PostSocialMedia::select('social_media_id')->where('custom_post_id',$id)->get();
+        // Getting Social Media
         $social_media=[];
         foreach ($active_social_media as $asm) {
             $social_media[]=$asm->social_media_id;
         }
         $data['post']->social_media=$social_media;
+
+        // Getting Schedule
+        $schedule=Schedule::where('custom_post_id',$id)->first();
+        if(isset($schedule) && !empty($schedule))
+        {
+            $scd=explode(' ',$schedule->time);
+            $data['post']->date=$scd[0];
+            $data['post']->time=$scd[1];
+        }
+
         return view('www::custom_post.edit',$data);
     }
     public function update(Request $request,$id)
     {
+        $this->validate($request, [
+            'social_media' => 'required',
+            'text' => 'required',
+        ]);
         DB::beginTransaction();
         try {
             $input = $request->all();
             $custom_post = CustomPost::findOrFail($id);
+            if($input['submit']=='later'){
+                $custom_post->status='processing';
+            }
             $custom_post->text = $input['text'];
             $custom_post->save();
             if (isset($input['social_media']) && !empty($input['social_media'])) {
@@ -111,7 +159,28 @@ class CustomPostController extends Controller
                     $post_social_media->save();
                 }
             }
-            Session::flash('message','Post has been updated successfully');
+            if($input['submit']=='now')
+            {
+                try {
+                    $this->publish($custom_post->id);
+                    Session::flash('message', 'Successfully Post on social media.');
+                }catch (Exception $e){
+                    DB::rollBack();
+                    Sessioin::flash('error',$e->getMessage());
+                }
+            }elseif($input['submit']=='later'){
+                $time=$input['date'].' '.$input['time'];
+                try {
+                    $schedule = Schedule::where('custom_post_id',$id)->first();
+                    $schedule->time = $time;
+                    $schedule->custom_post_id = $custom_post->id;
+                    $schedule->save();
+                    Session::flash('message','Schedule has been create successfully');
+                }catch (Exception $e){
+                    DB::rollBack();
+                    Sessioin::flash('error',$e->getMessage());
+                }
+            }
             DB::commit();
         }catch (Exception $e){
             DB::rollback();
@@ -164,10 +233,9 @@ class CustomPostController extends Controller
         }
         return redirect()->back();
     }
-    public function create_schedule($id)
+    public function create_schedule()
     {
         $data['pageTitle']='Create Schedule';
-        $data['post_id']=$id;
         return view('www::custom_post.create_schedule',$data);
     }
     public function store_schedule(Request $request,$id)

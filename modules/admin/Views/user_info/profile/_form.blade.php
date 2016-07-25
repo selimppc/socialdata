@@ -20,8 +20,7 @@
     <div class="row">
         <div class="col-sm-6">
             {!! Form::label('telephone_number', 'Telephone Number:', ['class' => 'control-label']) !!}
-            <small class="required">(Required)</small>
-            {!! Form::text('telephone_number', Input::old('telephone_number'), ['class' => 'form-control','required'=>'required','title'=>'Enter Telephone Number']) !!}
+            {!! Form::text('telephone_number', Input::old('telephone_number'), ['class' => 'form-control','title'=>'Enter Telephone Number']) !!}
         </div>
         <div class="col-sm-6">
             {{--<div class="input-group date" id="demo-date">
@@ -32,9 +31,8 @@
 
 
             {!! Form::label('date_of_birth', 'Date Of Birth:', ['class' => 'control-label']) !!}
-            <small class="required">(Required)</small>
             <div class="">
-                {!! Form::text('date_of_birth', Input::old('date_of_birth'), ['class' => 'form-control datapicker','required','title'=>'select birth date']) !!}
+                {!! Form::text('date_of_birth', Input::old('date_of_birth'), ['class' => 'form-control datapicker','title'=>'select birth date']) !!}
             </div>
         </div>
     </div>
@@ -44,8 +42,7 @@
     <div class="row">
         <div class="col-sm-12">
             {!! Form::label('address', ' Address:', ['class' => 'control-label']) !!}
-            <small class="required">(Required)</small>
-                {!! Form::textarea('address', Input::old('address'), ['id'=>'address', 'class' => 'form-control','size' => '12x3','title'=>'enter address of user','required']) !!}
+                {!! Form::textarea('address', Input::old('address'), ['id'=>'address', 'class' => 'form-control','size' => '12x3','title'=>'enter address of user']) !!}
         </div>
     </div>
 </div>
@@ -58,7 +55,7 @@
             @if(isset($user_image))
                 <img src="{{ URL::to($user_image->thumbnail) }}" width="100px" height="100px">
             @endif
-            {!! Form::file('image',Input::old('image'), [ 'class' => 'form-control','required','title'=>'Add Profile Image only png,gif,jpeg,jpg Format']) !!}
+            {!! Form::file('image',Input::old('image'), [ 'class' => 'form-control','title'=>'Add Profile Image only png,gif,jpeg,jpg Format']) !!}
         </div>
     </div>
 </div>

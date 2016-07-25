@@ -23,7 +23,7 @@
                                 <th> ID </th>
                                 <th> Post </th>
                                 <th width="10%"> Status </th>
-                                <th> Actions </th>
+                                <th width="10%"> Actions </th>
                             </tr>
                             </thead>
                             <style>
@@ -40,15 +40,16 @@
                                     <td>{{ ucfirst($post->status) }}</td>
                                     <td>
                                         @if($post->status!='sent')
+                                            <a href="{{ url('www/edit-post/'.$post->id) }}" data-placement="top" data-content="click add role button for new role entry" class="btn btn-info btn-xs">Edit</a>
                                             @if($post->status=='processing')
                                                 @if($post->relSchedule != null)
-                                                    <a href="{{ url('www/edit-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default btn-xs" >Edit Schedule</a>
-                                                    <a href="{{ url('www/show-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-info btn-xs" >View Schedule</a>
+                                                    {{--<a href="{{ url('www/edit-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default btn-xs" >Edit Schedule</a>--}}
+                                                    <a href="{{ url('www/show-schedule/'.$post->relSchedule['id']) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-warning btn-xs" >Schedule</a>
                                                 @endif
                                             @else
-                                                <a href="{{ url('www/edit-post/'.$post->id) }}" data-placement="top" data-content="click add role button for new role entry" class="btn btn-info btn-xs">Edit</a>
+                                                {{--<a href="{{ url('www/edit-post/'.$post->id) }}" data-placement="top" data-content="click add role button for new role entry" class="btn btn-info btn-xs">Edit</a>
                                                 <a href="{{ url('www/publish/'.$post->id) }}" class="btn btn-warning btn-xs">Publish Now</a>
-                                                <a href="{{ url('www/create-schedule/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default btn-xs" >Create Schedule</a>
+                                                <a href="{{ url('www/create-schedule/'.$post->id) }}" data-toggle="modal" data-placement="top" data-target="#editPost" class="btn btn-default btn-xs" >Create Schedule</a>--}}
                                             @endif
                                         @else
 
@@ -82,7 +83,7 @@
 
                     <div class="footer-form-margin-btn">
                         {!! Form::submit('Store', ['class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save company information']) !!}&nbsp;
-                        <a href="{{route('posts')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+                        <a href="#" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form" data-dismiss="modal">Close</a>
                     </div>
                 </div>
 

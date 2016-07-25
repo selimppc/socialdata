@@ -4,6 +4,7 @@
 @stop
 
 @section('content')
+    @include('www::custom_post._script')
     <div class="section-body contain-lg">
         <!-- BEGIN BASIC ELEMENTS -->
         <div class="row">

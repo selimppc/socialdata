@@ -10,6 +10,6 @@
 
 
     <div class="footer-form-margin-btn">
-        <a href="{{route('posts')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+        <a href="#" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form" data-dismiss="modal">Close</a>
     </div>
 </div>

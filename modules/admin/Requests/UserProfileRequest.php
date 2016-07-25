@@ -31,8 +31,7 @@ class UserProfileRequest extends Request
     {
         return [
             'first_name' => 'required',
-            'last_name' => 'required',
-            'date_of_birth' => 'required',
+            'last_name' => 'required'
         ];
     }
 }
