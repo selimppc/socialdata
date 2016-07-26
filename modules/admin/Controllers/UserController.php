@@ -462,15 +462,15 @@ class UserController extends Controller
         $pageTitle = "Add User";
         $role_id=Session::get('role_id');
         if($role_id== 'sadmin' || $role_id=='admin') {
-            $role =  [''=>'Select Role'] +  Role::lists('title','id')->all();
+            $role =  Role::whereNotIn('slug', ['facebook','twitter','google_plus'])->select('title','id','type')->get();
+
             $company=  [''=>'Select Company'] +  Company::lists('title','id')->all();
         }else{
-            $role =  [''=>'Select Role'] +  Role::where('company_id', Session::get('company_id'))->lists('title','id')->all();
+            $role =  Role::select('title','id','type')->where('company_id', Session::get('company_id'))->get();
 
             $company=  [];
         }
         $social_role= Role::whereIn('slug', ['facebook','twitter','google_plus'])->select('slug','id')->get();
-
 //        $department_data =  [''=>'Select Department'] + Department::lists('title','id')->all();
         /*set 30days for expire-date to user*/
         $i=30;
@@ -481,6 +481,7 @@ class UserController extends Controller
     public function add_user(Requests\UserRequest $request){
 
         $input = $request->all();
+//        dd($input);
         $input['expire_date']=date('Y-m-d',strtotime($input['expire_date']));
         #print_r($input);exit;
         date_default_timezone_set("Asia/Dacca");
@@ -494,7 +495,6 @@ class UserController extends Controller
                 'password'=>Hash::make($input['password']),
                 'csrf_token'=> str_random(30),
                 'ip_address'=> getHostByName(getHostName()),
-                'last_visit'=> $now,
                 'company_id'=> Session::get('company_id'),
                 'role_id'=> $input['role_id'],
                 'expire_date'=> $input['expire_date'],
@@ -502,22 +502,44 @@ class UserController extends Controller
             ];
             #print_r($input_data);exit;
 
-           if($user = User::create($input_data)){
-               $role_user = [
-                   'user_id'=>$user['id'],
-                   'role_id'=>$input['role_id'],
-                   'status'=>'active',
-               ];
-               RoleUser::create($role_user);
-           }
+            if($user = User::create($input_data)){
+                $role_user = [
+                    'user_id'=>$user['id'],
+                    'role_id'=>$input['role_id'],
+                    'status'=>'active',
+                ];
+                RoleUser::create($role_user);
+                if(isset($input['social_media'])){
+                    foreach ($input['social_media'] as $id=>$value) {
+                        $role_user=[
+                            'user_id'=>$user['id'],
+                            'role_id'=>$value,
+                            'status'=>'active',
+                        ];
+                        RoleUser::create($role_user);
+                    }
+                }
+            }
+
+            $email=$user->email;
+            $company= Company::findOrFail( Session::get('company_id'));
+
+            Mail::send('admin::user.email', ['company_name'=>$company->title]+$input,function($message) use ($email)
+            {
+                $message->from('test@edutechsolutionsbd.com', 'Account Information');
+                $message->to($email);
+                $message->subject('Account activation link');
+            });
+
             DB::commit();
             Session::flash('message', 'Successfully added!');
             LogFileHelper::log_info('user-add', 'Successfully added!', ['Username: '.$input_data['username']]);
         } catch (\Exception $e) {
-            //If there are any exceptions, rollback the transaction`
             DB::rollback();
+            //If there are any exceptions, rollback the transaction`
             Session::flash('danger', $e->getMessage());
             LogFileHelper::log_error('user-add', $e->getMessage(), ['Username: '.$input['username']]);
+            return redirect()->back();
         }
 
         return redirect()->to('user-list');
@@ -550,15 +572,28 @@ class UserController extends Controller
 
         $role_id=Session::get('role_id');
         if($role_id== 'sadmin' || $role_id=='admin') {
-            $role =  [''=>'Select Role'] +  Role::lists('title','id')->all();
+            $role =  Role::whereNotIn('slug', ['facebook','twitter','google_plus'])->select('title','id','type')->get();
         }else{
-            $role =  [''=>'Select Role'] +  Role::where('company_id', Session::get('company_id'))->lists('title','id')->all();
+            $role =  Role::select('title','id','type')->where('company_id', Session::get('company_id'))->get();
+        }
+        $social_role= Role::whereIn('slug', ['facebook','twitter','google_plus'])->select('slug','id')->get();
+        $activeSocialRole= RoleUser::select('role_id')->where('user_id',$id)->get();
+
+        foreach ($social_role as $id=>$sr) {
+            foreach ($activeSocialRole as $asr) {
+                if($sr->id==$asr->role_id)
+                {
+                    $social_role[$id]->active=1;
+                }
+            }
         }
 
+        $selected_role_type= Role::findOrFail($data->role_id);
+        $selected_role_type= $selected_role_type->type;
 
 //        $role =  [''=>'Select Role'] +  Role::lists('title','id')->all();
 
-        return view('admin::user.update', ['pageTitle'=>$pageTitle,'data' => $data,'role'=>$role]);
+        return view('admin::user.update', ['pageTitle'=>$pageTitle,'data' => $data,'role'=>$role,'social_role'=>$social_role,'selected_role_type'=>$selected_role_type]);
     }
 
     /**
@@ -590,13 +625,40 @@ class UserController extends Controller
                 'csrf_token' => str_random(30),
                 'ip_address' => getHostByName(getHostName()),
                 'last_visit' => $now,
-//                'role_id'=> $input['role_id'],
+                'role_id'=> $input['role_id'],
                 'expire_date' => $input['expire_date'],
                 'status' => $input['status'],
             ];
             DB::beginTransaction();
             try {
                 $model1->update($input_data);
+                // update role user
+                $role_user=RoleUser::where('user_id',$model1->id)->first();
+                $role_user->role_id=$input['role_id'];
+                $role_user->save();
+
+                $checkRole=Role::findOrFail($input['role_id']);
+                if($checkRole->type=='user') {
+
+                    if (isset($input['social_media'])) {
+                        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+                        $activeRole=RoleUser::where('user_id', $model1->id)->whereNotIn('role_id', [$role_user->role_id])->delete();
+
+
+                        foreach ($input['social_media'] as $id => $value) {
+
+                            $role_user = [
+                                'user_id' => $model1->id,
+                                'role_id' => $value,
+                                'status' => 'active',
+                            ];
+                            RoleUser::create($role_user);
+                        }
+                    }
+                }else{
+                    DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+                    RoleUser::where('user_id', $model1->id)->whereNotIn('role_id', [$role_user->role_id])->delete();
+                }
 
                 DB::commit();
                 Session::flash('message', "Successfully Updated");

@@ -40,16 +40,18 @@
         <div class="col-sm-6">
             {!! Form::label('role_id', 'User Role:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
-            {!! Form::Select('role_id',$role, Input::old('role_id'),['style'=>'text-transform:capitalize','class' => 'form-control','required','title'=>'select role name']) !!}
+            <select class="form-control" required title="Select role name" id="role_id" name="role_id" style="text-transform: capitalize">
+                <option value="">Select Role</option>
+                @foreach($role as $r)
+                <option value="{{ $r->id }}" class="{{ $r->type }}">{{ $r->title }}</option>
+                @endforeach
+            </select>
+{{--            {!! Form::Select('role_id',$role, Input::old('role_id'),['style'=>'text-transform:capitalize','class' => 'form-control','required','title'=>'select role name','id'=>'role_id']) !!}--}}
         </div>
         <div class="col-sm-6">
             {!! Form::label('expire_date', 'Expire Date:', ['class' => 'control-label']) !!}
             <div class="input-group date" id="demo-date">
-                @if(isset($data->expire_date))
-                    {!! Form::text('expire_date', Input::old('expire_date'), ['class' => 'form-control bs-datepicker-component','required','title'=>'select expire date']) !!}
-                @else
                     {!! Form::text('expire_date', $days, ['class' => 'form-control bs-datepicker-component','required','title'=>'select expire date']) !!}
-                @endif
 
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
@@ -58,16 +60,15 @@
             {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
             {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
         </div>
-        <div class="col-sm-6">
-
+        <div class="col-sm-6" id="permissionSocialMediaDiv" style="display: none">
             <div class="form-group">
                 {!! Form::label('social_media', 'Permission on:', ['class' => 'control-label']) !!}
-                <small class="required">(Required)</small>
+                <small class="required">(Required) <i id="sMessage" style="color: red;display: none">This field is required</i></small>
                 <br>
                 @foreach($social_role as $sr)
                     <div class="checkbox-inline">
                         <label class="">
-                            {!! Form::checkbox('social_media[]', $sr->id,Input::old('social_media'), ['id'=>'social_media']) !!}
+                            {!! Form::checkbox('social_media[]', $sr->id,Input::old('social_media'), ['class'=>'social_media']) !!}
                             <img width="60px" height="25px"
                                  @if($sr->slug=='facebook')
                                  src="{{ asset('assets/social_media_images/facebook.jpg') }}"
@@ -130,6 +131,17 @@
     <div class="form-group form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
         <div class="row">
             <div class="col-sm-6">
+                {!! Form::label('role_id', 'User Role:', ['class' => 'control-label']) !!}
+                <small class="required">(Required)</small>
+                <select class="form-control" required title="Select role name" id="role_id" name="role_id" style="text-transform: capitalize">
+                    <option value="">Select Role</option>
+                    @foreach($role as $r)
+                        <option @if($data->role_id == $r->id) selected @endif value="{{ $r->id }}" class="{{ $r->type }}">{{ $r->title }}</option>
+                    @endforeach
+                </select>
+                {{--            {!! Form::Select('role_id',$role, Input::old('role_id'),['style'=>'text-transform:capitalize','class' => 'form-control','required','title'=>'select role name','id'=>'role_id']) !!}--}}
+            </div>
+            <div class="col-sm-6">
                 {!! Form::label('expire_date', 'Expire Date:', ['class' => 'control-label']) !!}
                 <div class="input-group date" id="demo-date">
                     @if(isset($data->expire_date))
@@ -139,6 +151,30 @@
                     @endif
 
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-sm-6" id="permissionSocialMediaDiv" @if($selected_role_type!='user') style="display: none" @endif>
+                <div class="form-group">
+                    {!! Form::label('social_media', 'Permission on:', ['class' => 'control-label']) !!}
+                    <small class="required">(Required) <i id="sMessage" style="color: red;display: none">This field is required</i></small>
+                    <br>
+                    @foreach($social_role as $sr)
+                        <div class="checkbox-inline">
+                            <label class="">
+                                <input type="checkbox" name="social_media[]" value="{{ $sr->id }}" class="social_media" @if(isset($sr->active)) checked @endif>
+                                {{--{!! Form::checkbox('social_media[]', $sr->id,Input::old('social_media'), ['class'=>'social_media']) !!}--}}
+                                <img width="60px" height="25px"
+                                     @if($sr->slug=='facebook')
+                                     src="{{ asset('assets/social_media_images/facebook.jpg') }}"
+                                     @elseif($sr->slug=='twitter')
+                                     src="{{ asset('assets/social_media_images/twitter.jpg') }}"
+                                     @elseif($sr->slug=='google_plus')
+                                     src="{{ asset('assets/social_media_images/googleplus.png') }}"
+                                        @endif
+                                        >
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
             <div class="col-sm-6">
@@ -160,7 +196,7 @@
 @endif
 
 <div class="save-margin-btn">
-    {!! Form::submit('Save changes', ['id'=>'btn-disabled','class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save role information']) !!}
+    {!! Form::submit('Save changes', ['id'=>'submitBtn','class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save role information']) !!}
     <a href="{{route('user-list')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
 </div>
 
@@ -181,5 +217,29 @@
             document.getElementById("btn-disabled").disabled = true;
         });
     }
+    $('#role_id').change(function(){
+        var role_type=$('select[name="role_id"] :selected').attr('class');
+        if(role_type == 'user')
+        {
+            $('#permissionSocialMediaDiv').show();
+        }else{
+            $('#permissionSocialMediaDiv').hide();
+        }
+    });
+    $('#submitBtn').click(function(){
+        var role_type=$('select[name="role_id"] :selected').attr('class');
+        if(role_type=='user')
+        {
+            if ($('.social_media').is(":checked"))
+            {
+                $('#sMessage').hide();
+                return true;
+                // it is checked
+            }else{
+                $('#sMessage').show();
+            }
+            return false;
+        }
+    });
 
 </script>
