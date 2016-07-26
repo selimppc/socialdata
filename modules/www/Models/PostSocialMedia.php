@@ -25,7 +25,7 @@ class PostSocialMedia extends Model
     }
     public function relSmType()
     {
-        return $this->belongsTo('App\relSmType','social_media_id','id');
+        return $this->belongsTo('App\SmType','social_media_id','id');
     }
 
 }

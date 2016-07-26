@@ -17,10 +17,16 @@ class CustomPost extends Model
         'text',
         'status',
         'company_id',
+        'notify_time',
+        'execute_time',
         'postId',
         'created_by',
         'updated_by',
     ];
+    public function relUser()
+    {
+        return $this->belongsTo('App\User','created_by','id');
+    }
     public function relSchedule()
     {
         return $this->hasOne('App\Schedule','custom_post_id','id');
