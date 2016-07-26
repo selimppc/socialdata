@@ -10,20 +10,37 @@
             <small class="required">(Required)</small>
             <br>
             @foreach($all_social_media as $sm)
-                <div class="checkbox-inline">
-                <label class="">
-                {!! Form::checkbox('social_media[]', $sm->id,Input::old('social_media'), ['id'=>'social_media']) !!}
-                <img width="60px" height="25px"
-                     @if($sm->type=='facebook')
-                     src="{{ asset('assets/social_media_images/facebook.jpg') }}"
-                     @elseif($sm->type=='twitter')
-                     src="{{ asset('assets/social_media_images/twitter.jpg') }}"
-                     @elseif($sm->type=='google_plus')
-                     src="{{ asset('assets/social_media_images/googleplus.png') }}"
-                        @endif
-                        >
-                </label>
-                </div>
+                @if(session('role_id')=='user' && isset($sm->active))
+                    <div class="checkbox-inline">
+                        <label class="">
+                            {!! Form::checkbox('social_media[]', $sm->id,Input::old('social_media'), ['id'=>'social_media']) !!}
+                            <img width="60px" height="25px"
+                                 @if($sm->type=='facebook')
+                                 src="{{ asset('assets/social_media_images/facebook.jpg') }}"
+                                 @elseif($sm->type=='twitter')
+                                 src="{{ asset('assets/social_media_images/twitter.jpg') }}"
+                                 @elseif($sm->type=='google_plus')
+                                 src="{{ asset('assets/social_media_images/googleplus.png') }}"
+                                    @endif
+                                    >
+                        </label>
+                    </div>
+                @else
+                    <div class="checkbox-inline">
+                        <label class="">
+                            {!! Form::checkbox('social_media[]', $sm->id,Input::old('social_media'), ['id'=>'social_media']) !!}
+                            <img width="60px" height="25px"
+                                 @if($sm->type=='facebook')
+                                 src="{{ asset('assets/social_media_images/facebook.jpg') }}"
+                                 @elseif($sm->type=='twitter')
+                                 src="{{ asset('assets/social_media_images/twitter.jpg') }}"
+                                 @elseif($sm->type=='google_plus')
+                                 src="{{ asset('assets/social_media_images/googleplus.png') }}"
+                                    @endif
+                                    >
+                        </label>
+                    </div>
+                @endif
             @endforeach
         </div>
     </div>

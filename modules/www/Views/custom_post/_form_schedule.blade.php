@@ -10,5 +10,9 @@
             <small class="required">(Required)<i style="display: none;color: red;" id="timeRequired">This field is required</i></small>
             {!! Form::input('time','time', Input::old('time'), ['id'=>'time', 'class' => 'form-control']) !!}
         </div>
+        <div class="form-group">
+            {!! Form::label('notify_time','Notify: ',['class'=>'control-label']) !!}
+            {!! Form::select('notify_time',['30'=>'30 min before','15'=>'15 min before','10'=>'10 min before','5'=>'5 min before'],null,['class'=>'form-control']) !!}
+        </div>
     </div>
 </div>

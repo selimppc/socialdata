@@ -14,9 +14,12 @@ use App\Helpers\FacebookHelper;
 use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\PostSocialMedia;
+use App\Role;
+use App\RoleUser;
 use App\Schedule;
 use App\SmType;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,14 +36,39 @@ class CustomPostController extends Controller
     {
         $company_id=Session::get('company_id');
         $data['pageTitle']='Custom Posts';
-        $data['all_social_media']=SmType::select('id','type')->get();
-        $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
+        if(session('role_id')=='user')
+        {
+            $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->where('created_by',session('user_id'))->get();
+        }else{
+            $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
+        }
         return view('www::custom_post.index',$data);
     }
     public function create()
     {
         $company_id=Session::get('company_id');
-        $data['all_social_media']=SmType::select('id','type')->get();
+        if(session('role_id')=='user')
+        {
+            $userRole= RoleUser::where('user_id',session('user_id'))->get();
+            unset($userRole[0]);
+            $role_id=[];
+            foreach ($userRole as $ur) {
+                $role_id[]=$ur->role_id;
+            }
+            $roles= Role::select('slug')->whereIn('id',$role_id)->get();
+            $data['all_social_media'] = SmType::select('id', 'type')->get();
+            foreach ($data['all_social_media'] as $id=>$asm) {
+                foreach ($roles as $role) {
+                    if($role->slug==$asm->type)
+                    {
+                        $data['all_social_media'][$id]->active=1;
+                    }
+                }
+
+            }
+        }else {
+            $data['all_social_media'] = SmType::select('id', 'type')->get();
+        }
         $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
         $data['pageTitle']='Add new post';
         return view('www::custom_post.create',$data);
@@ -83,6 +111,7 @@ class CustomPostController extends Controller
                     }catch (Exception $e){
                         DB::rollBack();
                         Sessioin::flash('error',$e->getMessage());
+                        return redirect()->back();
                     }
                 }elseif($input['submit']=='later'){
                     $time=$input['date'].' '.$input['time'];
@@ -91,10 +120,20 @@ class CustomPostController extends Controller
                         $schedule->time = $time;
                         $schedule->custom_post_id = $custom_post->id;
                         $schedule->save();
+
+
+                        $exTime=new Carbon($time);
+                        $exTime->subMinute($input['notify_time']);
+                        $custom_post->notify_time=$input['notify_time'];
+                        $custom_post->execute_time=$exTime;
+                        $custom_post->save();
+
+
                         Session::flash('message','Schedule has been create successfully');
                     }catch (Exception $e){
                         DB::rollBack();
                         Sessioin::flash('error',$e->getMessage());
+                        return redirect()->back();
                     }
                 }
                 DB::commit();
@@ -113,7 +152,28 @@ class CustomPostController extends Controller
     public function edit($id)
     {
         $data['pageTitle']='Edit post';
-        $data['all_social_media']=SmType::select('id','type')->get();
+        if(session('role_id')=='user')
+        {
+            $userRole= RoleUser::where('user_id',session('user_id'))->get();
+            unset($userRole[0]);
+            $role_id=[];
+            foreach ($userRole as $ur) {
+                $role_id[]=$ur->role_id;
+            }
+            $roles= Role::select('slug')->whereIn('id',$role_id)->get();
+            $data['all_social_media'] = SmType::select('id', 'type')->get();
+            foreach ($data['all_social_media'] as $asm_id=>$asm) {
+                foreach ($roles as $role) {
+                    if($role->slug==$asm->type)
+                    {
+                        $data['all_social_media'][$asm_id]->active=1;
+                    }
+                }
+
+            }
+        }else {
+            $data['all_social_media'] = SmType::select('id', 'type')->get();
+        }
         $data['post']=CustomPost::findOrFail($id);
         $active_social_media=PostSocialMedia::select('social_media_id')->where('custom_post_id',$id)->get();
         // Getting Social Media
@@ -131,6 +191,7 @@ class CustomPostController extends Controller
             $data['post']->date=$scd[0];
             $data['post']->time=$scd[1];
         }
+//        dd($data['post']);
 
         return view('www::custom_post.edit',$data);
     }
@@ -175,6 +236,14 @@ class CustomPostController extends Controller
                     $schedule->time = $time;
                     $schedule->custom_post_id = $custom_post->id;
                     $schedule->save();
+
+
+                    $exTime=new Carbon($time);
+                    $exTime->subMinute($input['notify_time']);
+                    $custom_post->notify_time=$input['notify_time'];
+                    $custom_post->execute_time=$exTime;
+                    $custom_post->save();
+
                     Session::flash('message','Schedule has been create successfully');
                 }catch (Exception $e){
                     DB::rollBack();
