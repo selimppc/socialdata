@@ -107,6 +107,7 @@ class CustomPostController extends Controller
                         $post_social_media= new PostSocialMedia();
                         $post_social_media->custom_post_id=$custom_post->id;
                         $post_social_media->social_media_id=$sm;
+                        $post_social_media->company_id=session('company_id');
                         $post_social_media->status='new';
                         $post_social_media->save();
                     }

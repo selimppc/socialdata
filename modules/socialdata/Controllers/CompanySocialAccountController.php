@@ -2,8 +2,13 @@
 
 namespace Modules\Socialdata\Controllers;
 
+use App\ArchiveSchedule;
 use App\Company;
 use App\CompanySocialAccount;
+use App\CustomPost;
+use App\Post;
+use App\PostSocialMedia;
+use App\Schedule;
 use App\SmType;
 use Illuminate\Http\Request;
 
@@ -169,19 +174,26 @@ class CompanySocialAccountController extends Controller
      */
     public function delete($id)
     {
-        $companySocailAccount = CompanySocialAccount::select('sm_type_id')->where('id',$id)->first();
+        $companySocialAccount = CompanySocialAccount::select('sm_type_id','company_id')->where('id',$id)->first();
 
         DB::beginTransaction();
         try {
-            $smType= SmType::select('id')->where('id',$id)->first();
-            $smType=SmType::findOrFail($companySocailAccount->sm_type_id);
-            dd($smType);
-
-
-
-            exit('k');
+            $postSocialMedia = PostSocialMedia::where('company_id', $companySocialAccount->company_id)->where('social_media_id', $companySocialAccount->sm_type_id)->get();
+            foreach ($postSocialMedia as $psm) {
+                $checkPost = PostSocialMedia::where('custom_post_id', $psm->custom_post_id)->get();
+                echo $psm->id.'-';
+                echo count($checkPost).'<br>';
+                if (count($checkPost) == 1) {
+                    Schedule::where('custom_post_id', $psm->custom_post_id)->delete();
+                    ArchiveSchedule::where('custom_post_id', $psm->custom_post_id)->delete();
+                    Post::findOrFail($psm->custom_post_id)->delete();
+                }
+            }
+            PostSocialMedia::where('company_id', $companySocialAccount->company_id)->where('social_media_id', $companySocialAccount->sm_type_id)->delete();
+            CompanySocialAccount::select('sm_type_id','company_id')->where('id',$id)->delete();
             DB::commit();
             Session::flash('message', "Successfully Deleted.");
+
         } catch(\Exception $e) {
             DB::rollback();
             Session::flash('danger',$e->getMessage());
