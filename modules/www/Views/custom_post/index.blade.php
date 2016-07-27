@@ -22,6 +22,9 @@
                             <tr>
                                 <th> ID </th>
                                 <th> Post </th>
+                                @if(session('company_id')==null)
+                                <th> Company </th>
+                                @endif
                                 <th width="10%"> Status </th>
                                 <th width="10%"> Actions </th>
                             </tr>
@@ -37,6 +40,9 @@
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ nl2br($post->text) }}</td>
+                                    @if(session('company_id')==null)
+                                        <td> {{ $post->relCompany['title'] }} </td>
+                                    @endif
                                     <td>{{ ucfirst($post->status) }}</td>
                                     <td>
                                         @if($post->status!='sent')

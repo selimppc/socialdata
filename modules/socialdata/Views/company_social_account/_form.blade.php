@@ -45,5 +45,9 @@
 
 <div class="footer-form-margin-btn">
     {!! Form::submit('Save changes', ['class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save information']) !!}&nbsp;
+    @if(session('company_id')== null)
     <a href="{{ url('index-company-social-account',$company_id) }}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+    @else
+        <a href="{{ url('index-company-social-account') }}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+    @endif
 </div>

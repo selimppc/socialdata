@@ -486,6 +486,8 @@ class UserController extends Controller
         #print_r($input);exit;
         date_default_timezone_set("Asia/Dacca");
         $now = new DateTime();
+        $company_id_by_role_id= Role::where('id',$input['role_id'])->select('company_id')->first();
+        $company_id_by_role_id=$company_id_by_role_id->company_id;
         /* Transaction Start Here */
         DB::beginTransaction();
         try {
@@ -495,7 +497,7 @@ class UserController extends Controller
                 'password'=>Hash::make($input['password']),
                 'csrf_token'=> str_random(30),
                 'ip_address'=> getHostByName(getHostName()),
-                'company_id'=> Session::get('company_id'),
+                'company_id'=> $company_id_by_role_id,
                 'role_id'=> $input['role_id'],
                 'expire_date'=> $input['expire_date'],
                 'status'=> $input['status'],
@@ -522,13 +524,19 @@ class UserController extends Controller
             }
 
             $email=$user->email;
-            $company= Company::findOrFail( Session::get('company_id'));
+            if($company_id_by_role_id==null)
+            {
+                $company_title= 'Social Data Admin';
+            }else{
+                $company= Company::findOrFail($company_id_by_role_id);
+                $company_title=$company->title;
+            }
 
-            Mail::send('admin::user.email', ['company_name'=>$company->title]+$input,function($message) use ($email)
+            Mail::send('admin::user.email', ['company_name'=>$company_title]+$input,function($message) use ($email)
             {
                 $message->from('test@edutechsolutionsbd.com', 'Account Information');
                 $message->to($email);
-                $message->subject('Account activation link');
+                $message->subject('Account Credential [Social Data]');
             });
 
             DB::commit();

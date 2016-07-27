@@ -75,8 +75,6 @@ class UserActivityController extends Controller
             $action_route = Input::get('action_route');
             $in_date = Input::get('date');
             $user_id = Input::get('user_id');
-            $in_date= explode(" ",$in_date);
-            $in_date=date('Y-m-d',strtotime($in_date[0]));
 
             $data = $data->select('user_activity.*','user.username');
             if($action_name){
@@ -86,6 +84,7 @@ class UserActivityController extends Controller
                 $data = $data->where('user_activity.action_url', 'LIKE', '%'.$action_route.'%');
             }
             if($in_date){
+                $in_date= date('Y-m-d',strtotime($in_date));
                 $data = $data->whereDate('user_activity.date', '=', $in_date);
             }
             if(isset($user_id) && !empty($user_id)){
@@ -99,6 +98,7 @@ class UserActivityController extends Controller
             }
 
             $data = $data->orderBy('user_activity.id', 'DESC')->paginate(30);
+//            dd($data);
             /*$data = $data->orderBy('user_activity.id', 'DESC')->toSql();
             dd($data); exit;*/
         }else{

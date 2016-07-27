@@ -89,8 +89,12 @@ class CompanySocialAccountController extends Controller
             Session::flash('danger', $e->getMessage());
             return redirect()->back();
         }
-
-        return redirect()->to('index-company-social-account/'.$input['company_id']);
+        if(session('company_id')==null)
+        {
+            return redirect()->to('index-company-social-account/'.$input['company_id']);
+        }else{
+            return redirect()->to('index-company-social-account');
+        }
     }
 
     /**
@@ -149,7 +153,12 @@ class CompanySocialAccountController extends Controller
             return redirect()->back();
         }
 
-        return redirect()->to('index-company-social-account/'.$input['company_id']);
+        if(session('company_id')==null)
+        {
+            return redirect()->to('index-company-social-account/'.$input['company_id']);
+        }else{
+            return redirect()->to('index-company-social-account');
+        }
     }
 
     /**

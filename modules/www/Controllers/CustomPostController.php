@@ -38,11 +38,17 @@ class CustomPostController extends Controller
         $data['pageTitle']='Custom Posts';
         if(session('role_id')=='user')
         {
-            $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->where('created_by',session('user_id'))->get();
+            $data['posts']=CustomPost::with(['relSchedule','relCompany'=>function($query){
+                $query->addSelect('id','title');
+            }])->where('company_id',$company_id)->where('created_by',session('user_id'))->get();
         }elseif($company_id != null){
-            $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
+            $data['posts']=CustomPost::with(['relSchedule','relCompany'=>function($query){
+                $query->addSelect('id','title');
+            }])->where('company_id',$company_id)->get();
         }else{
-            $data['posts']=CustomPost::with(['relSchedule'])->get();
+            $data['posts']=CustomPost::with(['relSchedule','relCompany'=>function($query){
+                $query->addSelect('id','title');
+            }])->get();
         }
         return view('www::custom_post.index',$data);
     }

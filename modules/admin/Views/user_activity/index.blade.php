@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="col-sm-2">
-                        {!! Form::text('date',@Input::get('date')? Input::get('date') : null,['class' => 'datapicker2 form-control input-sm','placeholder'=>'pick a date', 'title'=>'pick a date by clicking here, then click "search" button']) !!}
+                        {!! Form::text('date',@Input::get('date')? Input::get('date') : null,['class' => 'datapicker form-control input-sm','placeholder'=>'pick a date', 'title'=>'pick a date by clicking here, then click "search" button']) !!}
                     </div>
 
                     <div class="col-sm-2">
