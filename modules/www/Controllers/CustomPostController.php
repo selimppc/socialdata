@@ -39,8 +39,10 @@ class CustomPostController extends Controller
         if(session('role_id')=='user')
         {
             $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->where('created_by',session('user_id'))->get();
-        }else{
+        }elseif($company_id != null){
             $data['posts']=CustomPost::with(['relSchedule'])->where('company_id',$company_id)->get();
+        }else{
+            $data['posts']=CustomPost::with(['relSchedule'])->get();
         }
         return view('www::custom_post.index',$data);
     }
