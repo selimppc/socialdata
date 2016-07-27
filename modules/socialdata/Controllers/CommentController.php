@@ -118,6 +118,7 @@ class CommentController extends Controller
             DB::rollback();
             Session::flash('danger', $ex->getMessage());
         }
+        DB::statement("SET foreign_key_checks = 1");
         return redirect()->route('index-post');
     }
 }

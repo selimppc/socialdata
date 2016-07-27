@@ -184,6 +184,7 @@ class CompanySocialAccountController extends Controller
                 echo $psm->id.'-';
                 echo count($checkPost).'<br>';
                 if (count($checkPost) == 1) {
+                    dd($psm->custom_post_id);
                     Schedule::where('custom_post_id', $psm->custom_post_id)->delete();
                     ArchiveSchedule::where('custom_post_id', $psm->custom_post_id)->delete();
                     Post::findOrFail($psm->custom_post_id)->delete();

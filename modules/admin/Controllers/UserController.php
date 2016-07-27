@@ -651,6 +651,7 @@ class UserController extends Controller
                     if (isset($input['social_media'])) {
                         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
                         $activeRole=RoleUser::where('user_id', $model1->id)->whereNotIn('role_id', [$role_user->role_id])->delete();
+                        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 
 
                         foreach ($input['social_media'] as $id => $value) {
@@ -666,6 +667,7 @@ class UserController extends Controller
                 }else{
                     DB::statement('SET FOREIGN_KEY_CHECKS = 0');
                     RoleUser::where('user_id', $model1->id)->whereNotIn('role_id', [$role_user->role_id])->delete();
+                    DB::statement('SET FOREIGN_KEY_CHECKS = 1');
                 }
 
                 DB::commit();
