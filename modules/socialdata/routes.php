@@ -203,6 +203,12 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
         "uses" => "CompanySocialAccountController@delete"
     ]);
 
+    Route::any("company-social-account-status-change/{id}/{status}", [
+        //"middleware" => "acl_access:company-social-account-status-change/{id}/{status}",
+        "as"   => "company-social-account-status-change",
+        "uses" => "CompanySocialAccountController@change_status"
+    ]);
+
     //Post Controller
 
     Route::any("index-post", [

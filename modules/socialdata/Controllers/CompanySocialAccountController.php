@@ -50,7 +50,7 @@ class CompanySocialAccountController extends Controller
         }
         $pageTitle = "Company Social Media Account Informations";
 
-        $data = CompanySocialAccount::where('company_id',$company_id)->where('status','!=','cancel')->orderBy('id', 'DESC')->paginate(50);
+        $data = CompanySocialAccount::where('company_id',$company_id)->orderBy('id', 'DESC')->paginate(50);
         $sm_type = SmType::where('status','!=','cancel')->lists('type','id')->all();
         $company_info = Company::where('status','!=','cancel')->lists('title','id')->all();
         $company= Company::findOrFail($company_id);
@@ -169,18 +169,36 @@ class CompanySocialAccountController extends Controller
      */
     public function delete($id)
     {
+        $companySocailAccount = CompanySocialAccount::select('sm_type_id')->where('id',$id)->first();
+
+        DB::beginTransaction();
+        try {
+            $smType= SmType::select('id')->where('id',$id)->first();
+            $smType=SmType::findOrFail($companySocailAccount->sm_type_id);
+            dd($smType);
+
+
+
+            exit('k');
+            DB::commit();
+            Session::flash('message', "Successfully Deleted.");
+        } catch(\Exception $e) {
+            DB::rollback();
+            Session::flash('danger',$e->getMessage());
+        }
+        //return redirect()->route('index-company-social-account');
+        return redirect()->back();
+    }
+    public function change_status($id,$status)
+    {
         $model = CompanySocialAccount::findOrFail($id);
 
         DB::beginTransaction();
         try {
-            if($model->status =='active' || $model->status =='inactive'){
-                $model->status = 'cancel';
-            }else{
-                $model->status = 'active';
-            }
+                $model->status = $status;
             $model->save();
             DB::commit();
-            Session::flash('message', "Successfully Deleted.");
+            Session::flash('message', "Successfully Change Status.");
         } catch(\Exception $e) {
             DB::rollback();
             Session::flash('danger',$e->getMessage());

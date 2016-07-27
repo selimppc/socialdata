@@ -64,11 +64,18 @@
                                     <td>{{$values->page_id}}</td>
                                     <td>{{$values->data_pull_duration}}</td>
                                     {{--<td>{{$values->relCompany->title}}</td>--}}
-                                    <td>{{$values->status}}</td>
+                                    <td>
+                                        @if($values->status=='active')
+                                        <a href="{{ route('company-social-account-status-change', $values->id.'/inactive') }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('Are you sure to Inactive ?')" title="Make Inactive" data-content="delete">{{$values->status}}</a>
+                                        @elseif($values->status=='inactive')
+                                            <a href="{{ route('company-social-account-status-change', $values->id.'/active') }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('Are you sure to Active?')" title="Make Active" data-content="delete">{{$values->status}}</a>
+                                        @endif
+
+                                    </td>
                                     <td>
                                         <a href="{{ route('view-company-social-account', $values->id) }}" class="btn btn-info btn-xs" data-placement="top" data-toggle="modal" data-target="#etsbModal" data-content="view"><i class="fa fa-eye"></i></a>
                                         <a href="{{ route('edit-company-social-account', $values->id) }}" class="btn btn-primary btn-xs" data-placement="top" data-content="update"><i class="fa fa-edit"></i></a>
-                                        <a href="{{ route('delete-company-social-account', $values->id) }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('Are you sure to Delete?')" data-content="delete"><i class="fa fa-trash-o"></i></a>
+                                        <a href="{{ route('delete-company-social-account', $values->id) }}" class="btn btn-danger btn-xs" data-placement="top" onclick="return confirm('By deleting this social account your all existing data will be lost. We suggest, instead of deletion make inactive this account. Are you sure to Delete? ')" data-content="delete"><i class="fa fa-trash-o"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
