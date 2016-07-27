@@ -52,8 +52,6 @@ class PostNofify extends Command
                     $mail->from('info@socialdata.com','Social Data');
                     $mail->to($ptn->relUser['email'],'Social Data')->subject('Post Notification');
                 });
-
-                echo 'success<br>';
             }
 
         }

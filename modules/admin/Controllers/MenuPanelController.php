@@ -126,8 +126,23 @@ class MenuPanelController extends Controller
         $pageTitle = 'Update Menu Panel Informations';
         $data = MenuPanel::where('id',$id)->first();
         $menu_data = MenuPanel::where('id',$parent_menu_id)->lists('menu_name', 'id');
+        if($data->menu_type=='ROOT')
+        {
+            $menu_type="ROOT";
+        }elseif($data->menu_type=='MODU')
+        {
+            $menu_type="ROOT";
+        }elseif($data->menu_type=='MENU')
+        {
+            $menu_type="MODU";
+        }elseif($data->menu_type=='SUBM')
+        {
+            $menu_type="MENU";
+        }
+        $sub_menu= MenuPanel::where('menu_type',$menu_type)->lists('menu_name','id');
+//        dd($data);
 
-        return view('admin::menu_panel.update', ['data' => $data, 'menu_data'=> $menu_data, 'pageTitle'=> $pageTitle]);
+        return view('admin::menu_panel.update', ['data' => $data, 'menu_data'=> $menu_data, 'pageTitle'=> $pageTitle,'sub_menu'=>$sub_menu]);
     }
 
     /**

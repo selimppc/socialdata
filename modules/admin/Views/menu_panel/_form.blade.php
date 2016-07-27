@@ -24,11 +24,19 @@
             <small class="required">(Required)</small>
             {!! Form::text('route', Input::old('route'), ['id'=>'route', 'class' => 'form-control','required','title'=>'enter route of menu']) !!}
         </div>
+        @if(isset($sub_menu))
+            <div class="col-sm-6">
+                {!! Form::label('parent_menu_id', 'Parent Menu Id	:', ['class' => 'control-label']) !!}
+                <small class="required">(Required)</small>
+                {!! Form::select('parent_menu_id', $sub_menu,Input::old('parent_menu_id'),['id'=>'parent-menu-id','class' => 'form-control','required']) !!}
+            </div>
+        @else
         <div class="col-sm-6">
             {!! Form::label('parent_menu_id', 'Parent Menu Id	:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
             {!! Form::select('parent_menu_id', array(''=>'Select Parent Id'),Input::old('parent_menu_id'),['id'=>'parent-menu-id','class' => 'form-control','required']) !!}
         </div>
+        @endif
     </div>
 </div>
 
