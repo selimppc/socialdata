@@ -98,7 +98,15 @@
                         {{--<img src="../../assets/img/avatar1.jpg?1403934956" alt="" />--}}
 								<span class="profile-info">
 									{{isset(Auth::user()->username)?ucfirst(Auth::user()->username):''}}
-									<small>Administrator</small>
+									<small>
+                                        @if(session('role_id')=='cadmin')
+                                            Company Administrator
+                                        @elseif(session('role_id')=='admin')
+                                            Administrator
+                                        @elseif(session('role_id')=='sadmin')
+                                            Super Administrator
+                                        @endif
+                                    </small>
 								</span>
                     </a>
                     <ul class="dropdown-menu animation-dock">
