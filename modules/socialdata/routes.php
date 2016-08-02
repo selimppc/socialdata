@@ -34,19 +34,19 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
     ]);*/
     //google api routes
     Route::any('google-api-index', [
-        //"middleware" => "acl_access:google-api-index",
+        "middleware" => "acl_access:google-api-index",
         'as' => 'google-api-index',
         'uses' => 'GoogleApiController@index'
     ]);
 
     Route::any('google-api-view', [
-        //"middleware" => "acl_access:google-api-view",
+        "middleware" => "acl_access:google-api-view",
         'as' => 'google-api-view',
         'uses' => 'GoogleApiController@view'
     ]);
 
     Route::any('google-plus-info', [
-        //"middleware" => "acl_access:google-plus-info",
+        "middleware" => "acl_access:google-plus-info",
         'as' => 'google-plus-info',
         'uses' => 'GoogleApiController@google_plus_info'
     ]);
@@ -54,27 +54,27 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
 
     //facebook api routes
     Route::any('facebook-api-index', [
-        //"middleware" => "acl_access:facebook-api-index",
+        "middleware" => "acl_access:facebook-api-index",
         'as' => 'facebook-api-index',
         'uses' => 'FacebookApiController@index'
     ]);
 
     //twitter api routes
     Route::any('twitter-api-index', [
-        //"middleware" => "acl_access:twitter-api-index",
+        "middleware" => "acl_access:twitter-api-index",
         'as' => 'twitter-api-index',
         'uses' => 'TwitterApiController@index'
     ]);
 
     //export post routes
     Route::any('export-post-index', [
-        //"middleware" => "acl_access:export-post-index",
+        "middleware" => "acl_access:export-post-index",
         'as' => 'export-post-index',
         'uses' => 'PostController@export_post_index'
     ]);
 
     Route::any('export-post-csv', [
-        //"middleware" => "acl_access:export-post-index",
+        "middleware" => "acl_access:export-post-index",
         'as' => 'export-post-csv',
         'uses' => 'PostController@export_post_csv'
     ]);
@@ -82,37 +82,37 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
     //Company Controller
 
     Route::any("index-company", [
-        //"middleware" => "acl_access:index-company",
+        "middleware" => "acl_access:index-company",
         "as"   => "index-company",
         "uses" => "CompanyController@index"
     ]);
 
     Route::any("store-company", [
-        //"middleware" => "acl_access:store-company",
+        "middleware" => "acl_access:store-company",
         "as"   => "store-company",
         "uses" => "CompanyController@store"
     ]);
 
     Route::any("view-company/{id}", [
-        //"middleware" => "acl_access:view-company/{id}",
+        "middleware" => "acl_access:view-company/{id}",
         "as"   => "view-company",
         "uses" => "CompanyController@show"
     ]);
 
     Route::any("edit-company/{id}", [
-        //"middleware" => "acl_access:edit-company/{id}",
+        "middleware" => "acl_access:edit-company/{id}",
         "as"   => "edit-company",
         "uses" => "CompanyController@edit"
     ]);
 
     Route::any("update-company/{id}", [
-        //"middleware" => "acl_access:update-company/{id}",
+        "middleware" => "acl_access:update-company/{id}",
         "as"   => "update-company",
         "uses" => "CompanyController@update"
     ]);
 
     Route::any("delete-company/{id}", [
-        //"middleware" => "acl_access:delete-company/{id}",
+        "middleware" => "acl_access:delete-company/{id}",
         "as"   => "delete-company",
         "uses" => "CompanyController@delete"
     ]);
@@ -120,37 +120,37 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
     //SmType Controller
 
     Route::any("index-sm-type", [
-        //"middleware" => "acl_access:index-sm-type",
+        "middleware" => "acl_access:index-sm-type",
         "as"   => "index-sm-type",
         "uses" => "SmTypeController@index"
     ]);
 
     Route::any("store-sm-type", [
-        //"middleware" => "acl_access:store-sm-type",
+        "middleware" => "acl_access:store-sm-type",
         "as"   => "store-sm-type",
         "uses" => "SmTypeController@store"
     ]);
 
     Route::any("view-sm-type/{id}", [
-        //"middleware" => "acl_access:view-sm-type/{id}",
+        "middleware" => "acl_access:view-sm-type/{id}",
         "as"   => "view-sm-type",
         "uses" => "SmTypeController@show"
     ]);
 
     Route::any("edit-sm-type/{id}", [
-        //"middleware" => "acl_access:edit-sm-type/{id}",
+        "middleware" => "acl_access:edit-sm-type/{id}",
         "as"   => "edit-sm-type",
         "uses" => "SmTypeController@edit"
     ]);
 
     Route::any("update-sm-type/{id}", [
-        //"middleware" => "acl_access:update-sm-type/{id}",
+        "middleware" => "acl_access:update-sm-type/{id}",
         "as"   => "update-sm-type",
         "uses" => "SmTypeController@update"
     ]);
 
     Route::any("delete-sm-type/{id}", [
-        //"middleware" => "acl_access:delete-sm-type/{id}",
+        "middleware" => "acl_access:delete-sm-type/{id}",
         "as"   => "delete-sm-type",
         "uses" => "SmTypeController@delete"
     ]);
@@ -158,53 +158,53 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
     //Company social account Controller
 
     Route::any("index-company-social-account/{company_id}", [
-        //"middleware" => "acl_access:index-company-social-account",
+        "middleware" => "acl_access:index-company-social-account",
         "as"   => "index-company-social-account",
         "uses" => "CompanySocialAccountController@index"
     ]);
     Route::any("index-company-social-account", [
-        //"middleware" => "acl_access:index-company-social-account",
+        "middleware" => "acl_access:index-company-social-account",
         "as"   => "index-company-social-account",
         "uses" => "CompanySocialAccountController@index"
     ]);
     Route::any("add-company-social-account/{company_id}", [
-        //"middleware" => "acl_access:add-company-social-account",
+        "middleware" => "acl_access:add-company-social-account/{company_id}",
         "as"   => "add-company-social-account",
         "uses" => "CompanySocialAccountController@create"
     ]);
 
     Route::any("store-company-social-account", [
-        //"middleware" => "acl_access:store-company-social-account",
+        "middleware" => "acl_access:store-company-social-account",
         "as"   => "store-company-social-account",
         "uses" => "CompanySocialAccountController@store"
     ]);
 
     Route::any("view-company-social-account/{id}", [
-        //"middleware" => "acl_access:view-company-social-account/{id}",
+        "middleware" => "acl_access:view-company-social-account/{id}",
         "as"   => "view-company-social-account",
         "uses" => "CompanySocialAccountController@show"
     ]);
 
     Route::any("edit-company-social-account/{id}", [
-        //"middleware" => "acl_access:edit-company-social-account/{id}",
+        "middleware" => "acl_access:edit-company-social-account/{id}",
         "as"   => "edit-company-social-account",
         "uses" => "CompanySocialAccountController@edit"
     ]);
 
     Route::any("update-company-social-account/{id}", [
-        //"middleware" => "acl_access:update-company-social-account/{id}",
+        "middleware" => "acl_access:update-company-social-account/{id}",
         "as"   => "update-company-social-account",
         "uses" => "CompanySocialAccountController@update"
     ]);
 
     Route::any("delete-company-social-account/{id}", [
-        //"middleware" => "acl_access:delete-company-social-account/{id}",
+        "middleware" => "acl_access:delete-company-social-account/{id}",
         "as"   => "delete-company-social-account",
         "uses" => "CompanySocialAccountController@delete"
     ]);
 
     Route::any("company-social-account-status-change/{id}/{status}", [
-        //"middleware" => "acl_access:company-social-account-status-change/{id}/{status}",
+        "middleware" => "acl_access:company-social-account-status-change/{id}/{status}",
         "as"   => "company-social-account-status-change",
         "uses" => "CompanySocialAccountController@change_status"
     ]);
@@ -212,37 +212,37 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
     //Post Controller
 
     Route::any("index-post", [
-        //"middleware" => "acl_access:index-post",
+        "middleware" => "acl_access:index-post",
         "as"   => "index-post",
         "uses" => "PostController@index"
     ]);
 
     Route::any("store-post", [
-        //"middleware" => "acl_access:store-post",
+        "middleware" => "acl_access:store-post",
         "as"   => "store-post",
         "uses" => "PostController@store"
     ]);
 
     Route::any("view-post/{id}", [
-        //"middleware" => "acl_access:view-post/{id}",
+        "middleware" => "acl_access:view-post/{id}",
         "as"   => "view-post",
         "uses" => "PostController@show"
     ]);
 
     Route::any("edit-post/{id}", [
-        //"middleware" => "acl_access:edit-post/{id}",
+        "middleware" => "acl_access:edit-post/{id}",
         "as"   => "edit-post",
         "uses" => "PostController@edit"
     ]);
 
     Route::any("update-post/{id}", [
-        //"middleware" => "acl_access:update-post/{id}",
+        "middleware" => "acl_access:update-post/{id}",
         "as"   => "update-post",
         "uses" => "PostController@update"
     ]);
 
     Route::any("delete-post/{id}", [
-        //"middleware" => "acl_access:delete-post/{id}",
+        "middleware" => "acl_access:delete-post/{id}",
         "as"   => "delete-post",
         "uses" => "PostController@delete"
     ]);
@@ -255,31 +255,31 @@ Route::group(['middleware' => 'auth', 'modules' => 'Socialdata', 'namespace' => 
 
     //Comment Controller
     Route::any("index-comment/{post_id}", [
-        //"middleware" => "acl_access:index-comment/{post_id}",
+        "middleware" => "acl_access:index-comment/{post_id}",
         "as"   => "index-comment",
         "uses" => "CommentController@index"
     ]);
 
     Route::any("view-comment/{id}", [
-        //"middleware" => "acl_access:view-comment/{id}",
+        "middleware" => "acl_access:view-comment/{id}",
         "as"   => "view-comment",
         "uses" => "CommentController@show"
     ]);
 
     Route::any("edit-comment/{id}", [
-        //"middleware" => "acl_access:edit-comment/{id}",
+        "middleware" => "acl_access:edit-comment/{id}",
         "as"   => "edit-comment",
         "uses" => "CommentController@edit"
     ]);
 
     Route::any("update-comment/{id}", [
-        //"middleware" => "acl_access:update-comment/{id}",
+        "middleware" => "acl_access:update-comment/{id}",
         "as"   => "update-comment",
         "uses" => "CommentController@update"
     ]);
 
     Route::any("delete-comment/{id}", [
-        //"middleware" => "acl_access:delete-comment/{id}",
+        "middleware" => "acl_access:delete-comment/{id}",
         "as"   => "delete-comment",
         "uses" => "CommentController@delete"
     ]);
