@@ -126,4 +126,10 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
      * User Request for join end
      * */
 
+    // search route
+    Route::get('search',[
+        #'middleware'=>'acl_access::search',
+        'as'=>'main-search',
+        'uses'=>'SettingController@main_search'
+    ]);
 });
