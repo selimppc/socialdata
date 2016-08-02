@@ -54,7 +54,10 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('get:googleplus')->cron('15 5,12,19 * * * *');
 //        $schedule->command('get:googleplus')->cron('30 3,10,17 * * * *');
 //        $schedule->command('get:googleplus')->cron('45 1,8,15,22 * * * *');
+
+        // Schedule for post on social media
         $schedule->command('post:schedule')->everyMinute();
+        // notify before post on social media
         $schedule->command('post:notify')->everyMinute();
     }
 }

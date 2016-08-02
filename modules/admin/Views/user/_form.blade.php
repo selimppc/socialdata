@@ -5,7 +5,7 @@
 <div class="form-group form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
 
     <div class="row">
-        <div class="col-sm-6 form-group">
+        <div class="col-sm-6">
             {!! Form::label('username', 'User Name:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
             {!! Form::text('username',Input::old('username'),['id'=>'name','class' => 'form-control','placeholder'=>'User Name','required','autofocus', 'title'=>'Enter User Name']) !!}
@@ -21,6 +21,7 @@
 
 <div class="form-group form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
     <div class="row">
+        <div class="col-sm-12"><span id='show-message'></span></div>
         <div class="col-sm-6">
             {!! Form::label('password', 'Password:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
@@ -30,7 +31,6 @@
             {!! Form::label('confirm_password', 'Confirm Password') !!}
             <small class="required">(Required)</small>
             {!! Form::password('re_password', ['class' => 'form-control','placeholder'=>'Re-Enter New Password','required','id'=>'re-password','name'=>'re_password','onkeyup'=>"validation()",'title'=>'Enter Confirm Password That Must Be Match With New Passowrd.']) !!}
-            <span id='show-message'></span>
 
         </div>
     </div>
@@ -46,7 +46,6 @@
                 <option value="{{ $r->id }}" class="{{ $r->type }}">{{ $r->title }}</option>
                 @endforeach
             </select>
-{{--            {!! Form::Select('role_id',$role, Input::old('role_id'),['style'=>'text-transform:capitalize','class' => 'form-control','required','title'=>'select role name','id'=>'role_id']) !!}--}}
         </div>
         <div class="col-sm-6">
             {!! Form::label('expire_date', 'Expire Date:', ['class' => 'control-label']) !!}
@@ -56,10 +55,8 @@
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
         </div>
-        <div class="col-sm-6">
-            {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
-            {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
-        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6" id="permissionSocialMediaDiv" style="display: none">
             <div class="form-group">
                 {!! Form::label('social_media', 'Permission on:', ['class' => 'control-label']) !!}
@@ -82,6 +79,10 @@
                     </div>
                 @endforeach
             </div>
+        </div>
+        <div class="col-sm-6">
+            {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
+            {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
         </div>
         {{--<div class="col-sm-6">
             {!! Form::label('department_id', 'Department:', ['class' => 'control-label']) !!}

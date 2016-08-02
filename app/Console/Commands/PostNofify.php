@@ -42,7 +42,8 @@ class PostNofify extends Command
     public function handle()
     {
         //
-        $postToNotify=CustomPost::where('execute_time','<=',Carbon::now())->with('relUser')->get();
+        $postToNotify=CustomPost::where('execute_time','<=',Carbon::now())->where('execute_time','<=',Carbon::now())->where('is_executed',0)->with('relUser')->get();
+//        dd($postToNotify);
         if(isset($postToNotify) && count($postToNotify)>0) {
             foreach ($postToNotify as $ptn) {
                 $data['postData']=$ptn;
@@ -52,6 +53,10 @@ class PostNofify extends Command
                     $mail->from('info@socialdata.com','Social Data');
                     $mail->to($ptn->relUser['email'],'Social Data')->subject('Post Notification');
                 });
+
+                $executed= CustomPost::findOrFail($ptn->id);
+                $executed->is_executed=1;
+                $executed->save();
             }
 
         }

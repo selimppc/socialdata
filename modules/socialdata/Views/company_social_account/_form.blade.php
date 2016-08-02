@@ -1,8 +1,8 @@
 
 <div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
     <div class="row">
+        {!! Form::hidden('company_id', $company_id, ['id'=>'company_id', 'class' => 'form-control']) !!}
         <div class="form-group">
-            {!! Form::hidden('company_id', $company_id, ['id'=>'company_id', 'class' => 'form-control']) !!}
             {!! Form::label('sm_type_id', 'Select Social Media Type :', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
             @if(count($sm_type)>0)

@@ -36,7 +36,7 @@ class UserRequest extends Request
         {
             return [
                 'username' => 'required|max:64',
-                'email' => 'required',
+                'email' => 'required|unique:user',
                 'password' => 'required|max:64',
                 're_password' => 'required|same:password',
                  'image'=>'mimes:png,gif,jpeg,txt,pdf,doc,jpg',

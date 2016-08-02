@@ -19,6 +19,7 @@ class CustomPost extends Model
         'company_id',
         'notify_time',
         'execute_time',
+        'is_executed',
         'postId',
         'created_by',
         'updated_by',
