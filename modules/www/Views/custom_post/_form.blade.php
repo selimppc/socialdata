@@ -10,7 +10,8 @@
             <small class="required">(Required)</small>
             <br>
             @foreach($all_social_media as $sm)
-                @if(session('role_id')=='user' && isset($sm->active))
+                @if(session('role_id')=='user')
+                    @if(isset($sm->active) && $sm->active==1)
                     <div class="checkbox-inline">
                         <label class="">
                             {!! Form::checkbox('social_media[]', $sm->id,Input::old('social_media'), ['id'=>'social_media']) !!}
@@ -25,6 +26,7 @@
                                     >
                         </label>
                     </div>
+                    @endif
                 @else
                     <div class="checkbox-inline">
                         <label class="">

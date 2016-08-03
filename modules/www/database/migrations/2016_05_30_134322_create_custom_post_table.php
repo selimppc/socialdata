@@ -21,6 +21,7 @@ class CreateCustomPostTable extends Migration
             $table->integer('notify_time',false)->nullable();
             $table->dateTime('execute_time')->nullable();
             $table->boolean('is_executed')->nullable();
+            $table->integer('created_by',false);
             $table->integer('updated_by',false);
             $table->timestamps();
         });

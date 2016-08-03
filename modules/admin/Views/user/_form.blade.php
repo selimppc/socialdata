@@ -47,13 +47,17 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-sm-6">
+        {{--<div class="col-sm-6">
             {!! Form::label('expire_date', 'Expire Date:', ['class' => 'control-label']) !!}
             <div class="input-group date" id="demo-date">
                     {!! Form::text('expire_date', $days, ['class' => 'form-control bs-datepicker-component','required','title'=>'select expire date']) !!}
 
                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             </div>
+        </div>--}}
+        <div class="col-sm-6">
+            {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
+            {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
         </div>
     </div>
     <div class="row">
@@ -80,10 +84,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="col-sm-6">
-            {!! Form::label('status', 'Status:', ['class' => 'control-label']) !!}
-            {!! Form::Select('status',array('active'=>'Active','inactive'=>'Inactive','cancel'=>'Cancel'),Input::old('status'),['class'=>'form-control ','required']) !!}
-        </div>
+
         {{--<div class="col-sm-6">
             {!! Form::label('department_id', 'Department:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>

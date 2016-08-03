@@ -24,10 +24,10 @@ CREATE TABLE IF NOT EXISTS `company` (
 --
 
 INSERT INTO `company` (`id`, `title`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'devdhaka405', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
-(2, 'bank of america', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
+(1, 'devdhaka405', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00');
+/*(2, 'bank of america', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
 (3, 'United Nations', 'active', 0, 0, '2016-03-06 02:04:41', '2016-03-06 02:04:41'),
-(4, 'Coca cola', 'active', 0, 0, '2016-03-14 10:27:26', '2016-03-14 10:27:26');
+(4, 'Coca cola', 'active', 0, 0, '2016-03-14 10:27:26', '2016-03-14 10:27:26');*/
 
 --
 -- Indexes for dumped tables

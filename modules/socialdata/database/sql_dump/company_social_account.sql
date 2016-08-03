@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `company_social_account` (
 --
 
 INSERT INTO `company_social_account` (`id`, `page_id`, `company_id`, `sm_type_id`, `data_pull_duration`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, '111786072963538463758', 1, 1, 'all', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
-(2, '+BankofAmerica', 2, 1, 'all', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
+(1, '111786072963538463758', 1, 1, 'all', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00');
+/*(2, '+BankofAmerica', 2, 1, 'all', 'active', 0, 0, '2016-03-06 02:04:00', '2016-03-06 02:04:00'),
 (3, '104158924758626757436', 3, 1, 'all', 'active', 0, 0, '2016-03-06 02:04:52', '2016-03-06 02:04:52'),
 (4, '1712417275663778', 3, 2, 'all', 'active', 0, 0, '2016-03-14 10:21:38', '2016-03-14 10:21:53'),
 (5, 'BankofAmerica', 2, 2, 'all', 'active', 0, 0, '2016-03-14 10:22:26', '2016-03-14 10:22:26'),
@@ -36,7 +36,7 @@ INSERT INTO `company_social_account` (`id`, `page_id`, `company_id`, `sm_type_id
 (7, 'bankofamerica', 2, 3, 'all', 'active', 0, 0, '2016-03-14 10:23:42', '2016-03-14 10:23:42'),
 (8, 'coca-cola', 4, 2, 'all', 'active', 0, 0, '2016-03-14 10:27:37', '2016-03-14 10:27:37'),
 (9, 'CocaCola', 4, 3, 'all', 'active', 0, 0, '2016-03-14 10:27:59', '2016-03-14 10:27:59'),
-(10, '+Coca-Cola', 4, 1, 'all', 'active', 0, 0, '2016-03-14 10:29:24', '2016-03-14 10:29:24');
+(10, '+Coca-Cola', 4, 1, 'all', 'active', 0, 0, '2016-03-14 10:29:24', '2016-03-14 10:29:24');*/
 
 --
 -- Indexes for dumped tables

@@ -65,6 +65,8 @@ php artisan migrate --path="modules/admin/database/migrations"
 
 php artisan migrate --path="modules/socialdata/database/migrations"
 
+php artisan migrate --path="modules/www/database/migrations"
+
 Now browse to the public directory like http://localhost/socialdata/public
 
 Default User : admin

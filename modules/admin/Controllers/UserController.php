@@ -65,7 +65,7 @@ class UserController extends Controller
         $company_name=str_replace(' ','-',$input['title']);
         DB::beginTransaction();
         try{
-
+            // check company exist or not
             $company_exists = DB::table('company')->where('title', '=', $input['title'])->exists();
 
             if($company_exists){
@@ -78,7 +78,7 @@ class UserController extends Controller
                 $company_ids = Company::create($input_company);
                 $company_id = $company_ids->id;
             }
-
+            /* create new role start */
             $input_role = [
                 'title'=>$input['title'].' | Com. Admin',
                 'slug'=>strtolower($company_name.'-cadmin'),
@@ -95,8 +95,10 @@ class UserController extends Controller
                 $role_ids = Role::create($input_role);
                 $role_id = $role_ids->id;
             }
+            /* create new role end */
 
             #print_r($role_id);exit;
+            /* create new user start */
 
             $curr_date = date('Y-m-d h:i:s', time());
             $date= date('Y-m-d h:i:s', strtotime($curr_date. ' + 180 days'));
@@ -120,6 +122,8 @@ class UserController extends Controller
             ];
 
             $user_id = User::create($input_data);
+            /* create new user end */
+            /* create new role user start */
 
             $input_role_user = [
                 'role_id'=>$role_id,
@@ -128,7 +132,9 @@ class UserController extends Controller
                 'created_by'=>1
             ];
             RoleUser::create($input_role_user);
-            // Give permission for com-admin
+            /* create new role user end */
+
+            /* Given permission for com-admin start */
             $permissions= Permission::select('id')->where('weight','<=',2)->get();
             if(isset($permissions) && !empty($permissions))
             {
@@ -141,10 +147,11 @@ class UserController extends Controller
                 }
             }
 
+            /* Given permission for com-admin end */
 
             #print_r($input_role_user);exit;
 
-            // Create default user role
+            /* Create default user role */
             $input_user_role = [
                 'title'=>$input['title'].' | Com. User',
                 'slug'=>strtolower($company_name.'-user'),
@@ -482,7 +489,7 @@ class UserController extends Controller
 
         $input = $request->all();
 //        dd($input);
-        $input['expire_date']=date('Y-m-d',strtotime($input['expire_date']));
+//        $input['expire_date']=date('Y-m-d',strtotime($input['expire_date']));
         #print_r($input);exit;
         date_default_timezone_set("Asia/Dacca");
         $now = new DateTime();
@@ -499,11 +506,11 @@ class UserController extends Controller
                 'ip_address'=> getHostByName(getHostName()),
                 'company_id'=> $company_id_by_role_id,
                 'role_id'=> $input['role_id'],
-                'expire_date'=> $input['expire_date'],
+//                'expire_date'=> $input['expire_date'],
                 'status'=> $input['status'],
             ];
             #print_r($input_data);exit;
-
+            // store user start
             if($user = User::create($input_data)){
                 $role_user = [
                     'user_id'=>$user['id'],
@@ -522,7 +529,7 @@ class UserController extends Controller
                     }
                 }
             }
-
+            // store user end
             $email=$user->email;
             if($company_id_by_role_id==null)
             {
@@ -616,7 +623,7 @@ class UserController extends Controller
         $input = Input::all();
         $email_check= User::where('email',$input['email'])->first();
         if($email_check->id==$id) {
-            $input['expire_date'] = date('Y-m-d', strtotime($input['expire_date']));
+//            $input['expire_date'] = date('Y-m-d', strtotime($input['expire_date']));
             $model1 = User::findOrFail($id);
             if ($input['re_password'] != Null) {
                 $password = Hash::make($input['re_password']);
@@ -634,7 +641,7 @@ class UserController extends Controller
                 'ip_address' => getHostByName(getHostName()),
                 'last_visit' => $now,
                 'role_id'=> $input['role_id'],
-                'expire_date' => $input['expire_date'],
+//                'expire_date' => $input['expire_date'],
                 'status' => $input['status'],
             ];
             DB::beginTransaction();
