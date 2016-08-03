@@ -58,7 +58,7 @@
                                 </th>
                             @endif
                             <th> Status &nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-placement="top" data-content="you can change status from update page"></span></th>
-                            <th> Expire Date </th>
+                            {{--<th> Expire Date </th>--}}
                             <th> Action &nbsp;&nbsp;<span style="color: #A54A7B" class="user-guideline" data-placement="top" data-content="view : click for details informations<br>update : click for update informations<br>delete : click for delete informations"></span></th>
                         </tr>
                         </thead>
@@ -73,7 +73,7 @@
                                         <td>{{isset($values->relCompany->title)?ucfirst($values->relCompany->title):''}}</td>
                                     @endif
                                     <td>{{ucfirst($values->status)}}</td>
-                                    <td>{{date('Y-m-d', strtotime($values->expire_date))}}</td>
+                                    {{--<td>{{date('Y-m-d', strtotime($values->expire_date))}}</td>--}}
                                     <td>
                                         <a href="{{ route('show-user', $values->id) }}" class="btn btn-info btn-xs" data-toggle="modal" data-target="#etsbModal" data-placement="top" data-content="view"><i class="fa fa-eye"></i></a>
                                         <a href="{{ route('edit-user', $values->id) }}" class="btn btn-primary btn-xs" data-content="update"><i class="fa fa-edit"></i></a>
