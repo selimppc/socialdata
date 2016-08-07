@@ -242,18 +242,8 @@ class AuthController extends Controller
                         if($user_data->status=='inactive'){
                             Session::flash('error', "Sorry!!Your Account Is Inactive.You Can Contact With System-Admin To Reactivate Account.");
                         }elseif($user_data->status=='register'){
-                            $user_data->remember_token= str_random(30);
-                            $user_data->save();
-                            $email=$user_data->email;
-                            Mail::send('admin::signup.email', array('token' =>$user_data['remember_token'],'user_id'=>$user_data->id),function($message) use ($email)
-                            {
-                                $message->from('test@edutechsolutionsbd.com', 'Account activation link');
-                                $message->to($email);
-                                $message->subject('Account activation link');
-                            });
-
-
-                            Session::flash('error', "Sorry!!Your Account not activate yet ! Please check your email for account activation link");
+                            $r=url('resend-account-activation-link',$user_data->id);
+                            Session::flash('error', "Sorry!! Your Account is not activate yet ! Please check your email for account activation link. Do not forget to check your spam folder. If you are not received any email <a href='$r'><b>click here</b></a> to resend. ");
                         }
                         else{
                             $attempt = Auth::attempt([

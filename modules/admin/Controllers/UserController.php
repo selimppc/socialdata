@@ -1267,5 +1267,20 @@ class UserController extends Controller
             }
         }
     }
+    public function resend_account_activation_link($user_id)
+    {
+        $user_data= User::findOrFail($user_id);
+        $user_data->remember_token= str_random(30);
+        $user_data->save();
+        $email=$user_data->email;
+        Mail::send('admin::signup.email', array('token' =>$user_data['remember_token'],'user_id'=>$user_data->id),function($message) use ($email)
+        {
+            $message->from('test@edutechsolutionsbd.com', 'Account activation link');
+            $message->to($email);
+            $message->subject('Account activation link');
+        });
+        Session::flash('message', 'Please check your email for account activation link. Don\'t forget to check your spam folder.');
+        return redirect()->back();
+    }
 
 }

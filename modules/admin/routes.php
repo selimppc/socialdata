@@ -27,6 +27,12 @@ Route::group(array('modules' => 'Admin', 'namespace' => 'Modules\Admin\Controlle
             'uses' => 'UserController@active_account',
     ]);
 
+    Route::get('resend-account-activation-link/{user_id}', [
+            'as'   => 'resend-account-activation-link',
+            'uses' => 'UserController@resend_account_activation_link',
+    ]);
+
+
 });
 
 //-------------- With Authentication [ Through Middleware ] ------------------//
