@@ -242,11 +242,11 @@ class CustomPostController extends Controller
             }elseif($input['submit']=='later'){
                 $time=$input['date'].' '.$input['time'];
                 try {
+                    $time=date('Y-m-d H:i',strtotime($time));
                     $schedule = Schedule::where('custom_post_id',$id)->first();
                     $schedule->time = $time;
                     $schedule->custom_post_id = $custom_post->id;
                     $schedule->save();
-
 
                     $exTime=new Carbon($time);
                     $exTime->subMinute($input['notify_time']);

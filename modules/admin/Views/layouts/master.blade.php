@@ -18,6 +18,7 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/main/css/theme-default/material-design-iconic-font.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/main/css/theme-default/libs/rickshaw/rickshaw.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/main/css/theme-default/libs/morris/morris.core.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('assets/main/css/timepicker.css') }}" />
     <!-- END STYLESHEETS -->
     <!-- Main Scripts -->
     <script src="{{ asset("assets/main/js/libs/jquery/jquery-1.11.2.min.js") }}"></script>
@@ -351,6 +352,7 @@
 <script src="{{ asset('assets/main/js/core/source/AppForm.js') }}"></script>
 <script src="{{ asset('assets/main/js/core/source/AppNavSearch.js') }}"></script>
 <script src="{{ asset('assets/main/js/core/demo/Demo.js') }}"></script>
+<script src="{{ asset('assets/main/js/timepicker.js') }}"></script>
 <script src="{{ asset('assets/main/js/custom.js') }}"></script>
 <script src="{{ asset('assets/main/js/core/demo/DemoFormComponents.js') }}"></script>
 {{--<script src="{{ asset('assets/main/js/core/demo/DemoDashboard.js') }}"></script>--}}

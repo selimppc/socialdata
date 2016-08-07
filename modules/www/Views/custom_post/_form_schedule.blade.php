@@ -3,12 +3,18 @@
         <div class="form-group">
             {!! Form::label('date', 'Date:', ['class' => 'control-label']) !!}
             <small class="required">(Required) <i style="display: none;color: red;" id="dateRequired">This field is required</i></small>
-            {!! Form::input('date','date', Input::old('date'), ['id'=>'date', 'class' => 'form-control bs-datepicker-component','autofocus']) !!}
+            {!! Form::text('date', Input::old('date'), ['id'=>'date', 'class' => 'form-control datapicker','autofocus']) !!}
+{{--            {!! Form::input('date', 'date', Input::old('date'), ['id'=>'date', 'class' => 'form-control datapicker','autofocus']) !!}--}}
         </div>
         <div class="form-group">
             {!! Form::label('time', 'Time:', ['class' => 'control-label']) !!}
             <small class="required">(Required)<i style="display: none;color: red;" id="timeRequired">This field is required</i></small>
-            {!! Form::input('time','time', Input::old('time'), ['id'=>'time', 'class' => 'form-control']) !!}
+            {!! Form::text('time', Input::old('time'), ['id'=>'time', 'class' => 'form-control timepicker1']) !!}
+
+            {{--<div class="input-group bootstrap-timepicker timepicker">
+                <input type="text" class="form-control input-small timepicker1">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            </div>--}}
         </div>
         <div class="form-group">
             {!! Form::label('notify_time','Notify: ',['class'=>'control-label']) !!}
