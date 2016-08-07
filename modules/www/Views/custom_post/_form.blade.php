@@ -4,10 +4,10 @@
             {!! Form::label('text', 'Post:', ['class' => 'control-label']) !!}
             <small class="required">(Required)</small>
             {!! Form::textarea('text', Input::old('text'), ['id'=>'text', 'class' => 'form-control','required','autofocus']) !!}
-            {{--<div class="input-group bootstrap-timepicker timepicker">--}}
-                {{--<input type="text" class="form-control input-small timepicker1">--}}
-                {{--<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>--}}
-            {{--</div>--}}
+            {{--<div class="input-group bootstrap-timepicker timepicker">
+                <input type="text" class="form-control input-small timepicker1">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+            </div>--}}
 
         </div>
         <div class="form-group">

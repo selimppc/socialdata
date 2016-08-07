@@ -357,6 +357,8 @@
 <script src="{{ asset('assets/main/js/core/demo/DemoFormComponents.js') }}"></script>
 {{--<script src="{{ asset('assets/main/js/core/demo/DemoDashboard.js') }}"></script>--}}
 <!-- END JAVASCRIPT -->
-
+<style>
+    .bootstrap-timepicker-widget{ z-index: 1151 !important; }
+</style>
 </body>
 </html>
