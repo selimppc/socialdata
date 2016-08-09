@@ -24,6 +24,10 @@ return [
         'client_id'=>'974791274339-doct333hjkdob6mccquvuo21k662s7m5',
         'client_secret'=>'BvCfXp-RahiywnK_7YshL2oT'
     ],
+    'instagram'=>[
+        'client_id'=>'832646bafffa46518b9f14bffc236968',
+        'client_secret'=>'0f6fd618195b49f5afbb360887857cad'
+    ],
     'permissions' => [
         'public_profile',
         'user_friends',

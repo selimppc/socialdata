@@ -10,6 +10,7 @@ namespace Modules\Www\Controllers;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Helpers\GooglePlusHelper;
+use App\Helpers\InstagramHelper;
 use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\CompanySocialAccount;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Helpers\FacebookHelper;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class SocialMediaController extends Controller
 {
@@ -68,7 +70,12 @@ class SocialMediaController extends Controller
 //        }
         foreach ($data['social_medias'] as $id=>$social_media) {
             if(empty($social_media->sm_account_id)){
-                if($social_media->sm_type_id==2)
+                if($social_media->sm_type_id==1){
+                    Session::put('user_social_account_id_google',$social_media->id);
+                    $loginUrl= GooglePlusHelper::getLoginUrl($social_media->id);
+                    $data['social_medias'][$id]->loginUrl = $loginUrl;
+                    $data['social_medias'][$id]->button_text = 'Subscribe with Google+';
+                }elseif($social_media->sm_type_id==2)
                 {
                     Session::put('user_social_account_id_facebook',$social_media->id);
                     $loginUrl= FacebookHelper::getLoginUrl();
@@ -79,11 +86,11 @@ class SocialMediaController extends Controller
                     $loginUrl= TwitterHelper::getLoginUrl();
                     $data['social_medias'][$id]->loginUrl = $loginUrl;
                     $data['social_medias'][$id]->button_text = 'Subscribe with Twitter';
-                }elseif($social_media->sm_type_id==1){
-                    Session::put('user_social_account_id_google',$social_media->id);
-                    $loginUrl= GooglePlusHelper::getLoginUrl($social_media->id);
+                }elseif($social_media->sm_type_id==4){
+                    Session::put('user_social_account_id_instagram',$social_media->id);
+                    $loginUrl= InstagramHelper::getLoginUrl($social_media->id);
                     $data['social_medias'][$id]->loginUrl = $loginUrl;
-                    $data['social_medias'][$id]->button_text = 'Subscribe with Google+';
+                    $data['social_medias'][$id]->button_text = 'Subscribe with Instagram';
                 }
                 $data['social_medias'][$id]->btnClass='info';
             }else{
@@ -94,67 +101,118 @@ class SocialMediaController extends Controller
         }
         return view('www::social_media.index',$data);
     }
-    public function social_media_return($social_media_type){
-//        dd(Session::get('user_social_account_id'));
-        if(Session::has('user_social_account_id_facebook') || Session::has('user_social_account_id_twitter') ||Session::has('user_social_account_id_google')) {
+    public function social_media_return(Request $request,$social_media_type){
+//        dd(Session::get('user_social_account_id_instagram'));
+        if(Session::has('user_social_account_id_facebook') || Session::has('user_social_account_id_twitter') ||Session::has('user_social_account_id_google') ||Session::has('user_social_account_id_instagram')) {
 //            $company_social_account_id=1;
             if ($social_media_type == 'facebook') {
-                $status = FacebookHelper::_return();
-                if (isset($status) && isset($status['userNode']) && isset($status['longLiveAccessToken'])) {
-                    /*
-                     * store data on user social account
-                     * */
-                    $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_facebook'));
-                    $userSocial->sm_account_id = $status['userNode']->getId();
-                    $userSocial->access_token = $status['longLiveAccessToken'];
-                    $userSocial->save();
-                    \Session::flash('message', 'Successfully Subscribe.');
-
-                } else {
-                    Session::flash('error', $status);
-                }
+                $this->SubscribeFacebook();
             }
             elseif ($social_media_type == 'twitter') {
-                if (Session::has('oauth_token') && Session::has('oauth_token_secret') && isset($_REQUEST) && $_REQUEST['oauth_token'] == session('oauth_token')) {
-                    $status = TwitterHelper::_return();
-                    if (isset($status) && isset($status['oauth_token']) && isset($status['oauth_token_secret']) && isset($status['user_id'])) {
-                        /*
-                         * store data on user social account
-                         * */
-
-                        $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_twitter'));
-                        $userSocial->sm_account_id = $status['user_id'];
-                        $userSocial->access_token = $status['oauth_token'];
-                        $userSocial->associate_token = $status['oauth_token_secret'];
-                        $userSocial->save();
-                        \Session::flash('message', 'Successfully Subscribe.');
-
-                    } else {
-                        Session::flash('error', $status);
-                    }
-                }
+                $this->SubscribeTwitter();
             }
             elseif ($social_media_type == 'google') {
-                $status = GooglePlusHelper::_return();
-                if(isset($status) && isset($status['refresh_token']) && isset($status['user_id'])) {
-                    /*
-                     * store data on user social account
-                     * */
+                $this->SubscribeGoogle();
+            }
+            elseif ($social_media_type == 'instagram') {
 
-                    $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_google'));
-                    $userSocial->sm_account_id = $status['user_id'];
-                    $userSocial->access_token = $status['refresh_token'];
-                    $userSocial->save();
-                    \Session::flash('message', 'Successfully Subscribe.');
+                if(isset($request->code))
+                {
+                    $this->SubscribeInstagram($request->code);
 
-                } else {
-                    Session::flash('error', 'Sorry, refresh token missing !');
+                }else{
+                    \Session::flash('error', 'Missing Code !! please try again.');
                 }
+//                $status = GooglePlusHelper::_return();
+//                if(isset($status) && isset($status['refresh_token']) && isset($status['user_id'])) {
+//                    /*
+//                     * store data on user social account
+//                     * */
+//
+//                    $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_google'));
+//                    $userSocial->sm_account_id = $status['user_id'];
+//                    $userSocial->access_token = $status['refresh_token'];
+//                    $userSocial->save();
+//                    \Session::flash('message', 'Successfully Subscribe.');
+//
+//                } else {
+//                    Session::flash('error', 'Sorry, refresh token missing !');
+//                }
             }
         }else{
             \Session::flash('error', 'Sorry session destroyed. Please try again.');
         }
         return redirect('www/add-social-media');
+    }
+    private function SubscribeGoogle()
+    {
+        $status = GooglePlusHelper::_return();
+        if(isset($status) && isset($status['refresh_token']) && isset($status['user_id'])) {
+            /*
+             * store data on user social account
+             * */
+
+            $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_google'));
+            $userSocial->sm_account_id = $status['user_id'];
+            $userSocial->access_token = $status['refresh_token'];
+            $userSocial->save();
+            \Session::flash('message', 'Successfully Subscribe to Google Plus.');
+
+        } else {
+            Session::flash('error', 'Sorry, refresh token missing !');
+        }
+    }
+    private function SubscribeTwitter()
+    {
+        if (Session::has('oauth_token') && Session::has('oauth_token_secret') && isset($_REQUEST) && $_REQUEST['oauth_token'] == session('oauth_token')) {
+            $status = TwitterHelper::_return();
+            if (isset($status) && isset($status['oauth_token']) && isset($status['oauth_token_secret']) && isset($status['user_id'])) {
+                /*
+                 * store data on user social account
+                 * */
+
+                $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_twitter'));
+                $userSocial->sm_account_id = $status['user_id'];
+                $userSocial->access_token = $status['oauth_token'];
+                $userSocial->associate_token = $status['oauth_token_secret'];
+                $userSocial->save();
+                \Session::flash('message', 'Successfully Subscribe to Twitter.');
+
+            } else {
+                Session::flash('error', $status);
+            }
+        }
+    }
+    private function SubscribeFacebook()
+    {
+        $status = FacebookHelper::_return();
+        if (isset($status) && isset($status['userNode']) && isset($status['longLiveAccessToken'])) {
+            /*
+             * store data on user social account
+             * */
+            $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_facebook'));
+            $userSocial->sm_account_id = $status['userNode']->getId();
+            $userSocial->access_token = $status['longLiveAccessToken'];
+            $userSocial->save();
+            \Session::flash('message', 'Successfully Subscribe to Facebook.');
+
+        } else {
+            \Session::flash('error', $status);
+        }
+    }
+    private function SubscribeInstagram($code)
+    {
+        $status=InstagramHelper::getAccessToken($code);
+        if(isset($status) && !empty($status['access_token']))
+        {
+            $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_instagram'));
+            $userSocial->sm_account_id = $status['user_id'];
+            $userSocial->access_token = $status['access_token'];
+            $userSocial->save();
+            \Session::flash('message', 'Successfully Subscribe to Instagram.');
+        }else{
+            \Session::flash('error', 'Some thing wrong ! please try again.');
+        }
     }
     public function get_posts($user_social_media_id)
     {
