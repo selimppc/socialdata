@@ -26,15 +26,14 @@ class InstagramHelper
     public static function getLoginUrl()
     {
         $config = InstagramHelper::getIgConfig();
-        $redirect_url='http://socialdataetsb.com/www/social-media-return/instagram';
-        $url='https://api.instagram.com/oauth/authorize/?client_id='.$config["client_id"].'&redirect_uri='.$redirect_url.'&response_type=code';
+        $redirect_url=url('www/social-media-return/instagram');
+        $url='https://api.instagram.com/oauth/authorize/?client_id='.$config["client_id"].'&redirect_uri='.$redirect_url.'&response_type=code&scope=basic+public_content+follower_list+comments+relationships+likes';
         return $url;
-
     }
     public static function getAccessToken( $code=false )	{
         if ( !empty($code) )	{
             $config = InstagramHelper::getIgConfig();
-            $redirect_url='http://socialdataetsb.com/www/social-media-return/instagram';
+            $redirect_url=url('www/social-media-return/instagram');
             $access_token_url='https://api.instagram.com/oauth/access_token';
 
             $curl = curl_init();
