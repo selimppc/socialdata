@@ -9,7 +9,11 @@
 namespace App\Helpers;
 
 
+use App\Post;
+use App\PostImage;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 
 class InstagramHelper
 {
@@ -84,20 +88,38 @@ class InstagramHelper
             $data = array();
 
             if ( $output = curl_exec( $curl ) )	{
-                $output = json_decode( $output );
-                dd($output);
-                $data = array(
-                    'user_id' => $output->user->id,
-                    'username' => $output->user->username,
-                    'name' => $output->user->full_name,
-                    'avatar' => $output->user->profile_picture,
-                    'access_token' => $output->access_token
-                );
-//                $this->__set( 'access_token', $data['access_token'] );
+                $data = json_decode( $output );
             }
             curl_close( $curl );
             return $data;
         }
         return false;
+    }
+    public static function storeData($data,$company_social_account)
+    {
+        DB::beginTransaction();
+        try {
+            foreach ($data->data as $item) {
+                $post = new Post();
+                $post->company_id = $company_social_account->company_id;
+                $post->sm_type_id = $company_social_account->sm_type_id;
+                if (isset($item->caption->text)) {
+                    $post->post = $item->caption->text;
+                }
+                $post->post_id = $item->caption->id;
+                $post->save();
+                $post_image= new PostImage();
+                $post_image->post_id=$post->id;
+                $post_image->url_thumbnail=$item->images->thumbnail->url;
+                $post_image->url_low=$item->images->low_resolution->url;
+                $post_image->url_standard=$item->images->standard_resolution->url;
+                $post_image->save();
+            }
+            DB::commit();
+        }catch (Exception $e)
+        {
+            DB::rollback();
+            return $e->getMessage();
+        }
     }
 }

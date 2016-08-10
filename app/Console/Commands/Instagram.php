@@ -40,10 +40,10 @@ class Instagram extends Command
     public function handle()
     {
         $company_social_accounts=CompanySocialAccount::where('sm_type_id',4)->where('sm_account_id','!=','')->get();
+//        dd($company_social_accounts);
         foreach ($company_social_accounts as $company_social_account) {
-            InstagramHelper::getData($company_social_account->access_token);
-
+            $data=InstagramHelper::getData($company_social_account->access_token);
+            InstagramHelper::storeData($data,$company_social_account);
         }
-        dd($company_social_accounts);
     }
 }

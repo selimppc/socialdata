@@ -45,6 +45,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:googleplus')->hourly();*/
         // every hour
         $schedule->command('get:twitter')->hourly();
+        $schedule->command('get:instagram')->hourly();
         // every one and a half hours
         $schedule->command('get:facebook')->cron('0 0,3,6,9,12,15,18,21 * * * *');
 //        $schedule->command('get:facebook')->cron('30 1,4,7,10,13,16,19,22 * * * *');
@@ -60,5 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('post:schedule')->everyMinute();
         // notify before post on social media
         $schedule->command('post:notify')->everyMinute();
+        // Pull Instagram data
+        $schedule->command('get:instagram')->hourly();
     }
 }
