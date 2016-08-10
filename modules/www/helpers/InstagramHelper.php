@@ -27,7 +27,7 @@ class InstagramHelper
     {
         $config = InstagramHelper::getIgConfig();
         $redirect_url=url('www/social-media-return/instagram');
-        $url='https://api.instagram.com/oauth/authorize/?client_id='.$config["client_id"].'&redirect_uri='.$redirect_url.'&response_type=code&scope=basic+public_content+follower_list+comments+relationships+likes';
+        $url='https://api.instagram.com/oauth/authorize/?client_id='.$config["client_id"].'&redirect_uri='.$redirect_url.'&response_type=code&scope=basic+public_content';
         return $url;
     }
     public static function getAccessToken( $code=false )	{
@@ -54,6 +54,38 @@ class InstagramHelper
 
             if ( $output = curl_exec( $curl ) )	{
                 $output = json_decode( $output );
+                $data = array(
+                    'user_id' => $output->user->id,
+                    'username' => $output->user->username,
+                    'name' => $output->user->full_name,
+                    'avatar' => $output->user->profile_picture,
+                    'access_token' => $output->access_token
+                );
+//                $this->__set( 'access_token', $data['access_token'] );
+            }
+            curl_close( $curl );
+            return $data;
+        }
+        return false;
+    }
+    public static function getData( $access_token)	{
+        if ( !empty($access_token) )	{
+            $config = InstagramHelper::getIgConfig();
+//            $redirect_url=url('www/social-media-return/instagram');
+//            $pull_url='https://api.instagram.com/v1/tags/nofilter/media/recent?access_token='.$access_token;
+            $pull_url='https://api.instagram.com/v1/users/self/media/liked?access_token='.$access_token;
+//            dd($pull_url);
+            $curl = curl_init();
+            curl_setopt_array( $curl, array(
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_URL => $pull_url
+            ));
+
+            $data = array();
+
+            if ( $output = curl_exec( $curl ) )	{
+                $output = json_decode( $output );
+                dd($output);
                 $data = array(
                     'user_id' => $output->user->id,
                     'username' => $output->user->username,

@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Twitter::class,
         \App\Console\Commands\PostSchedule::class,
         \App\Console\Commands\PostNofify::class,
+        \App\Console\Commands\Instagram::class,
     ];
 
     /**
