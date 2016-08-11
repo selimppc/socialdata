@@ -9,6 +9,7 @@
 namespace App\Helpers;
 
 
+use App\Comment;
 use App\Post;
 use App\PostImage;
 use Illuminate\Support\Facades\Config;
@@ -72,7 +73,7 @@ class InstagramHelper
         }
         return false;
     }
-    public static function getData( $access_token)	{
+    public static function getPosts( $access_token)	{
         if ( !empty($access_token) )	{
             $config = InstagramHelper::getIgConfig();
 //            $redirect_url=url('www/social-media-return/instagram');
@@ -91,29 +92,75 @@ class InstagramHelper
                 $data = json_decode( $output );
             }
             curl_close( $curl );
+            foreach ($data->data as $id=>$item) {
+                if($item->comments->count > 0)
+                {
+                    $data->data[$id]->comments->details=InstagramHelper::getComments($item->id,$access_token)->data;
+                }
+            }
             return $data;
         }
         return false;
+    }
+    public static function getComments($post_id,$access_token)
+    {
+        $url='https://api.instagram.com/v1/media/'.$post_id.'/comments?access_token='.$access_token;
+        $curl = curl_init();
+        curl_setopt_array( $curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url
+        ));
+
+        $data = array();
+
+        if ( $output = curl_exec( $curl ) )	{
+            $data = json_decode( $output );
+        }
+        curl_close( $curl );
+        return $data;
     }
     public static function storeData($data,$company_social_account)
     {
         DB::beginTransaction();
         try {
-            foreach ($data->data as $item) {
-                $post = new Post();
-                $post->company_id = $company_social_account->company_id;
-                $post->sm_type_id = $company_social_account->sm_type_id;
-                if (isset($item->caption->text)) {
-                    $post->post = $item->caption->text;
+            foreach ($data->data as $id=>$item) {
+                $post=Post::where('post_id',$item->id)->first();
+                if(count($post) == 0) {
+                    $post = new Post();
+                    $post->company_id = $company_social_account->company_id;
+                    $post->sm_type_id = $company_social_account->sm_type_id;
+                    if (isset($item->caption->text)) {
+                        $post->post = $item->caption->text;
+                    }
+                    $post->post_id = $item->id;
+                    $post->post_date = $item->created_time;
+                    $post->save();
+                    print "    Post Save \n";
+
+                    $post_image = new PostImage();
+                    $post_image->post_id = $post->id;
+                    $post_image->url_thumbnail = $item->images->thumbnail->url;
+                    $post_image->url_low = $item->images->low_resolution->url;
+                    $post_image->url_standard = $item->images->standard_resolution->url;
+                    $post_image->save();
+                    print "         Image Save \n";
                 }
-                $post->post_id = $item->caption->id;
-                $post->save();
-                $post_image= new PostImage();
-                $post_image->post_id=$post->id;
-                $post_image->url_thumbnail=$item->images->thumbnail->url;
-                $post_image->url_low=$item->images->low_resolution->url;
-                $post_image->url_standard=$item->images->standard_resolution->url;
-                $post_image->save();
+                if($item->comments->count > 0)
+                {
+                    foreach ($item->comments->details as $comment) {
+                        $check=Comment::where('comment_id',$comment->id)->first();
+                        if(count($check)==0) {
+                            $c = new Comment();
+                            $c->post_id = $post->id;
+                            $c->comment_id = $comment->id;
+                            $c->comment = $comment->text;
+                            $c->comment_date = $comment->created_time;
+                            $c->save();
+                            print "             Comment Save \n";
+                        }
+                    }
+                }
+
             }
             DB::commit();
         }catch (Exception $e)
