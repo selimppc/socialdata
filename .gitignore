@@ -15,3 +15,4 @@ bootstrap/compiled.php
 #later added ignores
 composer.lock
 .idea/
+config/custom.php
