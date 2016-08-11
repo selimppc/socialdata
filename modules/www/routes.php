@@ -128,8 +128,15 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
 
     // search route
     Route::get('search',[
-        'middleware'=>'acl_access:www/:search',
+        'middleware'=>'acl_access:www/search',
         'as'=>'main-search',
         'uses'=>'SettingController@main_search'
+    ]);
+
+    // News Feeds Routes
+    Route::get('feeds/instagram',[
+        'middleware'=>'acl_access:www/feeds/instagram',
+        'as' => 'feeds/instagram',
+        'uses'=>'FeedController@index'
     ]);
 });

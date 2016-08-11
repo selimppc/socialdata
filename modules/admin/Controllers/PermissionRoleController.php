@@ -364,9 +364,9 @@ class PermissionRoleController extends Controller
                 /* Transaction Start Here */
                 try {
                     $model->save();
-                    DB::commit();
                     Session::flash('message', 'Successfully added!');
                     LogFileHelper::log_info('store-permission-role', 'successfully added',  ['Permission role role_id'.$input['role_id']]);
+                    DB::commit();
                 } catch (\Exception $e) {
                     //If there are any exceptions, rollback the transaction`
                     DB::rollback();
