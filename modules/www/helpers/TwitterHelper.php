@@ -20,7 +20,7 @@ class TwitterHelper
 {
     public static function getTwitterConfig()
     {
-        $twitter_config=Config::get('custom.twitter');
+        $twitter_config=Config::get('socialdata.twitter');
         $config = [
             'consumerKey' => $twitter_config['consumerKey'],
             'consumerSecret' => $twitter_config['consumerSecret'],
@@ -31,7 +31,7 @@ class TwitterHelper
     }
     public static function getTwitterSetting()
     {
-        $twitter_config=Config::get('custom.twitter');
+        $twitter_config=Config::get('socialdata.twitter');
         $config = [
             'consumer_key' => $twitter_config['consumerKey'],
             'consumer_secret' => $twitter_config['consumerSecret'],
@@ -41,8 +41,8 @@ class TwitterHelper
         return $config;
     }
     public static function getLoginUrl(){
-        $twitter_config=Config::get('custom.twitter');
-        $callback=Config::get('custom.callback').'/twitter';
+        $twitter_config=Config::get('socialdata.twitter');
+        $callback=Config::get('settingData.callback').'/twitter';
         $callback= url($callback);
         $ttr= new TwitterOAuth($twitter_config['consumerKey'],$twitter_config['consumerSecret']);
         $request_token= $ttr->oauth('oauth/request_token',['oauth_callback'=>$callback]);
@@ -55,7 +55,7 @@ class TwitterHelper
     public static function _return()
     {
         try {
-            $twitter_config = Config::get('custom.twitter');
+            $twitter_config = Config::get('socialdata.twitter');
             $ttr = new TwitterOAuth($twitter_config['consumerKey'], $twitter_config['consumerSecret'], session('oauth_token'), session('oauth_token_secret'));
             $access_token = $ttr->oauth('oauth/access_token', ['oauth_verifier' => $_REQUEST['oauth_verifier']]);
             return $access_token;
@@ -71,7 +71,7 @@ class TwitterHelper
             {
                 $company_id=session('company_id');
             }
-            $twitter_config = Config::get('custom.twitter');
+            $twitter_config = Config::get('socialdata.twitter');
             $ttr_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id', 3)->first();
             $ttr = new TwitterOAuth($twitter_config['consumerKey'], $twitter_config['consumerSecret'], $ttr_account->access_token, $ttr_account->associate_token);
             $custom_post=CustomPost::findOrFail($post_id);

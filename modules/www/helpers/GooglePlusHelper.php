@@ -14,8 +14,8 @@ use Mockery\CountValidator\Exception;
 class GooglePlusHelper
 {
     public Static function client(){
-        $config=Config::get('custom.google');
-        $config['redirect_uri']= url(Config::get('custom.callback').'/google');
+        $config=Config::get('socialdata.google');
+        $config['redirect_uri']= url(Config::get('settingData.callback').'/google');
         $config['access_type']= 'offline';
         $client = new \Google_Client($config);
         return $client;

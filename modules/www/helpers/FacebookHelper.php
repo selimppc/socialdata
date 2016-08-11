@@ -19,7 +19,7 @@ class FacebookHelper
     public static function getFbConfig()
     {
         @session_start();
-        $fb_config=Config::get('custom.facebook');
+        $fb_config=Config::get('socialdata.facebook');
         $config = [
             'app_id' => $fb_config['app_id'],
             'app_secret' => $fb_config['app_secret'],
@@ -35,8 +35,8 @@ class FacebookHelper
 
         $helper = $fb->getRedirectLoginHelper();
         // Optional permissions
-        $permissions=Config::get('custom.permissions');
-        $callback=Config::get('custom.callback').'/facebook';
+        $permissions=Config::get('settingData.permissions');
+        $callback=Config::get('settingData.callback').'/facebook';
         $callback= url($callback);
 //        $url= \URL::to('www/social-media-return/facebook/'.$user_social_account_id);
         return $helper->getLoginUrl($callback, $permissions);

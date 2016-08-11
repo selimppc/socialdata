@@ -8,26 +8,7 @@
 
 return [
     'callback'=>'www/social-media-return',
-    'facebook'=>[
-        'app_id'=>'251889945201960',
-        'app_secret'=>'38db4d9210cbffda07f78baf35eaf981'
-    ],
     'post_status'=>['new','inactive','cancel','delete','ready','processing','sent'],
-    'twitter'=>[
-        'consumerKey'=>'dg38tfZt8l6VwlILLivRoAoEK',
-        'consumerSecret'=>'chlkofsQctIVJeOUB1fm5ROOFUnQ7HtqfA9iGN0jZl0lQ4XHvz',
-        'outhToken' => '707118658229698560-GxOU9hq56QFEzVpHR4HHL7h3MnHyKgJ',
-        'othTokenSecret'=> 'UxRtbw8qCzkaqsfInbzlttJw80j8IMIJWSM0saP9y629e'
-    ],
-    'google'=>[
-        'application_name'=>'ETSB Social Data',
-        'client_id'=>'974791274339-doct333hjkdob6mccquvuo21k662s7m5',
-        'client_secret'=>'BvCfXp-RahiywnK_7YshL2oT'
-    ],
-    'instagram'=>[
-        'client_id'=>'832646bafffa46518b9f14bffc236968',
-        'client_secret'=>'0f6fd618195b49f5afbb360887857cad'
-    ],
     'permissions' => [
         'public_profile',
         'user_friends',
@@ -71,5 +52,6 @@ return [
         'ads_management',
         'pages_messaging',
         'pages_messaging_phone_number'
-    ]
+    ],
 ];
+

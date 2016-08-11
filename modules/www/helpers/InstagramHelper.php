@@ -21,7 +21,7 @@ class InstagramHelper
     public static function getIgConfig()
     {
         @session_start();
-        $ig_config=Config::get('custom.instagram');
+        $ig_config=Config::get('socialdata.instagram');
         $config = [
             'client_id' => $ig_config['client_id'],
             'client_secret' => $ig_config['client_secret'],
