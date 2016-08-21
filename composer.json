@@ -30,7 +30,10 @@
             "App\\": "app/",
             "Modules\\": "modules/",
             "Bootstrap\\": "bootstrap/"
-        }
+        },
+        "files": [
+            "modules/www/helpers/HelperFunctions.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

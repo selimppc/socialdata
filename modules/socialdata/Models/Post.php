@@ -26,4 +26,15 @@ class Post extends Model
     public function relSmtype(){
         return $this->belongsTo('App\SmType', 'sm_type_id', 'id');
     }
+
+    // Relation with Comment Table
+    public function relComment()
+    {
+        return $this->hasMany('App\Comment','post_id','id');
+    }
+    // Relation with Post Images Table
+    public function relPostImage()
+    {
+        return $this->hasOne('App\PostImage','post_id','id');
+    }
 }
