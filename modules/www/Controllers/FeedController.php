@@ -15,27 +15,41 @@ use Illuminate\Http\Request;
 
 class FeedController extends Controller
 {
-    public function index(Request $request)
+    public function feeds(Request $request)
     {
-        dd($request->url());
-    }
-    public function instagram()
-    {
+        if($request->is('*/instagram'))
+        {
+            $sm_type_id=4;
+        }else{
+            return back();
+        }
+        if(session('role_id')=='admin' || session('role_id')=='sadmin') {
+            $data['posts']=Post::where('sm_type_id', $sm_type_id)->paginate(20);
+        }else{
+            $data['posts']=Post::where('sm_type_id',$sm_type_id)->where('company_id',session('company_id'))->paginate(20);
+        }
         $data['pageTitle']='Instagram Newsfeed';
-        $data['posts']=$this->_feeds(4);
+
         return view('www::feeds.index',$data);
     }
-    private function _feeds($sm_type_id)
+    public function details(Request $request,$post_id)
     {
-        return Post::where('sm_type_id',$sm_type_id)->where('company_id',session('company_id'))->paginate(20);
-    }
-    public function details($post_id)
-    {
-        $data['post']=Post::where('id',$post_id)->where('company_id',session('company_id'))->with(['relComment','relPostImage'])->first();
-        // if post is null then redirect back
+        if($request->is('*/instagram/*'))
+        {
+            $sm_type_id=4;
+        }else{
+            return back();
+        }
+
+        if(session('role_id')=='admin' || session('role_id')=='sadmin') {
+            $data['post'] = Post::where('id', $post_id)->where('sm_type_id', $sm_type_id)->with(['relComment', 'relPostImage'])->first();
+        }else{
+            $data['post'] = Post::where('id', $post_id)->where('sm_type_id', $sm_type_id)->where('company_id', session('company_id'))->with(['relComment', 'relPostImage'])->first();
+        }
         if($data['post'] == null) return back();
         $data['pageTitle']='Post Details';
 //        dd($data['post']);
         return view('www::feeds.details',$data);
+
     }
 }
