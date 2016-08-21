@@ -135,7 +135,7 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
 
     // News Feeds Routes
     Route::get('feeds/instagram/{post_id}',[
-//        'middleware'=>'acl_access:www/feeds/instagram/{post_id}',
+        'middleware'=>'acl_access:www/feeds/instagram/{post_id}',
         'as' => 'feeds/instagram/{post_id}',
         'uses'=>'FeedController@details'
     ]);
