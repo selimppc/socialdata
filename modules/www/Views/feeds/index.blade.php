@@ -29,7 +29,7 @@
                                     <td>{{ $post->post_id }}</td>
                                     <td>{{ $post->post }}</td>
                                     <td>
-                                        <a href="{{ url('www/feeds/instagram/'.$post->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -144,4 +144,34 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as' => 'feeds/instagram',
         'uses'=>'FeedController@feeds'
     ]);
+    Route::get('feeds/twitter/{post_id}',[
+        'middleware'=>'acl_access:www/feeds/twitter/{post_id}',
+        'as' => 'feeds/twitter/{post_id}',
+        'uses'=>'FeedController@details'
+    ]);
+    Route::get('feeds/twitter',[
+        'middleware'=>'acl_access:www/feeds/twitter',
+        'as' => 'feeds/twitter',
+        'uses'=>'FeedController@feeds'
+    ]);
+    Route::get('feeds/facebook/{post_id}',[
+        'middleware'=>'acl_access:www/feeds/facebook/{post_id}',
+        'as' => 'feeds/facebook/{post_id}',
+        'uses'=>'FeedController@details'
+    ]);
+    Route::get('feeds/facebook',[
+        'middleware'=>'acl_access:www/feeds/facebook',
+        'as' => 'feeds/facebook',
+        'uses'=>'FeedController@feeds'
+    ]);
+    Route::get('feeds/googleplus/{post_id}',[
+        'middleware'=>'acl_access:www/feeds/googleplus/{post_id}',
+        'as' => 'feeds/googleplus/{post_id}',
+        'uses'=>'FeedController@details'
+    ]);
+    Route::get('feeds/googleplus',[
+        'middleware'=>'acl_access:www/feeds/googleplus',
+        'as' => 'feeds/googleplus',
+        'uses'=>'FeedController@feeds'
+    ]);
 });

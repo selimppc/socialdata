@@ -17,9 +17,22 @@ class FeedController extends Controller
 {
     public function feeds(Request $request)
     {
-        if($request->is('*/instagram'))
+        if($request->is('*/googleplus'))
+        {
+            $sm_type_id=1;
+            $data['sm_type']='googleplus';
+        }elseif($request->is('*/facebook'))
+        {
+            $sm_type_id=2;
+            $data['sm_type']='facebook';
+        }elseif($request->is('*/twitter'))
+        {
+            $sm_type_id=3;
+            $data['sm_type']='twitter';
+        }elseif($request->is('*/instagram'))
         {
             $sm_type_id=4;
+            $data['sm_type']='instagram';
         }else{
             return back();
         }
@@ -34,9 +47,22 @@ class FeedController extends Controller
     }
     public function details(Request $request,$post_id)
     {
-        if($request->is('*/instagram/*'))
+        if($request->is('*/googleplus/*'))
+        {
+            $sm_type_id=1;
+            $data['sm_type']='googleplus';
+        }elseif($request->is('*/facebook/*'))
+        {
+            $sm_type_id=2;
+            $data['sm_type']='facebook';
+        }elseif($request->is('*/twitter/*'))
+        {
+            $sm_type_id=3;
+            $data['sm_type']='twitter';
+        }elseif($request->is('*/instagram/*'))
         {
             $sm_type_id=4;
+            $data['sm_type']='instagram';
         }else{
             return back();
         }

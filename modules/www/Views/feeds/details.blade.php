@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
-                    <span class="panel-title">{{ $pageTitle }}</span>
+                    <span class="panel-title">{{ $pageTitle }} <b>{{ ucfirst($sm_type) }}</b></span>
                 </div>
 
                 <div class="panel-body" id="postload">
