@@ -75,6 +75,7 @@ class FeedController extends Controller
         if($data['post'] == null) return back();
         $data['pageTitle']='Post Details';
 //        dd($data['post']);
+//        dd($data);
         return view('www::feeds.details',$data);
 
     }

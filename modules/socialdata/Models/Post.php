@@ -35,6 +35,6 @@ class Post extends Model
     // Relation with Post Images Table
     public function relPostImage()
     {
-        return $this->hasOne('App\PostImage','post_id','id');
+        return $this->hasMany('App\PostImage','post_id','id');
     }
 }

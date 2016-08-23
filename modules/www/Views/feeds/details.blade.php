@@ -14,9 +14,26 @@
                                 {{ $post->post }}
                             </div>
                             <div class="col-md-3">
-                                @if(!empty($post->relPostImage['url_standard']))
-                                    <img src="{{ $post->relPostImage['url_standard'] }}" width="100%">
-                                @endif
+                                <div class="row">
+                                    @if(count($post->relPostImage)>1)
+                                        @foreach($post->relPostImage as $postImage)
+                                            @if(!empty($postImage['url_standard']))
+                                                <div class="col-md-6">
+                                                    <img src="{{ $postImage['url_standard'] }}" width="100%">
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        @foreach($post->relPostImage as $postImage)
+                                            @if(!empty($postImage['url_standard']))
+                                                <div class="col-md-12">
+                                                    <img src="{{ $postImage['url_standard'] }}" width="100%">
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+<!--                                    --><?php //dd(count($post->relPostImage)); ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -34,7 +51,13 @@
                                         color: #707070;
                                         box-shadow: 0 0 5px #f0f0f0;
                                         border: 1px solid #ffffff;
-">{{ date('d M Y H:i:s (D)',$comment->comment_date) }}</span><br>
+">
+                                            @if($sm_type=='instagram')
+                                                {{ date('d M Y H:i:s (D)',$comment->comment_date) }}
+                                            @else
+                                                {{ $comment->comment_date }}
+                                            @endif
+                                        </span><br>
                                         {{ $comment->comment }}
                                         </div>
                                     @endforeach
