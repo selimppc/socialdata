@@ -17,6 +17,7 @@ class CreatePostImageTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('post_id');
             $table->foreign('post_id')->references('id')->on('post');
+            $table->text('description')->nullable();
             $table->text('url_low')->nullable();
             $table->text('url_thumbnail')->nullable();
             $table->text('url_standard')->nullable();

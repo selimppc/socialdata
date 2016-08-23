@@ -8,11 +8,15 @@
 
 namespace App\Helpers;
 
+use App\Comment;
 use App\CompanySocialAccount;
 use App\CustomPost;
+use App\Post;
+use App\PostImage;
 use App\PostSocialMedia;
 use Illuminate\Support\Facades\Config;
 use Facebook\Facebook;
+use Illuminate\Support\Facades\DB;
 
 class FacebookHelper
 {
@@ -114,5 +118,106 @@ class FacebookHelper
         }
         return false;
     }
+    // retrieve page data
 
+    public static function getPosts( $access_token,$page_id)	{
+        if ( !empty($access_token) )	{
+            $config = FacebookHelper::getFbConfig();
+            $fb= new Facebook($config);
+            $fb->setDefaultAccessToken($access_token);
+            try {
+                // Returns a `Facebook\FacebookResponse` object
+                return $fb->get("/$page_id/posts?fields=attachments,message,created_time", $access_token);
+            } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                echo 'Graph returned an error: ' . $e->getMessage();
+                exit;
+            } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                echo 'Facebook SDK returned an error: ' . $e->getMessage();
+                exit;
+            }
+        }
+        return false;
+    }
+    public static function storeData($data,$company_social_account)
+    {
+        DB::beginTransaction();
+        try {
+            foreach ($data as $id=>$item) {
+                $post=Post::where('post_id',$item['id'])->first();
+                if(count($post) == 0) {
+                    $post = new Post();
+                    $post->company_id = $company_social_account->company_id;
+                    $post->sm_type_id = $company_social_account->sm_type_id;
+                    $post->post = isset($item['message'])?$item['message']:"";
+                    $post->post_id = $item['id'];
+                    $post->post_date = $item['created_time'];
+//                    dd($post);
+                    $post->save();
+                    print "    Post Save \n";
+//                    dd($item['attachments']);
+//                    dd($item);
+                    if(isset($item['attachments'])) {
+                        FacebookHelper::_attachments($post,$item);
+                    }
+
+                }
+                $comments=FacebookHelper::_getComments($post->id);
+                if(isset($comments)){
+                    FacebookHelper::_storeComments($post->id,$comments);
+                }
+            }
+            DB::commit();
+        }catch (Exception $e)
+        {
+            DB::rollback();
+            return $e->getMessage();
+        }
+    }
+    private static function _attachments($post,$item)
+    {
+        foreach ($item['attachments']['data'] as $id=>$attachment) {
+            if(isset($attachment['subattachments']))
+            {
+                foreach ($attachment['subattachments']['data'] as $id=>$subattachment) {
+                    $post_image = new PostImage();
+                    $post_image->post_id = $post->id;
+                    $post_image->description = isset($subattachment['description'])?$subattachment['description']:'';
+                    $post_image->url_standard = $subattachment['media']['image']['src'];
+                    $post_image->save();
+                }
+            }else {
+                $post_image = new PostImage();
+                $post_image->post_id = $post->id;
+                $post_image->description = isset($attachment['description'])?$attachment['description']:'';
+                $post_image->url_standard = $attachment['media']['image']['src'];
+                    $post_image->save();
+            }
+            print "         Image Save \n";
+        }
+    }
+    private static function _getComments($post_id)
+    {
+        $post= Post::findOrFail($post_id);
+        $company_social_account= CompanySocialAccount::where('company_id',$post->company_id)->where('sm_type_id',2)->first();
+        $config = FacebookHelper::getFbConfig();
+        $fb= new Facebook($config);
+        $fb->setDefaultAccessToken($company_social_account->access_token);
+//        dd($post->post_id);
+        return $fb->get("/".$post->post_id."/comments", $company_social_account->access_token);
+    }
+    private static function _storeComments($post_id,$comments)
+    {
+        $comments=$comments->getDecodedBody('data');
+        foreach ($comments['data'] as $id=>$comment) {
+            if(!Comment::where('comment_id',$comment['id'])->exists()) {
+                $c = new Comment();
+                $c->post_id = $post_id;
+                $c->comment_id = $comment['id'];
+                $c->comment = $comment['message'];
+                $c->comment_date = $comment['created_time'];
+                $c->save();
+                print "             Comment Save \n";
+            }
+        }
+    }
 }

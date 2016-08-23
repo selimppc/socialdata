@@ -41,7 +41,7 @@ class FeedController extends Controller
         }else{
             $data['posts']=Post::where('sm_type_id',$sm_type_id)->where('company_id',session('company_id'))->paginate(20);
         }
-        $data['pageTitle']='Instagram Newsfeed';
+        $data['pageTitle']=ucfirst($data['sm_type']).' Newsfeed';
 
         return view('www::feeds.index',$data);
     }

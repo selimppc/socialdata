@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Comment;
 use App\Company;
 use App\CompanySocialAccount;
+use App\Helpers\FacebookHelper;
 use App\Post;
 use App\SmType;
 use Illuminate\Console\Command;
@@ -45,76 +46,105 @@ class Facebook extends Command
     private static $i = 1;
     public function handle()
     {
-        session_start();
-        $company_id = $this->argument('company_id');
-        $sm_type_id = $this->argument('sm_type_id');
-        //all company facebook page
-        if($company_id == 0){
-            if(SmType::where('type','facebook')->where('status','active')->exists()){
-                $sm_type_details = SmType::where('type','facebook')->where('status','active')->first();
-                if(CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->exists()){
-                    $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
-                    foreach ($company_details as $company_detail) {
-                        $sm_type_id = $company_detail->sm_type_id;
-                        $page_id = $company_detail->page_id;
-                        $company_id = $company_detail->company_id;
-                        if(Company::where('id',$company_id)->where('status','active')->exists()){
-                            $this->facebook_post($page_id, $sm_type_id, $company_id);
-                            //update company social account duration all to 1 day after first iteration
-                            /*DB::table('company_social_account')
-                                ->where('id',$sm_type_id)
-                                ->where('data_pull_duration', 'all')
-                                ->update(['data_pull_duration' => "1"]);*/
-                            if($company_detail->data_pull_duration == 'all'){
-                                $company_detail->data_pull_duration = 1;
-                                $company_detail->update();
-                            }
-                        }
-                    }
-                }else{
-                    print "No company found related facebook social media type.\n";exit;
-                }
-            }else{
-                print "No facebook media type found\n";
-            }
-        }else{
-            //specific company facebook page
-            if(Company::where('id', $company_id)->where('status','active')->exists()){
-                $company_details = Company::where('id', $company_id)->where('status','active')->first();
-                if(SmType::where('type','facebook')->where('status','active')->exists()){
-                    $sm_type_id = SmType::where('type','facebook')->where('status','active')->first();
-                    if(CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->exists()){
-                        $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
-                        foreach ($company_social_account as $com_s_acc) {
-                            $sm_type_id = $com_s_acc->sm_type_id;
-                            $page_id = $com_s_acc->page_id;
-                            $company_id = $com_s_acc->company_id;
-                            $this->facebook_post($page_id, $sm_type_id, $company_id);
-                            //update company social account duration all to 1 day after first iteration
-                            if($com_s_acc->data_pull_duration == 'all'){
-                                $com_s_acc->data_pull_duration = 1;
-                                $com_s_acc->update();
-                            }
-                        }
-                    }
-                }
-            }
+        $company_social_accounts=CompanySocialAccount::where('sm_type_id',2)->where('sm_account_id','!=','')->get();
+//        dd($company_social_accounts);
+        $i=0;
+        foreach ($company_social_accounts as $company_social_account) {
+            print ++$i.". Facebook Account Found \n";
+            $data=FacebookHelper::getPosts($company_social_account->access_token,$company_social_account->page_id);
+//            dd($data);
+            $data=$data->getDecodedBody('data');
+//            dd($data['data']);
+            FacebookHelper::storeData($data['data'],$company_social_account);
         }
-        exit;
+
+
+
+
+
+
+
+
+
+//        session_start();
+//        $company_id = $this->argument('company_id');
+//        $sm_type_id = $this->argument('sm_type_id');
+//        //all company facebook page
+//        if($company_id == 0){
+//            if(SmType::where('type','facebook')->where('status','active')->exists()){
+//                $sm_type_details = SmType::where('type','facebook')->where('status','active')->first();
+//                if(CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->exists()){
+//                    $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
+//                    foreach ($company_details as $company_detail) {
+//                        $sm_type_id = $company_detail->sm_type_id;
+//                        $page_id = $company_detail->page_id;
+//                        $company_id = $company_detail->company_id;
+//                        if(Company::where('id',$company_id)->where('status','active')->exists()){
+//                            $this->facebook_post($page_id, $sm_type_id, $company_id);
+//                            //update company social account duration all to 1 day after first iteration
+//                            /*DB::table('company_social_account')
+//                                ->where('id',$sm_type_id)
+//                                ->where('data_pull_duration', 'all')
+//                                ->update(['data_pull_duration' => "1"]);*/
+//                            if($company_detail->data_pull_duration == 'all'){
+//                                $company_detail->data_pull_duration = 1;
+//                                $company_detail->update();
+//                            }
+//                        }
+//                    }
+//                }else{
+//                    print "No company found related facebook social media type.\n";exit;
+//                }
+//            }else{
+//                print "No facebook media type found\n";
+//            }
+//        --}else{
+//            //specific company facebook page
+//            if(Company::where('id', $company_id)->where('status','active')->exists()){
+//                $company_details = Company::where('id', $company_id)->where('status','active')->first();
+//                if(SmType::where('type','facebook')->where('status','active')->exists()){
+//                    $sm_type_id = SmType::where('type','facebook')->where('status','active')->first();
+//                    if(CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->exists()){
+//                        $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
+//                        foreach ($company_social_account as $com_s_acc) {
+//                            $sm_type_id = $com_s_acc->sm_type_id;
+//                            $page_id = $com_s_acc->page_id;
+//                            $company_id = $com_s_acc->company_id;
+//                            $this->facebook_post($page_id, $sm_type_id, $company_id);
+//                            //update company social account duration all to 1 day after first iteration
+//                            if($com_s_acc->data_pull_duration == 'all'){
+//                                $com_s_acc->data_pull_duration = 1;
+//                                $com_s_acc->update();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        exit;
     }
 
     public function facebook_post($page_id, $sm_type_id, $company_id)
     {
+//        $config = [
+//            'appId' => '969861563097945',
+//            'secret' => '6aaf0ad24ca10468aa788f67f3741396',
+//            //'default_graph_version' => 'v2.5',
+//        ];
+        $fb_config=config('socialdata.facebook');
         $config = [
-            'appId' => '969861563097945',
-            'secret' => '6aaf0ad24ca10468aa788f67f3741396',
-            //'default_graph_version' => 'v2.5',
+            'appId' => $fb_config['app_id'],
+            'secret' => $fb_config['app_secret'],
+            'default_graph_version' => 'v2.6',
+            'persistent_data_handler'=>'session'
         ];
         $facebook = new \Facebook($config);
         $limit = 20;
 
+//        dd($facebook);
         // FB first call to get pagination next var
         $feed = $facebook->api("/$page_id/posts?limit=$limit");
+        dd($feed);
         $content_id['paging']['next'] = isset($feed['paging']['next'])?$feed['paging']['next']:null;
         if(isset($feed['data'])){
             foreach ($feed['data'] as $item) {
