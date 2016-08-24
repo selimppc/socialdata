@@ -159,7 +159,7 @@ class SocialMediaController extends Controller
             \Session::flash('message', 'Successfully Subscribe to Google Plus.');
 
         } else {
-            Session::flash('error', 'Sorry, refresh token missing !');
+            Session::flash('error', 'Sorry, refresh token missing ! Please remove this app from "Apps connected to your account" and try again.');
         }
     }
     private function SubscribeTwitter()

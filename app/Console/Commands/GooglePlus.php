@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Comment;
 use App\Company;
 use App\CompanySocialAccount;
+use App\Helpers\GooglePlusHelper;
 use App\Post;
 use App\SmType;
 use App\User;
@@ -68,89 +69,103 @@ class GooglePlus extends Command
     private static $i = 0;
     public function handle()
     {
-        session_start();
-        try {
-            $user_id = $this->argument('user_id');
-            $company_id = $this->argument('company_id');
-            $sm_type_id = 1;/*$this->argument('sm_type_id')*/
-            $sm_type_specific = 'google_plus';
-
-            //google authentication with access token
-            define('SCOPES', implode(' ', array(
-                    'https://www.googleapis.com/auth/plus.me'
-                )
-            ));
-            //$sm_type = SmType::findOrFail($sm_type_id);
-            $sm_type = SmType::where('type','google_plus')->first();
-            if ($sm_type->access_token != null) {
-                /*$client = new \Google_Client();
-                $client->setAuthConfigFile(public_path() . '/apis/client_secret_974791274339-doct333hjkdob6mccquvuo21k662s7m5.apps.googleusercontent.com.json');
-                $client->addScope(SCOPES);
-                $client->setLoginHint('');
-                $client->setAccessType('offline');
-                $client->setApprovalPrompt("force");
-                $client->setAccessToken($sm_type->access_token);
-                if ($client->isAccessTokenExpired()) {
-                    $refresh_token = $client->getRefreshToken();
-                    $client->refreshToken($refresh_token);
-                }
-                $plus = new \Google_Service_Plus($client);*/
-                //for all company google plus
-                if ($company_id == 0) {
-                    if (SmType::where('type', $sm_type_specific)->where('status', 'active')->exists()) {
-                        $sm_type_details = SmType::where('type', $sm_type_specific)->where('status', 'active')->first();
-                        if (CompanySocialAccount::where('status', 'active')->where('sm_type_id', $sm_type_details['id'])->exists()) {
-                            $company_details = CompanySocialAccount::where('status', 'active')->where('sm_type_id', $sm_type_details['id'])->get();
-                            foreach ($company_details as $company_detail) {
-                                $sm_type_id = $company_detail->sm_type_id;
-                                $page_id = $company_detail->page_id;
-                                $company_id = $company_detail->company_id;
-                                if (Company::where('id', $company_id)->where('status', 'active')->exists()) {
-                                    $this->google_post($page_id, $company_id, $sm_type_id);
-                                    //update company social account duration all to 1 day after first iteration
-                                    if($company_detail->data_pull_duration == 'all'){
-                                        $company_detail->data_pull_duration = 1;
-                                        $company_detail->update();
-                                    }
-                                }
-                            }
-                        } else {
-                            print "No company found related " . $sm_type_specific . " social media type.\n";
-                            exit;
-                        }
-                    } else {
-                        print "No " . $sm_type_specific . " media type found\n";
-                    }
-                } else {
-                    //specific company google plus
-                    if (Company::where('id', $company_id)->where('status', 'active')->exists()) {
-                        $company_details = Company::where('id', $company_id)->where('status', 'active')->first();
-                        if (SmType::where('type', $sm_type_specific)->where('status', 'active')->exists()) {
-                            $sm_type_id = SmType::where('type', $sm_type_specific)->where('status', 'active')->first();
-                            if (CompanySocialAccount::where('company_id', $company_id)->where('sm_type_id', $sm_type_id['id'])->where('status', 'active')->exists()) {
-                                $company_social_account = CompanySocialAccount::where('company_id', $company_id)->where('sm_type_id', $sm_type_id['id'])->where('status', 'active')->get();
-                                foreach ($company_social_account as $com_s_acc) {
-                                    $sm_type_id = $com_s_acc->sm_type_id;
-                                    $page_id = $com_s_acc->page_id;
-                                    $company_id = $com_s_acc->company_id;
-                                    $this->google_post($page_id, $company_id, $sm_type_id);
-                                    //update company social account duration all to 1 day after first iteration
-                                    if($com_s_acc->data_pull_duration == 'all'){
-                                        $com_s_acc->data_pull_duration = 1;
-                                        $com_s_acc->update();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                exit;
-            } else {
-                print "Access token not found";
-            }
-        }catch(\Exception $e){
-            Log::error('GooglePlus:'.$e->getMessage());
+        $company_social_accounts=CompanySocialAccount::where('sm_type_id',1)->where('sm_account_id','!=','')->get();
+//        dd($company_social_accounts);
+        $i=0;
+        foreach ($company_social_accounts as $company_social_account) {
+            print ++$i.". Google Plus Account Found \n";
+            $data=GooglePlusHelper::getPosts($company_social_account->access_token,$company_social_account->page_id);
+            GooglePlusHelper::storeData($data,$company_social_account);
         }
+
+
+
+
+
+
+//        session_start();
+//        try {
+//            $user_id = $this->argument('user_id');
+//            $company_id = $this->argument('company_id');
+//            $sm_type_id = 1;/*$this->argument('sm_type_id')*/
+//            $sm_type_specific = 'google_plus';
+//
+//            //google authentication with access token
+//            define('SCOPES', implode(' ', array(
+//                    'https://www.googleapis.com/auth/plus.me'
+//                )
+//            ));
+//            //$sm_type = SmType::findOrFail($sm_type_id);
+//            $sm_type = SmType::where('type','google_plus')->first();
+//            if ($sm_type->access_token != null) {
+//                /*$client = new \Google_Client();
+//                $client->setAuthConfigFile(public_path() . '/apis/client_secret_974791274339-doct333hjkdob6mccquvuo21k662s7m5.apps.googleusercontent.com.json');
+//                $client->addScope(SCOPES);
+//                $client->setLoginHint('');
+//                $client->setAccessType('offline');
+//                $client->setApprovalPrompt("force");
+//                $client->setAccessToken($sm_type->access_token);
+//                if ($client->isAccessTokenExpired()) {
+//                    $refresh_token = $client->getRefreshToken();
+//                    $client->refreshToken($refresh_token);
+//                }
+//                $plus = new \Google_Service_Plus($client);*/
+//                //for all company google plus
+//                if ($company_id == 0) {
+//                    if (SmType::where('type', $sm_type_specific)->where('status', 'active')->exists()) {
+//                        $sm_type_details = SmType::where('type', $sm_type_specific)->where('status', 'active')->first();
+//                        if (CompanySocialAccount::where('status', 'active')->where('sm_type_id', $sm_type_details['id'])->exists()) {
+//                            $company_details = CompanySocialAccount::where('status', 'active')->where('sm_type_id', $sm_type_details['id'])->get();
+//                            foreach ($company_details as $company_detail) {
+//                                $sm_type_id = $company_detail->sm_type_id;
+//                                $page_id = $company_detail->page_id;
+//                                $company_id = $company_detail->company_id;
+//                                if (Company::where('id', $company_id)->where('status', 'active')->exists()) {
+//                                    $this->google_post($page_id, $company_id, $sm_type_id);
+//                                    //update company social account duration all to 1 day after first iteration
+//                                    if($company_detail->data_pull_duration == 'all'){
+//                                        $company_detail->data_pull_duration = 1;
+//                                        $company_detail->update();
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            print "No company found related " . $sm_type_specific . " social media type.\n";
+//                            exit;
+//                        }
+//                    } else {
+//                        print "No " . $sm_type_specific . " media type found\n";
+//                    }
+//                } else {
+//                    //specific company google plus
+//                    if (Company::where('id', $company_id)->where('status', 'active')->exists()) {
+//                        $company_details = Company::where('id', $company_id)->where('status', 'active')->first();
+//                        if (SmType::where('type', $sm_type_specific)->where('status', 'active')->exists()) {
+//                            $sm_type_id = SmType::where('type', $sm_type_specific)->where('status', 'active')->first();
+//                            if (CompanySocialAccount::where('company_id', $company_id)->where('sm_type_id', $sm_type_id['id'])->where('status', 'active')->exists()) {
+//                                $company_social_account = CompanySocialAccount::where('company_id', $company_id)->where('sm_type_id', $sm_type_id['id'])->where('status', 'active')->get();
+//                                foreach ($company_social_account as $com_s_acc) {
+//                                    $sm_type_id = $com_s_acc->sm_type_id;
+//                                    $page_id = $com_s_acc->page_id;
+//                                    $company_id = $com_s_acc->company_id;
+//                                    $this->google_post($page_id, $company_id, $sm_type_id);
+//                                    //update company social account duration all to 1 day after first iteration
+//                                    if($com_s_acc->data_pull_duration == 'all'){
+//                                        $com_s_acc->data_pull_duration = 1;
+//                                        $com_s_acc->update();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                exit;
+//            } else {
+//                print "Access token not found";
+//            }
+//        }catch(\Exception $e){
+//            Log::error('GooglePlus:'.$e->getMessage());
+//        }
     }
 
     //google plus data fetch
