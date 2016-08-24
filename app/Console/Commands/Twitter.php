@@ -51,70 +51,81 @@ class Twitter extends Command
     private static $i=0;
     public function handle()
     {
-        $config= TwitterHelper::getTwitterSetting();
-        $twitter = new \TwitterAPIExchange($config);
-        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-        $requestMethod = 'GET';
-        $twitter_conf = [
-            'twitter' => $twitter,
-            'url' => $url,
-            'requestMethod' => $requestMethod
-        ];
-        $company_id = $this->argument('company_id');
-        $sm_type_id = $this->argument('sm_type_id');
-        $sm_type_specific = 'twitter';
-        //for all company Twitter
-        if($company_id == 0){
-            if(SmType::where('type', $sm_type_specific)->where('status','active')->exists()){
-                $sm_type_details = SmType::where('type', $sm_type_specific)->where('status','active')->first();
-                if(CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->exists()){
-                    $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
-                    foreach ($company_details as $company_detail) {
-                        $sm_type_id = $company_detail->sm_type_id;
-                        $page_id = $company_detail->page_id;
-                        $company_id = $company_detail->company_id;
-                        if(Company::where('id',$company_id)->where('status','active')->exists()){
-                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
+        $company_social_accounts=CompanySocialAccount::where('sm_type_id',3)->where('sm_account_id','!=','')->get();
+//        dd($company_social_accounts);
 
-                            //Call mention related function
-                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
-                            //update company social account duration all to 1 day after first iteration
-                            if($company_detail->data_pull_duration == 'all'){
-                                $company_detail->data_pull_duration = 1;
-                                $company_detail->update();
-                            }
-                        }
-                    }
-                }else{
-                    print "No company found related ".$sm_type_specific." social media type.\n";exit;
-                }
-            }else{
-                print "No ".$sm_type_specific." media type found\n";
-            }
-        }else{
-            //specific company Twitter
-            if(Company::where('id', $company_id)->where('status','active')->exists()){
-                $company_details = Company::where('id', $company_id)->where('status','active')->first();
-                if(SmType::where('type', $sm_type_specific)->where('status','active')->exists()){
-                    $sm_type_id = SmType::where('type', $sm_type_specific)->where('status','active')->first();
-                    if(CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->exists()){
-                        $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
-                        foreach ($company_social_account as $com_s_acc) {
-                            $sm_type_id = $com_s_acc->sm_type_id;
-                            $page_id = $com_s_acc->page_id;
-                            $company_id = $com_s_acc->company_id;
-                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
-                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
-                            //update company social account duration all to 1 day after first iteration
-                            if($com_s_acc->data_pull_duration == 'all'){
-                                $com_s_acc->data_pull_duration = 1;
-                                $com_s_acc->update();
-                            }
-                        }
-                    }
-                }
-            }
+        $i=0;
+        foreach ($company_social_accounts as $company_social_account) {
+//            dd($company_social_account);
+            print ++$i.". Twitter Account Found \n";
+            $data=TwitterHelper::getPosts($company_social_account->access_token,$company_social_account->associate_token,$company_social_account->page_id);
+//            dd($data);
+            TwitterHelper::storeData($data,$company_social_account);
         }
+//        $config= TwitterHelper::getTwitterSetting();
+//        $twitter = new \TwitterAPIExchange($config);
+//        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+//        $requestMethod = 'GET';
+//        $twitter_conf = [
+//            'twitter' => $twitter,
+//            'url' => $url,
+//            'requestMethod' => $requestMethod
+//        ];
+//        $company_id = $this->argument('company_id');
+//        $sm_type_id = $this->argument('sm_type_id');
+//        $sm_type_specific = 'twitter';
+//        //for all company Twitter
+//        if($company_id == 0){
+//            if(SmType::where('type', $sm_type_specific)->where('status','active')->exists()){
+//                $sm_type_details = SmType::where('type', $sm_type_specific)->where('status','active')->first();
+//                if(CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->exists()){
+//                    $company_details = CompanySocialAccount::where('status','active')->where('sm_type_id',$sm_type_details['id'])->get();
+//                    foreach ($company_details as $company_detail) {
+//                        $sm_type_id = $company_detail->sm_type_id;
+//                        $page_id = $company_detail->page_id;
+//                        $company_id = $company_detail->company_id;
+//                        if(Company::where('id',$company_id)->where('status','active')->exists()){
+//                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
+//
+//                            //Call mention related function
+//                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
+//                            //update company social account duration all to 1 day after first iteration
+//                            if($company_detail->data_pull_duration == 'all'){
+//                                $company_detail->data_pull_duration = 1;
+//                                $company_detail->update();
+//                            }
+//                        }
+//                    }
+//                }else{
+//                    print "No company found related ".$sm_type_specific." social media type.\n";exit;
+//                }
+//            }else{
+//                print "No ".$sm_type_specific." media type found\n";
+//            }
+//        }else{
+//            //specific company Twitter
+//            if(Company::where('id', $company_id)->where('status','active')->exists()){
+//                $company_details = Company::where('id', $company_id)->where('status','active')->first();
+//                if(SmType::where('type', $sm_type_specific)->where('status','active')->exists()){
+//                    $sm_type_id = SmType::where('type', $sm_type_specific)->where('status','active')->first();
+//                    if(CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->exists()){
+//                        $company_social_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',$sm_type_id['id'])->where('status','active')->get();
+//                        foreach ($company_social_account as $com_s_acc) {
+//                            $sm_type_id = $com_s_acc->sm_type_id;
+//                            $page_id = $com_s_acc->page_id;
+//                            $company_id = $com_s_acc->company_id;
+//                            $this->twitter_post($page_id, $company_id, $sm_type_id, $twitter_conf);
+//                            $this->twitter_post_mention($page_id, $company_id, $sm_type_id, $twitter_conf);
+//                            //update company social account duration all to 1 day after first iteration
+//                            if($com_s_acc->data_pull_duration == 'all'){
+//                                $com_s_acc->data_pull_duration = 1;
+//                                $com_s_acc->update();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     public function twitter_post_mention($page_id, $company_id, $sm_type_id ,$twitter_conf){

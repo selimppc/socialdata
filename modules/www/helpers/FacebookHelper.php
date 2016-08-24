@@ -143,7 +143,7 @@ class FacebookHelper
         DB::beginTransaction();
         try {
             foreach ($data as $id=>$item) {
-                $post=Post::where('post_id',$item['id'])->first();
+                $post=Post::where('post_id',$item['id'])->where('sm_type_id',2)->first();
                 if(count($post) == 0) {
                     $post = new Post();
                     $post->company_id = $company_social_account->company_id;
