@@ -116,7 +116,7 @@ class CustomPostController extends Controller
                 {
                     try {
                         $this->publish($custom_post->id);
-                        Session::flash('message', 'Successfully Post on social media.');
+//                        Session::flash('message', 'Successfully Post on social media.');
                     }catch (Exception $e){
                         DB::rollBack();
                         Sessioin::flash('error',$e->getMessage());
@@ -234,7 +234,7 @@ class CustomPostController extends Controller
             {
                 try {
                     $this->publish($custom_post->id);
-                    Session::flash('message', 'Successfully Post on social media.');
+//                    Session::flash('message', 'Successfully Post on social media.');
                 }catch (Exception $e){
                     DB::rollBack();
                     Sessioin::flash('error',$e->getMessage());

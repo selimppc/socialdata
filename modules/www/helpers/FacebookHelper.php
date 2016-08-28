@@ -66,14 +66,17 @@ class FacebookHelper
         $fb->setDefaultAccessToken($longLiveAccessToken);
 
         try {
+            $pages=$fb->get('/me/accounts');
+            $pages=$pages->getGraphEdge()->asArray();
+
             $response = $fb->get('/me');
             $userNode = $response->getGraphUser();
+            return ['userNode'=>$userNode,'longLiveAccessToken'=>$longLiveAccessToken,'pages'=>$pages];
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
             return $e->getMessage();
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
             return $e->getMessage();
         }
-        return ['userNode'=>$userNode,'longLiveAccessToken'=>$longLiveAccessToken];
     }
     public static function publish($post_id,$company_id=false)
     {
@@ -88,6 +91,7 @@ class FacebookHelper
         $fb->setDefaultAccessToken($fb_account->access_token);
         $pages=$fb->get('/me/accounts');
         $pages=$pages->getGraphEdge()->asArray();
+//        dd($pages);
         $page_access_token= null;
         $page_id= null;
         foreach ($pages as $page) {
@@ -115,6 +119,8 @@ class FacebookHelper
             {
                 return $e;
             }
+        }else{
+            return 'Page owner error';
         }
         return false;
     }

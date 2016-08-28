@@ -186,16 +186,30 @@ class SocialMediaController extends Controller
     private function SubscribeFacebook()
     {
         $status = FacebookHelper::_return();
-        if (isset($status) && isset($status['userNode']) && isset($status['longLiveAccessToken'])) {
+        if (isset($status) && isset($status['userNode']) && isset($status['longLiveAccessToken']) && isset($status['pages'])) {
             /*
              * store data on user social account
              * */
+            $page_owner=false;
             $userSocial = CompanySocialAccount::findOrFail(Session::get('user_social_account_id_facebook'));
-            $userSocial->sm_account_id = $status['userNode']->getId();
-            $userSocial->access_token = $status['longLiveAccessToken'];
-            $userSocial->save();
-            \Session::flash('message', 'Successfully Subscribe to Facebook.');
 
+            foreach ($status['pages'] as $page) {
+                if($page['id']==$userSocial->page_id)
+                {
+                    $page_owner=true;
+                }
+            }
+
+            if($page_owner)
+            {
+                $userSocial->sm_account_id = $status['userNode']->getId();
+                $userSocial->access_token = $status['longLiveAccessToken'];
+                $userSocial->save();
+                \Session::flash('message', 'Successfully Subscribe to Facebook.');
+            }else{
+                \Session::flash('error', 'Sorry,You are not authorized to access the company page.');
+
+            }
         } else {
             \Session::flash('error', $status);
         }
