@@ -187,7 +187,7 @@ class CompanySocialAccountController extends Controller
 //                    dd($psm->custom_post_id);
                     Schedule::where('custom_post_id', $psm->custom_post_id)->delete();
                     ArchiveSchedule::where('custom_post_id', $psm->custom_post_id)->delete();
-                    Post::findOrFail($psm->custom_post_id)->delete();
+                    Post::where('id',$psm->custom_post_id)->delete();
                 }
             }
             PostSocialMedia::where('company_id', $companySocialAccount->company_id)->where('social_media_id', $companySocialAccount->sm_type_id)->delete();
