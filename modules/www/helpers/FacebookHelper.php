@@ -169,7 +169,7 @@ class FacebookHelper
 
                 }
                 $comments = FacebookHelper::_getComments($post->id);
-                if (isset($comments)) {
+                if (isset($comments) && !emptyArray($comments)) {
                     FacebookHelper::_storeComments($post->id, $comments);
                 }
                 DB::commit();
