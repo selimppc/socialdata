@@ -81,7 +81,7 @@ class CompanySocialAccountController extends Controller
     public function store(Requests\CompanySocialAccountRequest $request)
     {
         $input = $request->all();
-        $check_existing= CompanySocialAccount::where('sm_account_id',$input['sm_account_id'])->where('page_id',$input['page_id'])->first();
+        $check_existing= CompanySocialAccount::where('sm_type_id',$input['sm_type_id'])->where('page_id',$input['page_id'])->first();
         if(count($check_existing)==0) {
             /* Transaction Start Here */
             DB::beginTransaction();
@@ -147,25 +147,33 @@ class CompanySocialAccountController extends Controller
      */
     public function update(Requests\CompanySocialAccountRequest $request, $id)
     {
-        $model = CompanySocialAccount::where('id',$id)->first();
         $input = $request->all();
-        DB::beginTransaction();
-        try {
-            $model->update($input);
-            DB::commit();
+        $check_existing= CompanySocialAccount::where('sm_type_id',$input['sm_type_id'])->where('page_id',$input['page_id'])->first();
+//        dd($check_existing);
+        if(count($check_existing)==1 && $check_existing->id==$id) {
+            DB::beginTransaction();
+            try {
+//                $check_existing = CompanySocialAccount::where('id', $id)->first();
+                $check_existing->update($input);
+                DB::commit();
+                Session::flash('message', "Successfully Updated");
+            } catch (Exception $e) {
+                //If there are any exceptions, rollback the transaction
+                DB::rollback();
+                Session::flash('danger', $e->getMessage());
+                return redirect()->back();
+            }
+        }elseif($check_existing==null){
+            $check_existing = CompanySocialAccount::where('id', $id)->first();
+            $check_existing->update($input);
             Session::flash('message', "Successfully Updated");
-        }
-        catch ( Exception $e ){
-            //If there are any exceptions, rollback the transaction
-            DB::rollback();
-            Session::flash('danger', $e->getMessage());
+        }else{
+            Session::flash('danger', 'Sorry,This Page/Account already exist. Please try with new one.');
             return redirect()->back();
         }
-
-        if(session('company_id')==null)
-        {
-            return redirect()->to('index-company-social-account/'.$input['company_id']);
-        }else{
+        if (session('company_id') == null) {
+            return redirect()->to('index-company-social-account/' . $input['company_id']);
+        } else {
             return redirect()->to('index-company-social-account');
         }
     }
