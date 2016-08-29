@@ -81,24 +81,28 @@ class CompanySocialAccountController extends Controller
     public function store(Requests\CompanySocialAccountRequest $request)
     {
         $input = $request->all();
-
-        /* Transaction Start Here */
-        DB::beginTransaction();
-        try {
-            CompanySocialAccount::create($input);
-            DB::commit();
-            Session::flash('message', 'Successfully added!');
-        } catch (\Exception $e) {
-            //If there are any exceptions, rollback the transaction`
-            DB::rollback();
-            Session::flash('danger', $e->getMessage());
-            return redirect()->back();
-        }
-        if(session('company_id')==null)
-        {
-            return redirect()->to('index-company-social-account/'.$input['company_id']);
+        $check_existing= CompanySocialAccount::where('sm_account_id',$input['sm_account_id'])->where('page_id',$input['page_id'])->first();
+        if(count($check_existing)==0) {
+            /* Transaction Start Here */
+            DB::beginTransaction();
+            try {
+                CompanySocialAccount::create($input);
+                DB::commit();
+                Session::flash('message', 'Successfully added!');
+            } catch (\Exception $e) {
+                //If there are any exceptions, rollback the transaction`
+                DB::rollback();
+                Session::flash('danger', $e->getMessage());
+                return redirect()->back();
+            }
+            if (session('company_id') == null) {
+                return redirect()->to('index-company-social-account/' . $input['company_id']);
+            } else {
+                return redirect()->to('index-company-social-account');
+            }
         }else{
-            return redirect()->to('index-company-social-account');
+            Session::flash('danger', 'Sorry,This Page/Account already exist. Please try with new one.');
+            return redirect()->back();
         }
     }
 
