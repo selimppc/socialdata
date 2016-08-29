@@ -208,9 +208,13 @@ class FacebookHelper
         $company_social_account= CompanySocialAccount::where('company_id',$post->company_id)->where('sm_type_id',2)->first();
         $config = FacebookHelper::getFbConfig();
         $fb= new Facebook($config);
-        $fb->setDefaultAccessToken($company_social_account->access_token);
+        if($company_social_account !=null) {
+            $fb->setDefaultAccessToken($company_social_account->access_token);
 //        dd($post->post_id);
-        return $fb->get("/".$post->post_id."/comments", $company_social_account->access_token);
+            return $fb->get("/" . $post->post_id . "/comments", $company_social_account->access_token);
+        }else{
+            return [];
+        }
     }
     private static function _storeComments($post_id,$comments)
     {
