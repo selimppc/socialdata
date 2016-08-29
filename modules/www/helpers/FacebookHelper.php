@@ -146,15 +146,16 @@ class FacebookHelper
     }
     public static function storeData($data,$company_social_account)
     {
-        DB::beginTransaction();
-        try {
-            foreach ($data as $id=>$item) {
-                $post=Post::where('post_id',$item['id'])->where('sm_type_id',2)->first();
-                if(count($post) == 0) {
+        $message=[];
+        foreach ($data as $id=>$item) {
+            DB::beginTransaction();
+            try {
+                $post = Post::where('post_id', $item['id'])->where('sm_type_id', 2)->first();
+                if (count($post) == 0) {
                     $post = new Post();
                     $post->company_id = $company_social_account->company_id;
                     $post->sm_type_id = $company_social_account->sm_type_id;
-                    $post->post = isset($item['message'])?$item['message']:"";
+                    $post->post = isset($item['message']) ? $item['message'] : "";
                     $post->post_id = $item['id'];
                     $post->post_date = $item['created_time'];
 //                    dd($post);
@@ -162,22 +163,22 @@ class FacebookHelper
                     print "    Post Save \n";
 //                    dd($item['attachments']);
 //                    dd($item);
-                    if(isset($item['attachments'])) {
-                        FacebookHelper::_attachments($post,$item);
+                    if (isset($item['attachments'])) {
+                        FacebookHelper::_attachments($post, $item);
                     }
 
                 }
-                $comments=FacebookHelper::_getComments($post->id);
-                if(isset($comments)){
-                    FacebookHelper::_storeComments($post->id,$comments);
+                $comments = FacebookHelper::_getComments($post->id);
+                if (isset($comments)) {
+                    FacebookHelper::_storeComments($post->id, $comments);
                 }
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+                $message[$item->id]=$e->getMessage();
             }
-            DB::commit();
-        }catch (Exception $e)
-        {
-            DB::rollback();
-            return $e->getMessage();
         }
+        return $message;
     }
     private static function _attachments($post,$item)
     {
