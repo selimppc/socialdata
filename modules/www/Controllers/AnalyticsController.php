@@ -12,6 +12,10 @@ namespace Modules\Www\Controllers;
 use App\CompanySocialAccount;
 use App\Helpers\FacebookHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Analysis;
+use App\Models\CompanyMetric;
+use App\Models\Metric;
+use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
@@ -28,9 +32,5 @@ class AnalyticsController extends Controller
 //            dd($data['data']);
             FacebookHelper::storeData($data['data'],$company_social_account);
         }
-    }
-    public function analytics_settings()
-    {
-        
     }
 }

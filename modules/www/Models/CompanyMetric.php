@@ -9,7 +9,9 @@
 namespace App\Models;
 
 
-class CompanyMetric
+use Illuminate\Database\Eloquent\Model;
+
+class CompanyMetric extends Model
 {
     protected $table='company_metrics';
     protected $fillable=[

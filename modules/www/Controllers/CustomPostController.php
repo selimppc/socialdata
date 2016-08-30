@@ -141,7 +141,7 @@ class CustomPostController extends Controller
                         Session::flash('message','Schedule has been create successfully');
                     }catch (Exception $e){
                         DB::rollBack();
-                        Sessioin::flash('error',$e->getMessage());
+                        Session::flash('error',$e->getMessage());
                         return redirect()->back();
                     }
                 }

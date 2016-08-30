@@ -177,7 +177,12 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
     Route::get('analytics/facebook/settings',[
         'middleware'=>'acl_access:www/analytics/facebook/settings',
         'as' => 'analytics/facebook/settings',
-        'uses'=>'AnalyticsController@analytics_settings'
+        'uses'=>'CompanyMetricsController@analytics_settings'
+    ]);
+    Route::post('analytics/facebook/settings',[
+        'middleware'=>'acl_access:www/analytics/facebook/settings',
+        'as' => 'company_metrics.store',
+        'uses'=>'CompanyMetricsController@store'
     ]);
 
     Route::get('get_analytics',[
