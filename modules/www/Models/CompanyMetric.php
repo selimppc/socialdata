@@ -18,4 +18,10 @@ class CompanyMetric extends Model
         'company_id',
         'metric_id'
     ];
+    public function relMetric(){
+        return $this->belongsTo('App\Models\Metric','metric_id','id');
+    }
+    public function relCompany(){
+        return $this->belongsTo('App\Company','company_id','id');
+    }
 }

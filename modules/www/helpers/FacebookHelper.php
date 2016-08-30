@@ -11,12 +11,15 @@ namespace App\Helpers;
 use App\Comment;
 use App\CompanySocialAccount;
 use App\CustomPost;
+use App\Models\Analysis;
+use App\Models\CompanyMetric;
 use App\Post;
 use App\PostImage;
 use App\PostSocialMedia;
 use Illuminate\Support\Facades\Config;
 use Facebook\Facebook;
 use Illuminate\Support\Facades\DB;
+use League\Flysystem\Exception;
 
 class FacebookHelper
 {
@@ -231,13 +234,49 @@ class FacebookHelper
             }
         }
     }
-    public static function metric($access_token,$page_id)
+    public static function metric($access_token,$page_id,$company_id)
     {
-        $config= FacebookHelper::getFbConfig();
-        $fb= new Facebook($config);
-        $fb->setDefaultAccessToken($access_token);
-        $insights = $fb->get($page_id.'/insights/page_suggestion');
-        dd($insights);
-
+        $company_metrics= CompanyMetric::with('relMetric')->where('company_id',$company_id)->get();
+        $j=1;
+        DB::beginTransaction();
+        try {
+            foreach ($company_metrics as $id => $company_metric) {
+//            dd($company_metric->relMetric);
+                $config = FacebookHelper::getFbConfig();
+                $fb = new Facebook($config);
+                $fb->setDefaultAccessToken($access_token);
+                $option = null;
+                if ($company_metric->relMetric['options'] == 1) {
+                    $option = '/day';
+                } elseif ($company_metric->relMetric['options'] == 2) {
+                    $option = '/week';
+                } elseif ($company_metric->relMetric['options'] == 3) {
+                    $option = '/days_28';
+                } elseif ($company_metric->relMetric['options'] == 4) {
+                    $option = '/lifetime';
+                } elseif ($company_metric->relMetric['options'] == 5) {
+                    $option = '/daily';
+                }
+                $insights = $fb->get($page_id . '/insights/' . $company_metric->relMetric['name'] . $option);
+                $data = $insights->getDecodedBody();
+                $data = $data['data'];
+//            dd($data[0]);
+                if (!empty($data)) {
+                    $analysis = new Analysis();
+                    $analysis->company_id = $company_id;
+                    $analysis->metric_id = $company_metric->id;
+                    $analysis->period = $data[0]['period'];
+                    $analysis->data = serialize($data[0]['values']);
+                    $analysis->save();
+                    echo '<br><br><b>' . $j++ . '. Successfully Store :::::::: ' . $company_metric->relMetric['name']. $option . ' (Company ID - ' . $company_id . ')</b>';
+                }
+            }
+            DB::commit();
+            echo '</br>Committed successfully</br>';
+        }catch (Exception $e){
+            echo 'me';
+            DB::rollback();
+            echo 'Message-'.$e->getMessage();
+        }
     }
 }

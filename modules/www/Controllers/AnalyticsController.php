@@ -26,7 +26,7 @@ class AnalyticsController extends Controller
         $i=0;
         foreach ($company_social_accounts as $company_social_account) {
             print ++$i.". Facebook Account Found \n";
-            $data=FacebookHelper::metric($company_social_account->access_token,$company_social_account->page_id);
+            $data=FacebookHelper::metric($company_social_account->access_token,$company_social_account->page_id,$company_social_account->company_id);
             dd($data);
             $data=$data->getDecodedBody('data');
 //            dd($data['data']);
