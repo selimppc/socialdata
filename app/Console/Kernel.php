@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\PostSchedule::class,
         \App\Console\Commands\PostNofify::class,
         \App\Console\Commands\Instagram::class,
+        \App\Console\Commands\Metric::class,
     ];
 
     /**

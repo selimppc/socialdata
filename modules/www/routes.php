@@ -174,4 +174,15 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as' => 'feeds/googleplus',
         'uses'=>'FeedController@feeds'
     ]);
+    Route::get('analytics/facebook/settings',[
+        'middleware'=>'acl_access:www/analytics/facebook/settings',
+        'as' => 'analytics/facebook/settings',
+        'uses'=>'AnalyticsController@analytics_settings'
+    ]);
+
+    Route::get('get_analytics',[
+//        'middleware'=>'acl_access:www/feeds/googleplus',
+        'as' => 'get_analytics',
+        'uses'=>'AnalyticsController@get_analytics'
+    ]);
 });

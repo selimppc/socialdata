@@ -231,4 +231,13 @@ class FacebookHelper
             }
         }
     }
+    public static function metric($access_token,$page_id)
+    {
+        $config= FacebookHelper::getFbConfig();
+        $fb= new Facebook($config);
+        $fb->setDefaultAccessToken($access_token);
+        $insights = $fb->get($page_id.'/insights/page_suggestion');
+        dd($insights);
+
+    }
 }

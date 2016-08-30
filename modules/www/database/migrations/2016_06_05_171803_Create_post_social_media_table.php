@@ -22,6 +22,8 @@ class CreatePostSocialMediaTable extends Migration
             $table->foreign('company_id')->references('id')->on('company');
             $table->enum('status',['new','sent']);
             $table->unsignedInteger('postId');
+            $table->integer('created_by',false);
+            $table->integer('updated_by',false);
             $table->timestamps();
         });
     }
