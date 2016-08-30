@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-sm-5">
-        <strong class="text-center">Not Existing Metrics List</strong>
+        <strong class="text-center">Metrics List</strong>
         <select id="optgroup" class="form-control" size="20" multiple="multiple">
             @foreach($not_existing_metrics as $key=>$value)
             <option value="{{$value->id}}">{{$value->name}}@if($value->options==1)/day @elseif($value->options==2)/week @elseif($value->options==3)/28_days @elseif($value->options==4)/lifetime @elseif($value->options==5)/daily @endif </option>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="form-group col-sm-5">
-        <strong class="text-center">Existing Metrics List</strong>
+        <strong class="text-center">Selected Metrics List</strong>
         <select name="selected_id[]" id="optgroup_to" class="check form-control" size="20" multiple="multiple">
             @foreach($existing_metrics as $key=>$value)
                 <option value="{{$value->id}}">{{$value->name}}@if($value->options==1)/day @elseif($value->options==2)/week @elseif($value->options==3)/28_days @elseif($value->options==4)/lifetime @elseif($value->options==5)/daily @endif </option>
