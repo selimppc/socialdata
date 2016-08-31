@@ -15,7 +15,7 @@
 
                 <div class="panel-body" id="postload">
                     <div class="table-primary">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" width="100%">
                             <thead>
                             <tr>
                                 <th> ID </th>
