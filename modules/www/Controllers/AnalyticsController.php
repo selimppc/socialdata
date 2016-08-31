@@ -19,6 +19,15 @@ use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
+    public function index()
+    {
+        $data['pageTitle']='Analytics';
+        $company_id=session('company_id');
+        $data['per_page']=10;
+        $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',0)->paginate($data['per_page']);
+//        dd($data);
+        return view('www::analytics.index',$data);
+    }
     public function get_analytics()
     {
         $company_social_accounts=CompanySocialAccount::where('sm_type_id',2)->where('sm_account_id','!=','')->get();

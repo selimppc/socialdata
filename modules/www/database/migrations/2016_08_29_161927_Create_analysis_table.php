@@ -20,6 +20,7 @@ class CreateAnalysisTable extends Migration
             $table->foreign('metric_id')->references('id')->on('metrics');
             $table->string('period',100)->nullable();
             $table->longText('data',100)->nullable();
+            $table->boolean('status')->nullable();
             $table->integer('created_by',false)->nullable();
             $table->integer('updated_by',false)->nullable();
             $table->timestamps();

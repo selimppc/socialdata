@@ -19,5 +19,10 @@ class Analysis extends Model
         'metric_id',
         'period',
         'data',
+        'status',
     ];
+    public function relMetric()
+    {
+        return $this->belongsTo('App\Models\Metric','metric_id','id');
+    }
 }

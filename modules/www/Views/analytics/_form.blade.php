@@ -34,7 +34,7 @@
 
 <div class="form-margin-btn pull-right">
     {!! Form::submit('Save changes', ['class' => 'btn btn-primary','data-placement'=>'top','data-content'=>'click save changes button for save information','id'=>'check-empty']) !!}
-    <a href="{{route('index-permission-role')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Close</a>
+    <a href="{{route('company_metrics.facebook')}}" class=" btn btn-default" data-placement="top" data-content="click close button for close this entry form">Back</a>
 </div>
 
 <p> &nbsp; </p>

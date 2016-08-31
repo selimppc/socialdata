@@ -184,6 +184,11 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as' => 'company_metrics.store',
         'uses'=>'CompanyMetricsController@store'
     ]);
+    Route::get('analytics/facebook',[
+        'middleware'=>'acl_access:www/analytics/facebook',
+        'as' => 'company_metrics.facebook',
+        'uses'=>'AnalyticsController@index'
+    ]);
 
     Route::get('get_analytics',[
 //        'middleware'=>'acl_access:www/feeds/googleplus',
