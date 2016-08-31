@@ -15,7 +15,7 @@
 
                 <div class="panel-body" id="postload">
                     <div class="table-primary">
-                        <table class="table table-bordered" width="100%">
+                        <table class="table table-bordered">
                             <thead>
                             <tr>
                                 <th> ID </th>
@@ -27,7 +27,7 @@
                             @foreach($posts as $post)
                                 <tr>
                                     <td>{{ $post->post_id }}</td>
-                                    <td>{{ $post->post }}</td>
+                                    <td>{{ substr($post->post,0,80).'.....' }}</td>
                                     <td>
                                         <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a>
                                     </td>
