@@ -66,7 +66,7 @@
                                                     @foreach($details as $detail)
                                                         <tr>
                                                             <td>{{ $detail['end_time'] }}</td>
-                                                            <td>{{ $detail['value'] }}</td>
+                                                            <td><?php echo '<pre>'; print_r($detail['value']); ?></td>
                                                         </tr>
                                                     @endforeach
                                                 </table>
