@@ -10,6 +10,7 @@ namespace Modules\Www\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Analysis;
 use App\Models\CompanyMetric;
 use App\Models\Metric;
 use Illuminate\Http\Request;
@@ -59,6 +60,13 @@ class CompanyMetricsController extends Controller
 //        dd($to_delete);
         DB::beginTransaction();
         try {
+
+            if (isset($metric_new) && !empty($metric_new)) {
+                foreach ($metric_new as $metric_id) {
+                    Analysis::where('metric_id', $metric_id)->where('company_id', $company_id)->where('status',0)->update(['status'=>1]);
+
+                }
+            }
             if (isset($metric_new) && !empty($metric_new)) {
                 foreach ($metric_new as $metric_id) {
                     $companyMetric = new CompanyMetric();
@@ -70,6 +78,8 @@ class CompanyMetricsController extends Controller
             if (isset($to_delete) && !empty($to_delete)) {
                 foreach ($to_delete as $metric_id) {
                     CompanyMetric::where('metric_id', $metric_id)->where('company_id', $company_id)->delete();
+                    Analysis::where('metric_id', $metric_id)->where('company_id', $company_id)->update(['status'=>0]);
+
                 }
             }
             DB::commit();

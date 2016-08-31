@@ -267,7 +267,7 @@ class FacebookHelper
                     $analysis->metric_id = $company_metric->id;
                     $analysis->period = $data[0]['period'];
                     $analysis->data = serialize($data[0]['values']);
-                    $analysis->status = 0;
+                    $analysis->status = 1;
                     $analysis->save();
                     echo '<br><br><b>' . $j++ . '. Successfully Store :::::::: ' . $company_metric->relMetric['name']. $option . ' (Company ID - ' . $company_id . ')</b>';
                 }

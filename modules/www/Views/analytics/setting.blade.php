@@ -10,21 +10,21 @@
             <div class="col-lg-12">
                 <h4>{{ $pageTitle }}</h4>
             </div><!--end .col -->
-            <div class="col-lg-3 col-md-4">
-                <article class="margin-bottom-xxl">
-                    <ul class="list-divided">
-                        <li>
-                            When the field is focused, there will be a thicker line drawn beneath it.
-                            The label in this example is always visible.
-                        </li>
-                        <li>
-                            The vertical layout can be used in combination with a floating label.
-                            With floating labels, when the user engages with the input fields, the labels move to float above the field.
-                        </li>
-                    </ul>
-                </article>
-            </div><!--end .col -->
-            <div class="col-lg-offset-1 col-md-8 col-sm-8">
+            {{--<div class="col-lg-3 col-md-4">--}}
+                {{--<article class="margin-bottom-xxl">--}}
+                    {{--<ul class="list-divided">--}}
+                        {{--<li>--}}
+                            {{--When the field is focused, there will be a thicker line drawn beneath it.--}}
+                            {{--The label in this example is always visible.--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--The vertical layout can be used in combination with a floating label.--}}
+                            {{--With floating labels, when the user engages with the input fields, the labels move to float above the field.--}}
+                        {{--</li>--}}
+                    {{--</ul>--}}
+                {{--</article>--}}
+            {{--</div><!--end .col -->--}}
+            <div class="col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card-body">
                         {!! Form::open(['route' => 'company_metrics.store','class' => 'form']) !!}
