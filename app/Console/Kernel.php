@@ -64,5 +64,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('post:notify')->everyMinute();
         // Pull Instagram data
         $schedule->command('get:instagram')->hourly();
+        $schedule->command('get:metric')->daily();
     }
 }
