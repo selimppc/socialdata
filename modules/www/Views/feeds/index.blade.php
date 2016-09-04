@@ -29,7 +29,7 @@
                                     <td>{{ $post->post_id }}</td>
                                     <td>{{ substr($post->post,0,80).'.....' }}</td>
                                     <td>
-                                        <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-eye"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

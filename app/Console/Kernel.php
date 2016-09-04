@@ -45,25 +45,26 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:facebook')->hourly();
         $schedule->command('get:googleplus')->hourly();*/
         // every hour
-        $schedule->command('get:twitter')->hourly();
-        $schedule->command('get:instagram')->hourly();
+        $schedule->command('get:twitter')->cron('*/16 * * * *');
         // every one and a half hours
-        $schedule->command('get:facebook')->cron('0 0,3,6,9,12,15,18,21 * * * *');
+        $schedule->command('get:facebook')->cron('*/16 * * * *');
 //        $schedule->command('get:facebook')->cron('30 1,4,7,10,13,16,19,22 * * * *');
         // every two hours at x.15 minutes (0.15, 2.15, 4.15 etc)
         //$schedule->command('get:googleplus')->cron('15 */2 * * * *');
         // every 1.45 hour
-        $schedule->command('get:googleplus')->cron('0 7,14,21 * * * *');
+        $schedule->command('get:googleplus')->cron('*/16 * * * *');
+        $schedule->command('get:instagram')->cron('*/16 * * * *');
 //        $schedule->command('get:googleplus')->cron('15 5,12,19 * * * *');
 //        $schedule->command('get:googleplus')->cron('30 3,10,17 * * * *');
 //        $schedule->command('get:googleplus')->cron('45 1,8,15,22 * * * *');
 
         // Schedule for post on social media
-        $schedule->command('post:schedule')->everyMinute();
+//        $schedule->command('post:schedule')->everyMinute();
+        $schedule->command('post:schedule')->cron('*/16 * * * *');
         // notify before post on social media
-        $schedule->command('post:notify')->everyMinute();
+//        $schedule->command('post:notify')->everyMinute();
+        $schedule->command('post:notify')->cron('*/16 * * * *');
         // Pull Instagram data
-        $schedule->command('get:instagram')->hourly();
         $schedule->command('get:metric')->daily();
     }
 }
