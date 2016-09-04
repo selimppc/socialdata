@@ -45,9 +45,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('get:facebook')->hourly();
         $schedule->command('get:googleplus')->hourly();*/
         // every hour
-        $schedule->command('get:twitter')->cron('*/16 * * * *');
+//        $schedule->command('get:twitter')->cron('*/16 * * * *');
+        $schedule->command('get:twitter')->everyMinute();
         // every one and a half hours
-        $schedule->command('get:facebook')->cron('*/16 * * * *');
+//        $schedule->command('get:facebook')->cron('*/16 * * * *');
+        $schedule->command('get:facebook')->everyMinute();
 //        $schedule->command('get:facebook')->cron('30 1,4,7,10,13,16,19,22 * * * *');
         // every two hours at x.15 minutes (0.15, 2.15, 4.15 etc)
         //$schedule->command('get:googleplus')->cron('15 */2 * * * *');
