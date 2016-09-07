@@ -66,7 +66,19 @@
                                                     @foreach($details as $detail)
                                                         <tr>
                                                             <td>{{ $detail['end_time'] }}</td>
-                                                            <td><?php if(isset($detail['value'])){echo '<pre>'; print_r($detail['value']);} ?></td>
+                                                            <td>
+                                                                <?php
+                                                                if(isset($detail['value'])){
+                                                                    if(is_array($detail['value'])){
+                                                                        foreach ($detail['value'] as $id=>$item) {
+                                                                            echo '<b>'.ucfirst($id).' : </b>'.$item.'<br>';
+                                                                        }
+                                                                    }else{
+                                                                        echo $detail['value'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </table>
