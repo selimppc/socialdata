@@ -23,7 +23,7 @@ class AnalyticsController extends Controller
     {
         $data['pageTitle']='Analytics';
         $company_id=session('company_id');
-        $data['per_page']=800;
+        $data['per_page']=500;
         $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
 //        dd($data);
         return view('www::analytics.index',$data);

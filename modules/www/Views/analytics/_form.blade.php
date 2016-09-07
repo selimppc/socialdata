@@ -25,7 +25,7 @@
         <strong class="text-center">Selected Metrics List</strong>
         <select name="selected_id[]" id="optgroup_to" class="check form-control" size="20" multiple="multiple">
             @foreach($existing_metrics as $key=>$value)
-                <option value="{{$value->id}}">{{$value->name}}@if($value->options==1)/day @elseif($value->options==2)/week @elseif($value->options==3)/28_days @elseif($value->options==4)/lifetime @elseif($value->options==5)/daily @endif </option>
+                <option value="{{$value->id}}">{{$value->name}}@if($value->options==1)/day @elseif($value->options==2)/week @elseif($value->options==3)/28_days @elseif($value->options==4)/lifetime @endif </option>
             @endforeach
         </select>
         <span id='check-message' class="required"></span>

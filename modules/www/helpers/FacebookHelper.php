@@ -254,8 +254,6 @@ class FacebookHelper
                     $option = '/days_28';
                 } elseif ($company_metric->relMetric['options'] == 4) {
                     $option = '/lifetime';
-                } elseif ($company_metric->relMetric['options'] == 5) {
-                    $option = '/daily';
                 }
                 $insights = $fb->get($page_id . '/insights/' . $company_metric->relMetric['name'] . $option);
                 $data = $insights->getDecodedBody();
@@ -264,7 +262,7 @@ class FacebookHelper
                 if (!empty($data)) {
                     $analysis = new Analysis();
                     $analysis->company_id = $company_id;
-                    $analysis->metric_id = $company_metric->id;
+                    $analysis->metric_id = $company_metric->metric_id;
                     $analysis->period = $data[0]['period'];
                     $analysis->data = serialize($data[0]['values']);
                     $analysis->status = 1;
