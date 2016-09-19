@@ -51,7 +51,7 @@
                                     <td>{!! $i++ !!}</td>
                                     <td>{!! $analytic->relMetric['name'] !!}</td>
                                     <td>{!! $analytic->period !!}</td>
-                                    <td>{!! date('d M Y',strtotime($analytic->created_at)) !!}</td>
+                                    <td>{!! date('d M Y H:i',strtotime($analytic->created_at)) !!}</td>
                                     <td><a href="#" metric-id="{{ $analytic->id }}" class="btn btn-info btn-xs detailsBtn">Details</a>
                                         <div style="display: none;" id="detailsOfMetric_{{$analytic->id}}">
                                             <div class="detailsOfMetric">
