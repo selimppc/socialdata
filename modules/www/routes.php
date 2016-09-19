@@ -154,6 +154,16 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as' => 'feeds/twitter',
         'uses'=>'FeedController@feeds'
     ]);
+    Route::get('feeds/facebook/{post_id}/edit',[
+        'middleware'=>'acl_access:www/feeds/facebook/{post_id}/edit',
+        'as' => 'feeds/facebook/{post_id}/edit',
+        'uses'=>'FeedController@edit'
+    ]);
+    Route::post('feeds/facebook/{post_id}/edit',[
+        'middleware'=>'acl_access:www/feeds/facebook/{post_id}/edit',
+        'as' => 'feeds/facebook/{post_id}/edit',
+        'uses'=>'FeedController@update'
+    ]);
     Route::get('feeds/facebook/{post_id}',[
         'middleware'=>'acl_access:www/feeds/facebook/{post_id}',
         'as' => 'feeds/facebook/{post_id}',

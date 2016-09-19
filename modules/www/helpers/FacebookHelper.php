@@ -278,4 +278,39 @@ class FacebookHelper
             echo 'Message-'.$e->getMessage();
         }
     }
+    public static function _updatePost($post_id,$data)
+    {
+        $config= FacebookHelper::getFbConfig();
+        $company_id=session('company_id');
+        $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
+
+        $fb= new Facebook($config);
+        $fb->setDefaultAccessToken($fb_account->access_token);
+        $pages=$fb->get('/me/accounts');
+        $pages=$pages->getGraphEdge()->asArray();
+//        dd($pages);
+        $page_access_token= null;
+        $page_id= null;
+        foreach ($pages as $page) {
+            if($page['id']==$fb_account->page_id){
+                $page_access_token=$page['access_token'];
+                $page_id=$page['id'];
+            }
+        }
+
+        if($page_access_token!=null && $page_id!=null)
+        {
+            try{
+//                $custom_post=CustomPost::findOrFail($post_id);
+                $post=$fb->post('/'.$post_id,['message'=>$data['post']],$page_access_token);
+                return $post->getDecodedBody();
+            }catch (Exception $e)
+            {
+                return $e;
+            }
+        }else{
+            return 'Page owner error';
+        }
+        return false;
+    }
 }

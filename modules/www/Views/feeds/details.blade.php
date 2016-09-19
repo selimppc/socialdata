@@ -5,6 +5,7 @@
             <div class="panel">
                 <div class="panel-heading">
                     <span class="panel-title">{{ $pageTitle }} <b>{{ ucfirst($sm_type) }}</b></span>
+                    <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id.'/edit') }}" class="btn btn-info">Edit</a>
                 </div>
 
                 <div class="panel-body" id="postload">
@@ -32,7 +33,6 @@
                                             @endif
                                         @endforeach
                                     @endif
-<!--                                    --><?php //dd(count($post->relPostImage)); ?>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
+                    <a href="{{ URL::to('www/feeds/'.$sm_type) }}" class="btn btn-info">Back</a>
                 </div>
             </div>
         </div>
