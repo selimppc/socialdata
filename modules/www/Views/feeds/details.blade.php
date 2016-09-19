@@ -5,7 +5,9 @@
             <div class="panel">
                 <div class="panel-heading">
                     <span class="panel-title">{{ $pageTitle }} <b>{{ ucfirst($sm_type) }}</b></span>
+                    @if($sm_type=='facebook')
                     <a href="{{ url('www/feeds/'.$sm_type.'/'.$post->id.'/edit') }}" class="btn btn-info">Edit</a>
+                        @endif
                 </div>
 
                 <div class="panel-body" id="postload">

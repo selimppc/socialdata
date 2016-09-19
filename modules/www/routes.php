@@ -174,6 +174,11 @@ Route::group(['middleware' => 'auth', 'prefix'=>'www','modules'=>'www','namespac
         'as' => 'feeds/facebook',
         'uses'=>'FeedController@feeds'
     ]);
+    Route::get('delete-post/facebook/{post_id}',[
+        'middleware'=>'acl_access:www/delete-post/facebook/{post_id}',
+        'as' => 'delete-post/facebook/{post_id}',
+        'uses'=>'FeedController@delete'
+    ]);
     Route::get('feeds/googleplus/{post_id}',[
         'middleware'=>'acl_access:www/feeds/googleplus/{post_id}',
         'as' => 'feeds/googleplus/{post_id}',

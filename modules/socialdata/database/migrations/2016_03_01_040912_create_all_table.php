@@ -61,6 +61,7 @@ class CreateAllTable extends Migration
         // post table
         Schema::create('post', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('status',['active','deleted']);
             $table->integer('company_id', false, 11);
             $table->integer('sm_type_id', false, 11);
             $table->text('post');

@@ -64,7 +64,7 @@ class FeedController extends Controller
         if(session('role_id')=='admin' || session('role_id')=='sadmin') {
             $data['posts']=Post::where('sm_type_id', $this->sm_type_id)->paginate(20);
         }else{
-            $data['posts']=Post::where('sm_type_id',$this->sm_type_id)->where('company_id',session('company_id'))->paginate(20);
+            $data['posts']=Post::where('sm_type_id',$this->sm_type_id)->where('status','active')->where('company_id',session('company_id'))->paginate(20);
         }
         $data['pageTitle']=ucfirst($data['sm_type']).' Newsfeed';
 
@@ -112,6 +112,20 @@ class FeedController extends Controller
                 $post->update($data);
                 Session::flash('message','Successfully updated');
                 return redirect('www/feeds/facebook/'.$post_id);
+            }
+        }
+        return back();
+    }
+    public function delete($post_id)
+    {
+        $post=Post::findOrFail($post_id);
+        if($this->sm_type=='facebook')
+        {
+            $result=FacebookHelper::_deletePost($post->post_id);
+            if($result['success']==true){
+                $data['status']='deleted';
+                $post->update($data);
+                Session::flash('message','Successfully delete');
             }
         }
         return back();

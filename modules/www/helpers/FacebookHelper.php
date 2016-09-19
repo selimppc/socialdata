@@ -81,13 +81,9 @@ class FacebookHelper
             return $e->getMessage();
         }
     }
-    public static function publish($post_id,$company_id=false)
+    private static function _getPageAccessToken($company_id)
     {
         $config= FacebookHelper::getFbConfig();
-        if($company_id==false)
-        {
-            $company_id=session('company_id');
-        }
         $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
 
         $fb= new Facebook($config);
@@ -103,6 +99,18 @@ class FacebookHelper
                 $page_id=$page['id'];
             }
         }
+        return ['page_access_token'=>$page_access_token,'page_id'=>$page_id,'fb'=>$fb];
+    }
+    public static function publish($post_id,$company_id=false)
+    {
+        if($company_id==false)
+        {
+            $company_id=session('company_id');
+        }
+        $pageData=FacebookHelper::_getPageAccessToken($company_id);
+        $page_id=$pageData['page_id'];
+        $page_access_token=$pageData['page_access_token'];
+        $fb=$pageData['fb'];
         if($page_access_token!=null && $page_id!=null)
         {
             try{
@@ -280,29 +288,37 @@ class FacebookHelper
     }
     public static function _updatePost($post_id,$data)
     {
-        $config= FacebookHelper::getFbConfig();
         $company_id=session('company_id');
-        $fb_account= CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id',2)->first();
-
-        $fb= new Facebook($config);
-        $fb->setDefaultAccessToken($fb_account->access_token);
-        $pages=$fb->get('/me/accounts');
-        $pages=$pages->getGraphEdge()->asArray();
-//        dd($pages);
-        $page_access_token= null;
-        $page_id= null;
-        foreach ($pages as $page) {
-            if($page['id']==$fb_account->page_id){
-                $page_access_token=$page['access_token'];
-                $page_id=$page['id'];
-            }
-        }
-
+        $pageData=FacebookHelper::_getPageAccessToken($company_id);
+        $page_id=$pageData['page_id'];
+        $page_access_token=$pageData['page_access_token'];
+        $fb=$pageData['fb'];
         if($page_access_token!=null && $page_id!=null)
         {
             try{
 //                $custom_post=CustomPost::findOrFail($post_id);
                 $post=$fb->post('/'.$post_id,['message'=>$data['post']],$page_access_token);
+                return $post->getDecodedBody();
+            }catch (Exception $e)
+            {
+                return $e;
+            }
+        }else{
+            return 'Page owner error';
+        }
+        return false;
+    }
+    public static function _deletePost($post_id)
+    {
+        $company_id=session('company_id');
+        $pageData=FacebookHelper::_getPageAccessToken($company_id);
+        $page_id=$pageData['page_id'];
+        $page_access_token=$pageData['page_access_token'];
+        $fb=$pageData['fb'];
+        if($page_access_token!=null && $page_id!=null)
+        {
+            try{
+                $post=$fb->delete('/'.$post_id,[],$page_access_token);
                 return $post->getDecodedBody();
             }catch (Exception $e)
             {
