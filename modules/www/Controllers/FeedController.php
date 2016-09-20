@@ -105,13 +105,14 @@ class FeedController extends Controller
     {
         $data=$request->all();
         $post=Post::findOrFail($post_id);
-        if($this->sm_type=='facebook')
-        {
-            $result=FacebookHelper::_updatePost($post->post_id,$data);
-            if($result['success']==true){
-                $post->update($data);
-                Session::flash('message','Successfully updated');
-                return redirect('www/feeds/facebook/'.$post_id);
+        if($post->status != 'deleted') {
+            if ($this->sm_type == 'facebook') {
+                $result = FacebookHelper::_updatePost($post->post_id, $data);
+                if ($result['success'] == true) {
+                    $post->update($data);
+                    Session::flash('message', 'Successfully updated');
+                    return redirect('www/feeds/facebook/' . $post_id);
+                }
             }
         }
         return back();
