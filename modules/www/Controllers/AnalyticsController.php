@@ -15,16 +15,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Analysis;
 use App\Models\CompanyMetric;
 use App\Models\Metric;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $request=$request->all();
         $data['pageTitle']='Analytics';
         $company_id=session('company_id');
         $data['per_page']=500;
-        $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
+        if(isset($request['metric_name']))
+        {
+            $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
+        }else{
+            $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
+        }
 //        dd($data);
         return view('www::analytics.index',$data);
     }

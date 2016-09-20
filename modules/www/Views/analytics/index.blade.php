@@ -17,6 +17,16 @@
                 </div>
 
                 <div class="panel-body" id="postload">
+                    <div class="row">
+                        {!! Form::open(['method'=>'get']) !!}
+                            <div class="col-md-4">
+                            {!! Form::text('metric_name',null,['class'=>'form-control','placeholder'=>'Search metric here','required']) !!}
+                            </div>
+                            <div class="col-md-2">
+                            {!! Form::submit('Search',['class'=>'btn btn-primary']) !!}
+                            </div>
+                        {!! Form::close() !!}
+                    </div><br>
                     <div class="table-primary">
                         <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables-example">
                             <thead>

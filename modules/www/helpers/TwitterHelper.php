@@ -165,5 +165,20 @@ class TwitterHelper
             print "     Post Attachment \n";
         }
     }
+    public static function _deletePost($post_id)
+    {
+        try {
+            $company_id=session('company_id');
+            $twitter_config = Config::get('socialdata.twitter');
+            $ttr_account = CompanySocialAccount::where('company_id',$company_id)->where('sm_type_id', 3)->first();
+            $ttr = new TwitterOAuth($twitter_config['consumerKey'], $twitter_config['consumerSecret'], $ttr_account->access_token, $ttr_account->associate_token);
+            $ttr->post('statuses/destroy/'.$post_id,[]);
+            $result['success']=true;
+            return $result;
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+        return false;
+    }
 
 }

@@ -10,6 +10,7 @@ namespace Modules\Www\Controllers;
 
 
 use App\Helpers\FacebookHelper;
+use App\Helpers\TwitterHelper;
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
@@ -123,11 +124,14 @@ class FeedController extends Controller
         if($this->sm_type=='facebook')
         {
             $result=FacebookHelper::_deletePost($post->post_id);
-            if($result['success']==true){
-                $data['status']='deleted';
-                $post->update($data);
-                Session::flash('message','Successfully delete');
-            }
+        }elseif($this->sm_type=='twitter')
+        {
+            $result=TwitterHelper::_deletePost($post->post_id);
+        }
+        if($result['success']==true){
+            $data['status']='deleted';
+            $post->update($data);
+            Session::flash('message','Successfully delete');
         }
         return back();
     }
