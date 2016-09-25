@@ -37,8 +37,9 @@
                                     <th> Company </th>
                                 @endif
                                 <th> Period </th>
-                                <th> Date </th>
-                                <th> Actions </th>
+                                <th> Value </th>
+                                <th> End Date </th>
+                                <th> Pull Date </th>
                             </tr>
                             </thead>
                             <style>
@@ -61,40 +62,10 @@
                                     <td>{!! $i++ !!}</td>
                                     <td>{!! $analytic->relMetric['name'] !!}</td>
                                     <td>{!! $analytic->period !!}</td>
+                                    <td>{!! $analytic->value !!}</td>
+                                    <td>{!! date('d M Y H:i',strtotime($analytic->end_time)) !!}</td>
                                     <td>{!! date('d M Y H:i',strtotime($analytic->created_at)) !!}</td>
-                                    <td><a href="#" metric-id="{{ $analytic->id }}" class="btn btn-info btn-xs detailsBtn">Details</a>
-                                        <div style="display: none;" id="detailsOfMetric_{{$analytic->id}}">
-                                            <div class="detailsOfMetric">
-                                                <?php $details=unserialize($analytic->data);?>
-                                                <b>Metric Name : </b> {{ $analytic->relMetric['name'].'/'.$analytic->period }}
-                                                <span class="pull-right"><b>Date : </b>{!! date('d M Y',strtotime($analytic->created_at)) !!}</span>
-                                                <table class="table">
-                                                    <tr>
-                                                        <th>End Time</th>
-                                                        <th>Value</th>
-                                                    </tr>
-                                                    @foreach($details as $detail)
-                                                        <tr>
-                                                            <td>{{ $detail['end_time'] }}</td>
-                                                            <td>
-                                                                <?php
-                                                                if(isset($detail['value'])){
-                                                                    if(is_array($detail['value'])){
-                                                                        foreach ($detail['value'] as $id=>$item) {
-                                                                            echo '<b>'.ucfirst($id).' : </b>'.$item.'<br>';
-                                                                        }
-                                                                    }else{
-                                                                        echo $detail['value'];
-                                                                    }
-                                                                }
-                                                                ?>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             @endforeach
                             </tbody>

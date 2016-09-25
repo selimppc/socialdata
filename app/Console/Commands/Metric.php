@@ -45,10 +45,10 @@ class Metric extends Command
         foreach ($company_social_accounts as $company_social_account) {
             print ++$i.". Facebook Account Found \n";
             $data=FacebookHelper::metric($company_social_account->access_token,$company_social_account->page_id,$company_social_account->company_id);
-            dd($data);
+            /*dd($data);
             $data=$data->getDecodedBody('data');
 //            dd($data['data']);
-            FacebookHelper::storeData($data['data'],$company_social_account);
+            FacebookHelper::storeData($data['data'],$company_social_account);*/
         }
     }
 }

@@ -266,13 +266,13 @@ class FacebookHelper
                 $insights = $fb->get($page_id . '/insights/' . $company_metric->relMetric['name'] . $option);
                 $data = $insights->getDecodedBody();
                 $data = $data['data'];
-//            dd($data[0]);
                 if (!empty($data)) {
                     $analysis = new Analysis();
                     $analysis->company_id = $company_id;
                     $analysis->metric_id = $company_metric->metric_id;
                     $analysis->period = $data[0]['period'];
-                    $analysis->data = serialize($data[0]['values']);
+                    $analysis->value = $data[0]['values'][2]['value'];
+                    $analysis->end_time = date('Y-m-d H:i:s',strtotime($data[0]['values'][2]['end_time']));
                     $analysis->status = 1;
                     $analysis->save();
                     echo '<br><br><b>' . $j++ . '. Successfully Store :::::::: ' . $company_metric->relMetric['name']. $option . ' (Company ID - ' . $company_id . ')</b>';
