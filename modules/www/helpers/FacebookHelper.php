@@ -266,7 +266,7 @@ class FacebookHelper
                 $insights = $fb->get($page_id . '/insights/' . $company_metric->relMetric['name'] . $option);
                 $data = $insights->getDecodedBody();
                 $data = $data['data'];
-                if (!empty($data)) {
+                if (!empty($data) && is_numeric($data[0]['values'][2]['value'])) {
                     $analysis = new Analysis();
                     $analysis->company_id = $company_id;
                     $analysis->metric_id = $company_metric->metric_id;
