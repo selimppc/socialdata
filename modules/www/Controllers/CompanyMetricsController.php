@@ -40,31 +40,52 @@ class CompanyMetricsController extends Controller
 
         $metric_exists=[];
         $existing_metrics_array=[];
-        foreach ($existing_metrics as $existing_metric) {
-            $existing_metrics_array[]=$existing_metric->id;
-            foreach ($input['selected_id'] as $item) {
-                if($item==$existing_metric->id)
-                {
-                    $metric_exists[]=$item;
+        if(!empty($existing_metrics)) {
+            foreach ($existing_metrics as $existing_metric) {
+                $existing_metrics_array[] = $existing_metric->id;
+                if(!empty($input['selected_id'])) {
+                    foreach ($input['selected_id'] as $item) {
+                        if ($item == $existing_metric->id) {
+                            $metric_exists[] = $item;
+                        }
+                    }
                 }
             }
         }
-        $metric_new=array_merge(array_diff($input['selected_id'],$metric_exists),array_diff($metric_exists,$input['selected_id']));
+        if(!empty($metric_exists))
+        {
+            $metric_new=array_merge(array_diff($input['selected_id'],$metric_exists),array_diff($metric_exists,$input['selected_id']));
+        }else{
+            $metric_new=$input['selected_id'];
+        }
 //        echo '<pre>';print_r($input['selected_id']);
 //        echo '<pre>';print_r($existing_metrics_array);
 //        echo '<pre>';print_r($metric_exists);
 //        echo '<pre>';print_r($metric_new);
-        $diff_between_exist_input=array_merge(array_diff($input['selected_id'],$existing_metrics_array),array_diff($existing_metrics_array,$input['selected_id']));
+        if(!empty($metric_new))
+        {
+            $diff_between_exist_input=array_merge(array_diff($input['selected_id'],$existing_metrics_array),array_diff($existing_metrics_array,$input['selected_id']));
+        }else{
+            $diff_between_exist_input=[];
+        }
 //        echo '<pre>';print_r($diff_between_exist_input);
-        $to_delete=array_merge(array_diff($metric_new,$diff_between_exist_input),array_diff($diff_between_exist_input,$metric_new));
-//        dd($to_delete);
+        if(!empty($diff_between_exist_input))
+        {
+            $to_delete=array_merge(array_diff($metric_new,$diff_between_exist_input),array_diff($diff_between_exist_input,$metric_new));
+        }else{
+            $to_delete=[];
+            if(!empty($existing_metrics))
+            {
+                foreach ($existing_metrics as $existing_metric) {
+                    $to_delete[]=$existing_metric->id;
+                }
+            }
+        }
         DB::beginTransaction();
         try {
-
             if (isset($metric_new) && !empty($metric_new)) {
                 foreach ($metric_new as $metric_id) {
                     Analysis::where('metric_id', $metric_id)->where('company_id', $company_id)->where('status',0)->update(['status'=>1]);
-
                 }
             }
             if (isset($metric_new) && !empty($metric_new)) {
