@@ -29,6 +29,11 @@ class AnalyticsController extends Controller
         if(isset($request['metric_name']))
         {
             $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
+        }elseif(isset($request['date']))
+        {
+            $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)
+                ->where('end_time','like',$request['date'].'%')->where('status',1)->paginate($data['per_page']);
+//            dd($data);
         }else{
             $data['analytics']=Analysis::with('relMetric')->where('company_id',$company_id)->where('status',1)->paginate($data['per_page']);
         }

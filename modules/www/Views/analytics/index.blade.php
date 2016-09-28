@@ -20,7 +20,7 @@
                     <div class="row">
                         {!! Form::open(['method'=>'get']) !!}
                             <div class="col-md-4">
-                            {!! Form::text('metric_name',null,['class'=>'form-control','placeholder'=>'Search metric here','required']) !!}
+                            {!! Form::text('date',Input::get('date'),['class'=>'form-control datapicker','metricDate','placeholder'=>'Search metric here by date','required']) !!}
                             </div>
                             <div class="col-md-2">
                             {!! Form::submit('Search',['class'=>'btn btn-primary']) !!}
@@ -57,6 +57,7 @@
                                 $i=1;
                             }
                             ?>
+                            @if(count($analytics)>=1)
                             @foreach($analytics as $analytic)
                                 <tr>
                                     <td>{!! $i++ !!}</td>
@@ -68,6 +69,11 @@
 
                                 </tr>
                             @endforeach
+                            @else
+                                <tr>
+                                    <th colspan="6" class="text-center">Sorry, No data found</th>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>
@@ -111,6 +117,7 @@
                 $('#metricContent').append(data);
                 $('#metricDetails').modal();
             });
+//            $('#metricDate').datepicker();
         })
     </script>
 
